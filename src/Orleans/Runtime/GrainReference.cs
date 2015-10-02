@@ -339,8 +339,8 @@ namespace Orleans.Runtime
                 return default(T);
             }
 
-            resultTask = OrleansTaskExtentions.ConvertTaskViaTcs(resultTask);
-            return (T) await resultTask;
+            object result = await resultTask.ConfigureAwait(false);
+            return result == null ? default(T) : (T)result;
         }
 
         #endregion

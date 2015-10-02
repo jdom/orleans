@@ -179,47 +179,6 @@ namespace Orleans
             tcs.TrySetException(exception);
             return tcs.Task;
         }
-
-        internal static Task<T> ConvertTaskViaTcs<T>(Task<T> task)
-        {
-            if (task == null) return Task.FromResult(default(T));
-
-            var resolver = new TaskCompletionSource<T>();
-
-            if (task.Status == TaskStatus.RanToCompletion)
-            {
-                resolver.TrySetResult(task.Result);
-            }
-            else if (task.IsFaulted)
-            {
-                resolver.TrySetException(task.Exception.Flatten());
-            }
-            else if (task.IsCanceled)
-            {
-                resolver.TrySetException(new TaskCanceledException(task));
-            }
-            else
-            {
-                if (task.Status == TaskStatus.Created) task.Start();
-
-                task.ContinueWith(t =>
-                {
-                    if (t.IsFaulted)
-                    {
-                        resolver.TrySetException(t.Exception.Flatten());
-                    }
-                    else if (t.IsCanceled)
-                    {
-                        resolver.TrySetException(new TaskCanceledException(t));
-                    }
-                    else
-                    {
-                        resolver.TrySetResult(t.Result);
-                    }
-                });
-            }
-            return resolver.Task;
-        }
     }
 }
 
