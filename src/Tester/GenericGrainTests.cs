@@ -299,7 +299,7 @@ namespace UnitTests.General
             await grain.SetB(b);
 
             Task<string> stringPromise = grain.GetAxB();
-            Assert.AreEqual(expected, stringPromise.Result);
+            Assert.AreEqual(expected, await stringPromise);
         }
 
         [TestMethod, TestCategory("BVT"), TestCategory("Functional"), TestCategory("Generics")]
