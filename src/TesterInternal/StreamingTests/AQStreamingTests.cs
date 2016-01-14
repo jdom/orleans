@@ -12,24 +12,24 @@ namespace UnitTests.Streaming
     [DeploymentItem("ClientConfig_AzureStreamProviders.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [TestClass]
-    public class AQStreamingTests : HostedTestClusterPerFixture
+    public class AQStreamingTests : HostedTestClusterPerTest
     {
         internal static readonly FileInfo SiloConfigFile = new FileInfo("Config_AzureStreamProviders.xml");
         internal static readonly FileInfo ClientConfigFile = new FileInfo("ClientConfig_AzureStreamProviders.xml");
 
         private static readonly TestingSiloOptions aqSiloOptions = new TestingSiloOptions
-            {
-                SiloConfigFile = SiloConfigFile,
-            };
+        {
+            SiloConfigFile = SiloConfigFile,
+        };
         private static readonly TestingClientOptions aqClientOptions = new TestingClientOptions
             {
                 ClientConfigFile = ClientConfigFile
             };
-        //private static readonly TestingSiloOptions aqSiloOption_OnlyPrimary = new TestingSiloOptions
-        //    {
-        //        SiloConfigFile = SiloConfigFile,
-        //        StartSecondary = false,
-        //    };
+        private static readonly TestingSiloOptions aqSiloOption_OnlyPrimary = new TestingSiloOptions
+        {
+            SiloConfigFile = SiloConfigFile,
+            StartSecondary = false,
+        };
         //private static readonly TestingSiloOptions aqSiloOption_NoClient = new TestingSiloOptions
         //    {
         //        SiloConfigFile = SiloConfigFile,
