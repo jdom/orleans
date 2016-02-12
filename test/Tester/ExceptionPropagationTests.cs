@@ -89,7 +89,7 @@ namespace UnitTests.General
             Assert.Equal("Test exception", exception.Message);
         }
 
-        [Fact(Skip = "Implementation of issue #1378 is still pending"), TestCategory("BVT"), TestCategory("Functional")]
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
         public void ExceptionPropagationForwardsEntireAggregateException()
         {
             IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
