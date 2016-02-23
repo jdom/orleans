@@ -63,10 +63,7 @@ namespace Orleans.AzureUtils
             {
                 CloudTableClient tableCreationClient = GetCloudTableCreationClient();
                 CloudTable tableRef = tableCreationClient.GetTableReference(TableName);
-                bool didCreate = await Task<bool>.Factory.FromAsync(
-                     tableRef.BeginCreateIfNotExists,
-                     tableRef.EndCreateIfNotExists,
-                     null);
+                bool didCreate = await tableRef.CreateIfNotExistsAsync();
 
                 Logger.Info(ErrorCode.AzureTable_01, "{0} Azure storage table {1}", (didCreate ? "Created" : "Attached to"), TableName);
 
@@ -97,10 +94,7 @@ namespace Orleans.AzureUtils
             {
                 CloudTableClient tableCreationClient = GetCloudTableCreationClient();
                 CloudTable tableRef = tableCreationClient.GetTableReference(TableName);
-                bool didDelete = await Task<bool>.Factory.FromAsync(
-                        tableRef.BeginDeleteIfExists,
-                        tableRef.EndDeleteIfExists,
-                        null);
+                bool didDelete = await tableRef.DeleteIfExistsAsync();
 
                 if (didDelete)
                 {
@@ -140,11 +134,8 @@ namespace Orleans.AzureUtils
                 try
                 {
                     // Presumably FromAsync(BeginExecute, EndExecute) has a slightly better performance then CreateIfNotExistsAsync.
-                    var opResult = await Task<TableResult>.Factory.FromAsync(
-                        tableReference.BeginExecute,
-                        tableReference.EndExecute,
-                        TableOperation.Insert(data),
-                        null);
+                    var opResult = await tableReference.ExecuteAsync(
+                        TableOperation.Insert(data));
 
                     return opResult.Etag;
                 }
@@ -180,11 +171,8 @@ namespace Orleans.AzureUtils
                     // svc.UpdateObject(data);
                     // SaveChangesOptions.ReplaceOnUpdate,
 
-                    var opResult = await Task<TableResult>.Factory.FromAsync(
-                       tableReference.BeginExecute,
-                       tableReference.EndExecute,
-                       TableOperation.InsertOrReplace(data),
-                       null);
+                    var opResult = await tableReference.ExecuteAsync(
+                        TableOperation.InsertOrReplace(data));
                     
                     return opResult.Etag;                                                           
                 }
@@ -225,11 +213,8 @@ namespace Orleans.AzureUtils
 
                     data.ETag = eTag;
                     // Merge requires an ETag (which may be the '*' wildcard).
-                    var opResult = await Task<TableResult>.Factory.FromAsync(
-                          tableReference.BeginExecute,
-                          tableReference.EndExecute,
-                          TableOperation.Merge(data),
-                          null);
+                    var opResult = await tableReference.ExecuteAsync(
+                          TableOperation.Merge(data));
 
                     return opResult.Etag;
                 }
@@ -265,11 +250,8 @@ namespace Orleans.AzureUtils
                 {
                     data.ETag = dataEtag;
 
-                    var opResult = await Task<TableResult>.Factory.FromAsync(
-                        tableReference.BeginExecute,
-                        tableReference.EndExecute,
-                        TableOperation.Replace(data),
-                        null);
+                    var opResult = await tableReference.ExecuteAsync(
+                        TableOperation.Replace(data));
 
                     //The ETag of data is needed in further operations.                                        
                     return opResult.Etag;
@@ -306,11 +288,8 @@ namespace Orleans.AzureUtils
                 try
                 {
                     // Presumably FromAsync(BeginExecute, EndExecute) has a slightly better performance then DeleteIfExistsAsync.
-                    await Task<TableResult>.Factory.FromAsync(
-                        tableReference.BeginExecute,
-                        tableReference.EndExecute,
-                        TableOperation.Delete(data),
-                        null);
+                    await tableReference.ExecuteAsync(
+                        TableOperation.Delete(data));
                 }
                 catch (Exception exc)
                 {
@@ -429,11 +408,7 @@ namespace Orleans.AzureUtils
 
                 try
                 {
-                    await Task<IList<TableResult>>.Factory.FromAsync(
-                        tableReference.BeginExecuteBatch,
-                        tableReference.EndExecuteBatch,
-                        entityBatch,
-                        null);
+                    await tableReference.ExecuteBatchAsync(entityBatch);
                 }
                 catch (Exception exc)
                 {
@@ -549,11 +524,7 @@ namespace Orleans.AzureUtils
                 try
                 {
                     // http://msdn.microsoft.com/en-us/library/hh452241.aspx
-                    await Task<IList<TableResult>>.Factory.FromAsync(
-                        tableReference.BeginExecuteBatch,
-                        tableReference.EndExecuteBatch,
-                        entityBatch,
-                        null);
+                    await tableReference.ExecuteBatchAsync(entityBatch);
                 }
                 catch (Exception exc)
                 {
@@ -596,11 +567,7 @@ namespace Orleans.AzureUtils
                     data2.ETag = data2Etag;
                     entityBatch.Add(TableOperation.Replace(data2));
                                                                                
-                    var opResults = await Task<IList<TableResult>>.Factory.FromAsync(
-                        tableReference.BeginExecuteBatch,
-                        tableReference.EndExecuteBatch,
-                        entityBatch,
-                        null);
+                    var opResults = await tableReference.ExecuteBatchAsync(entityBatch);
 
                     //The batch results are returned in order of execution,
                     //see reference at https://msdn.microsoft.com/en-us/library/microsoft.windowsazure.storage.table.cloudtable.executebatch.aspx.
@@ -650,11 +617,7 @@ namespace Orleans.AzureUtils
                         entityBatch.Add(TableOperation.Replace(data2));
                     }
                                         
-                    var opResults = await Task<IList<TableResult>>.Factory.FromAsync(
-                        tableReference.BeginExecuteBatch,
-                        tableReference.EndExecuteBatch,
-                        entityBatch,
-                        null);
+                    var opResults = await tableReference.ExecuteBatchAsync(entityBatch);
 
                     //The batch results are returned in order of execution,
                     //see reference at https://msdn.microsoft.com/en-us/library/microsoft.windowsazure.storage.table.cloudtable.executebatch.aspx.
