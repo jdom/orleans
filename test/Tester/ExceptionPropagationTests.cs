@@ -4,6 +4,7 @@ using FluentAssertions.Collections;
 using UnitTests.GrainInterfaces;
 using UnitTests.Tester;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace UnitTests.General
 {
@@ -12,6 +13,13 @@ namespace UnitTests.General
     /// </summary>
     public class ExceptionPropagationTests : HostedTestClusterEnsureDefaultStarted
     {
+        private readonly ITestOutputHelper output;
+
+        public ExceptionPropagationTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         [Fact, TestCategory("BVT"), TestCategory("Functional")]
         public async Task BasicExceptionPropagation()
         {
@@ -19,7 +27,33 @@ namespace UnitTests.General
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => grain.ThrowsInvalidOperationException());
 
+            output.WriteLine(exception.ToString());
             Assert.Equal("Test exception", exception.Message);
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task ExceptionContainsOriginalStackTrace()
+        {
+            IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => grain.ThrowsInvalidOperationException());
+
+            output.WriteLine(exception.ToString());
+            Assert.Equal("Test exception", exception.Message);
+            Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task ExceptionContainsOriginalStackTrace2()
+        {
+            IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
+            grain.ThrowsInvalidOperationException().Wait();
+            var exception = Assert.Throws<AggregateException>(
+                () => grain.ThrowsInvalidOperationException().Wait());
+
+            output.WriteLine(exception.ToString());
+            Assert.Equal("Test exception", exception.Message);
+            Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional")]
@@ -89,12 +123,12 @@ namespace UnitTests.General
             Assert.Equal("Test exception", exception.Message);
         }
 
-        [Fact(Skip = "Implementation of issue #1378 is still pending"), TestCategory("BVT"), TestCategory("Functional")]
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
         public void ExceptionPropagationForwardsEntireAggregateException()
         {
             IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
             var grainCall = grain.ThrowsMultipleExceptionsAggregatedInFaultedTask();
-
+            grainCall.Wait();
             // use Wait() so that we get the entire AggregateException ('await' would just catch the first inner exception)
             var exception = Assert.Throws<AggregateException>(
                 () => grainCall.Wait());

@@ -111,6 +111,42 @@ namespace Orleans
         }
 
         /// <summary>
+        /// Returns a <see cref="Task{Object}"/> for the provided <see cref="Task{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The underlying type of <paramref name="task"/>.
+        /// </typeparam>
+        /// <param name="task">
+        /// The task.
+        /// </param>
+        /// <returns>
+        /// The response.
+        /// </returns>
+        public static Task<T> Unbox<T>(this Task<object> task)
+        {
+            switch (task.Status)
+            {
+                case TaskStatus.RanToCompletion:
+                    return Task.FromResult((T)task.GetResult());
+
+                case TaskStatus.Faulted:
+                    {
+                        return TaskFromFaulted<T>(task);
+                    }
+
+                case TaskStatus.Canceled:
+                    {
+                        var completion = new TaskCompletionSource<T>();
+                        completion.SetCanceled();
+                        return completion.Task;
+                    }
+
+                default:
+                    return UnboxAwait<T>(task);
+            }
+        }
+
+        /// <summary>
         /// Returns a <see cref="Task{Object}"/> for the provided <see cref="Task{Object}"/>.
         /// </summary>
         /// <typeparam name="object">
@@ -138,9 +174,26 @@ namespace Orleans
             return await task;
         }
 
+        //private static async Task<T> UnboxAwait<T>(Task<object> task)
+        //{
+        //    return (T)await task;
+        //}
+
+        private static Task<T> UnboxAwait<T>(Task<object> task)
+        {
+            return task.ContinueWith(t => t.Unbox<T>()).Unwrap();
+        }
+
         private static Task<object> TaskFromFaulted(Task task)
         {
             var completion = new TaskCompletionSource<object>();
+            completion.SetException(task.Exception.InnerExceptions);
+            return completion.Task;
+        }
+
+        private static Task<T> TaskFromFaulted<T>(Task task)
+        {
+            var completion = new TaskCompletionSource<T> ();
             completion.SetException(task.Exception.InnerExceptions);
             return completion.Task;
         }
@@ -289,7 +342,7 @@ namespace Orleans
             }
             else if (task.IsFaulted)
             {
-                resolver.TrySetException(task.Exception);
+                resolver.TrySetException(task.Exception.InnerExceptions);
             }
             else if (task.IsCanceled)
             {

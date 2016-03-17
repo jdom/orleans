@@ -295,7 +295,7 @@ namespace Orleans.Runtime
         /// <summary>
         /// Called from generated code.
         /// </summary>
-        protected async Task<T> InvokeMethodAsync<T>(int methodId, object[] arguments, InvokeMethodOptions options = InvokeMethodOptions.None, SiloAddress silo = null)
+        protected Task<T> InvokeMethodAsync<T>(int methodId, object[] arguments, InvokeMethodOptions options = InvokeMethodOptions.None, SiloAddress silo = null)
         {
             object[] argsDeepCopy = null;
             if (arguments != null)
@@ -313,11 +313,12 @@ namespace Orleans.Runtime
 
             if (resultTask == null)
             {
-                return default(T);
+                // TODO: optimize
+                return Task.FromResult(default(T));
             }
 
             resultTask = OrleansTaskExtentions.ConvertTaskViaTcs(resultTask);
-            return (T) await resultTask;
+            return resultTask.Unbox<T>();
         }
 
         #endregion
