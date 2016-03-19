@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "OrleansProviders": { "target": "project" },
+    "OrleansRuntime": { "target": "project" },
+    "WindowsAzure.Storage": "5.0.2",
+    "Newtonsoft.Json": "9.0.1"
+  },
+
+  "frameworks": {
+     "netstandard1.6": {},
+     "net451":{
+      "frameworkAssemblies": {
+        "System.Web": "4.0.0.0"
+      }
+    }
+  }
+}

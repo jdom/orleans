@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "FSharp.Compiler.Tools": "4.0.0.1",
+    "FSharp.Core": "4.0.0.1"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8" ]
+    },
+    "net451": { }
+  }
+}

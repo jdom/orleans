@@ -1,0 +1,22 @@
+﻿{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "OrleansManager": { "target": "project" },
+    "OrleansRuntime": { "target": "project" },
+    "TestGrainInterfaces": { "target": "project" },
+    "TestGrains": { "target": "project" },
+    "TestInternalGrainInterfaces": { "target": "project" },
+    "MSTest.UnitTestFramework": "1.0.0-alpha7"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    },
+    "net451": { }
+  }
+}

@@ -1,0 +1,54 @@
+﻿{
+  "version": "1.0.0-*",
+  "testRunner": "xunit",
+
+  "buildOptions": {
+    "compile": { "exclude": [ "DeploymentTests/**", "FSharpGrainTests.cs" ] },
+    "copyToOutput": {
+      "include": "SerializationTests/ConfigurationTests/*.xml"
+    }
+  },
+
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "ClientGenerator": { "target": "project" },
+    "OrleansAzureUtils": { "target": "project" },
+    "OrleansBondUtils": { "target": "project" },
+    "OrleansCodeGenerator": { "target": "project" },
+    "OrleansGoogleUtils": { "target": "project" },
+    "OrleansManager": { "target": "project" },
+    "OrleansProviders": { "target": "project" },
+    "OrleansRuntime": { "target": "project" },
+    "OrleansServiceBus": { "target": "project" },
+    "OrleansSQLUtils": { "target": "project" },
+    "OrleansTestingHost": { "target": "project" },
+    "TestExtensions": { "target": "project" },
+    "TestFSharp": { "target": "project" },
+    "TestFSharpInterfaces": { "target": "project" },
+    "TestGrainInterfaces": { "target": "project" },
+    "TestGrains": { "target": "project" },
+    "TestInterfaces": { "target": "project" },
+    "TestInternalGrainInterfaces": { "target": "project" },
+    "TestInternalGrains": { "target": "project" },
+    "xunit": "2.2.0-beta2-build3300",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "MSTest.UnitTestFramework": "1.0.0-alpha7",
+    "FluentAssertions": "4.0.0",
+    "WindowsAzure.ServiceBus": "3.2.0",
+    "Xunit.SkippableFact": "1.2.14"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    },
+    "net451":{
+      "frameworkAssemblies": {
+        "System.Management": "4.0.0.0"
+      }
+    }
+  }
+}

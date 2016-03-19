@@ -1,0 +1,14 @@
+﻿{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "TestGrainInterfaces": { "target": "project" },
+    "FSharp.Compiler.Tools": "4.0.0.1",
+    "FSharp.Core": "4.0.0.1"
+  },
+
+  "frameworks": {
+     "netstandard1.6": {},
+     "net451":{ }
+  }
+}

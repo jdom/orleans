@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "OrleansAzureUtils": { "target": "project" },
+    "OrleansProviders": { "target": "project" },
+    "Newtonsoft.Json": "9.0.1",
+    "Microsoft.WindowsAzure.ConfigurationManager": "3.1.0",
+    "WindowsAzure.ServiceBus": "3.2.2"
+  },
+
+  "frameworks": {
+     "netstandard1.6": {},
+     "net451":{ }
+  }
+}

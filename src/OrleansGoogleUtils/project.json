@@ -1,0 +1,13 @@
+﻿{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "OrleansRuntime": { "target": "project" },
+    "Google.Protobuf": "3.0.0-alpha4"
+  },
+
+  "frameworks": {
+     "netstandard1.6": {},
+     "net451":{ }
+  }
+}

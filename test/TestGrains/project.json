@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "OrleansEventSourcing": { "target": "project" },
+    "OrleansProviders": { "target": "project" },
+    "OrleansSQLUtils": { "target": "project" },
+    "TestFSharpInterfaces": { "target": "project" },
+    "TestGrainInterfaces": { "target": "project" },
+    "TestInterfaces": { "target": "project" },
+    "Newtonsoft.Json": "9.0.1"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    },
+    "net451": { }
+  }
+}

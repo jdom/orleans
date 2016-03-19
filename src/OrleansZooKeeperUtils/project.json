@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Orleans": { "target": "project" },
+    "ZooKeeperNetEx": "3.4.8.1",
+    "Newtonsoft.Json": "9.0.1"
+  },
+
+  "frameworks": {
+     "netstandard1.6": {},
+     "net451":{ }
+  }
+}
