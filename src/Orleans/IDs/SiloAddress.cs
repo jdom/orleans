@@ -38,7 +38,7 @@ namespace Orleans.Runtime
 
         private static readonly Interner<SiloAddress, SiloAddress> siloAddressInterningCache;
 
-        private static readonly IPEndPoint localEndpoint = new IPEndPoint(ClusterConfiguration.GetLocalIPAddress(), 0); // non loopback local ip.
+        private static readonly Lazy<IPEndPoint> localEndpoint = new Lazy<IPEndPoint>(() => new IPEndPoint(ClusterConfiguration.GetLocalIPAddress(), 0)); // non loopback local ip.
 
         static SiloAddress()
         {
@@ -54,7 +54,7 @@ namespace Orleans.Runtime
         /// <returns>SiloAddress object initialized with the non-loopback local IP address and the specified silo generation.</returns>
         public static SiloAddress NewLocalAddress(int gen)
         {
-            return New(localEndpoint, gen);
+            return New(localEndpoint.Value, gen);
         }
 
         /// <summary>
