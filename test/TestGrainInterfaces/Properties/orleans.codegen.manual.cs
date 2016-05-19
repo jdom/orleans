@@ -1178,9 +1178,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBaseReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1276,9 +1278,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDerivedFromBaseReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1401,9 +1405,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBase1Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1499,9 +1505,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBase2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1597,9 +1605,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBase3Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1695,9 +1705,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBase4Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1793,9 +1805,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStringGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -1905,9 +1919,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGuidGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2003,9 +2019,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleActivateDeactivateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2110,9 +2128,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTailCallActivateDeactivateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2217,9 +2237,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenLongRunningActivateDeactivateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2324,9 +2346,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBadActivateDeactivateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2431,9 +2455,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBadConstructorTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2529,9 +2555,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTaskActionActivateDeactivateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2636,9 +2664,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCreateGrainReferenceTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2743,9 +2773,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDeactivatingWhileActivatingTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2841,9 +2873,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenChainedGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -2993,9 +3027,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenActivateDeactivateWatcherGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3127,9 +3163,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCatalogTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3248,9 +3286,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenClientAddressableTestConsumerReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3355,9 +3395,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCollectionTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3516,9 +3558,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenConcurrentGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3668,9 +3712,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenConcurrentReentrantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3784,9 +3830,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenConsumerEventCountingGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3900,9 +3948,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDeadlockNonReentrantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4007,9 +4057,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDeadlockReentrantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4114,9 +4166,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenEchoGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4230,9 +4284,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenEchoTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4409,9 +4465,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBlockingEchoTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4561,9 +4619,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantBlockingEchoTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4713,9 +4773,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenErrorGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5038,9 +5100,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenExceptionGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5208,9 +5272,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenExtensionTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5315,9 +5381,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericExtensionTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5444,9 +5512,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericGrainWithNonGenericExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5560,9 +5630,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenExternalTypeGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5667,9 +5739,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenFaultableConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5810,9 +5884,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenFSharpParametersGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5973,9 +6049,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6071,9 +6149,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratorTestDerivedFromFSharpInterfaceInExternalAssemblyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6169,9 +6249,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratorTestDerivedDerivedGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6402,9 +6484,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratorTestDerivedGrain1Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6579,9 +6663,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratorTestDerivedGrain2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6756,9 +6842,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratorTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6890,9 +6978,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMethodInterceptionGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7006,9 +7096,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7135,9 +7227,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGenericGrain1Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7303,9 +7397,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGenericGrainUsingAzureTableStorageReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7432,9 +7528,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTinyNameGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7561,9 +7659,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGenericGrainUReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7729,9 +7829,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGenericGrain2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -7897,9 +7999,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericGrainWithNoPropertiesReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8013,9 +8117,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainWithNoPropertiesReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8111,9 +8217,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainWithListFieldsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8218,9 +8326,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericGrainWithListFieldsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8347,9 +8457,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericReader1Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8463,9 +8575,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericWriter1Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8579,9 +8693,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericReaderWriterGrain1Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8744,9 +8860,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericReader2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -8873,9 +8991,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericWriter2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -9002,9 +9122,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericReaderWriterGrain2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -9201,9 +9323,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericReader3Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -9365,9 +9489,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericWriter3Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -9529,9 +9655,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericReaderWriterGrain3Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -9806,9 +9934,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBasicGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -9974,9 +10104,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenHubGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10090,9 +10222,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenEchoHubGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10250,9 +10384,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenEchoGenericChainGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10431,9 +10567,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonGenericBaseReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10529,9 +10667,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneric1ArgumentReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10645,9 +10785,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneric2ArgumentsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10761,9 +10903,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDbGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -10890,9 +11034,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericPingSelfReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11084,9 +11230,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenLongRunningTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11347,9 +11495,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericGrainWithConstraintsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11503,9 +11653,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonGenericCastableGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11601,9 +11753,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericCastableGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11704,9 +11858,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainSayingHelloReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11802,9 +11958,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSomeGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -11936,9 +12094,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonGenericCastGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12052,9 +12212,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenIndependentlyConcretizedGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12186,9 +12348,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenIndependentlyConcretizedGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12338,9 +12502,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenInitialStateGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12445,9 +12611,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenKeyExtensionTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12552,9 +12720,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMultifacetReaderReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12650,9 +12820,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMultifacetWriterReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12748,9 +12920,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenJsonEchoGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12855,9 +13029,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMultipleImplicitSubscriptionGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -12953,9 +13129,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMultipleSubscriptionConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -13105,9 +13283,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistenceTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -13257,9 +13437,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistenceTestGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -13493,9 +13675,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMemoryStorageTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -13618,9 +13802,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAzureStorageTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -13743,9 +13929,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAzureStorageGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -13898,9 +14086,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAzureStorageTestGrain_GuidExtendedKeyReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14032,9 +14222,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAzureStorageTestGrain_LongKeyReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14157,9 +14349,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAzureStorageTestGrain_LongExtendedKeyReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14291,9 +14485,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistenceErrorGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14425,9 +14621,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistenceProviderErrorGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14541,9 +14739,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistenceUserHandledErrorGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14657,9 +14857,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBadProviderTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14755,9 +14957,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistenceNoStateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -14853,9 +15057,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenUserReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15005,9 +15211,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrentGrainWithStateReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15148,9 +15356,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonReentrentStressGrainWithoutStateReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15255,9 +15465,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenInternalGrainWithStateReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15353,9 +15565,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStateInheritanceTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15460,9 +15674,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSerializationTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15585,9 +15801,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPlacementTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -15782,9 +16000,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenActivationCountBasedPlacementTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -16041,9 +16261,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenRandomPlacementTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -16300,9 +16522,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPreferLocalPlacementTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -16559,9 +16783,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenLocalPlacementTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -16818,9 +17044,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenLocalContentGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -16925,9 +17153,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTestContentGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -17032,9 +17262,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPolymorphicTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -17559,9 +17791,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenProducerEventCountingGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -17675,9 +17909,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPromiseForwardGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -17948,9 +18184,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenProxyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18064,9 +18302,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18180,9 +18420,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonReentrantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18296,9 +18538,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenUnorderedNonReentrantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18412,9 +18656,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantSelfManagedGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18528,9 +18774,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonReentrantSelfManagedGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18644,9 +18892,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18760,9 +19010,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenNonReentrantTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -18876,9 +19128,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenFanOutGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19001,9 +19255,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenFanOutACGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19126,9 +19382,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantTestSupportGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19224,9 +19482,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantStressTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19394,9 +19654,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReentrantLocalStressTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19555,9 +19817,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReminderTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19653,9 +19917,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReminderTestGrain2Reference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19814,9 +20080,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReminderTestCopyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -19939,9 +20207,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReminderGrainWrongReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20037,9 +20307,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenRequestContextTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20171,9 +20443,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenRequestContextTaskGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20332,9 +20606,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenRequestContextProxyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20430,9 +20706,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSampleStreaming_ProducerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20573,9 +20851,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSampleStreaming_ConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20689,9 +20969,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSampleStreaming_InlineConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -20831,9 +21113,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSerializationGeneratorTaskTestReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21067,9 +21351,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSerializationGeneratorPromiseTestReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21303,9 +21589,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleDIGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21401,9 +21689,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGenericGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21556,9 +21846,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSomeGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21691,9 +21983,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSomeGrainWithInvocationOptionsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21789,9 +22083,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSerializationGenerationGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -21941,9 +22237,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGrainAsyncReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22084,9 +22382,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGrainWithAsyncMethodsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22283,9 +22583,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStatelessWorkerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22390,9 +22692,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleObserverableGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22591,9 +22895,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGrainObserverReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22690,9 +22996,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenObserverGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22798,9 +23106,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -22941,9 +23251,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimplePersistentGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -23158,9 +23470,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenLivenessTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -23301,9 +23615,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreaming_ConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -23435,9 +23751,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistentStreaming_ProducerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -23681,9 +23999,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistentStreaming_ConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -23849,9 +24169,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreaming_ProducerConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -24174,9 +24496,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreaming_Reentrant_ProducerConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -24499,9 +24823,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreaming_ImplicitlySubscribedConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -24667,9 +24993,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreaming_ImplicitlySubscribedGenericConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -24869,9 +25197,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamingImmutabilityTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -25012,9 +25342,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamLifecycleConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -25164,9 +25496,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenFilteredStreamConsumerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -25376,9 +25710,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamLifecycleProducerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -25528,9 +25864,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamLifecycleProducerInternalGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -25740,9 +26078,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamLifecycleConsumerInternalGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -25943,9 +26283,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamReliabilityTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -26176,9 +26518,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamUnsubscribeTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -26283,9 +26627,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTestExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -26422,9 +26768,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGenericTestExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -26594,9 +26942,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSimpleExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -26722,9 +27072,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -26910,9 +27262,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGuidTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -27044,9 +27398,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreaming_ProducerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -27232,9 +27588,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTimerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -27384,9 +27742,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTimerPersistantGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -27578,9 +27938,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTimerCallGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -27703,9 +28065,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenValueTypeTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -27819,9 +28183,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenEnumResultGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -28284,9 +28650,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenConsiderForCodeGenerationGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -28422,9 +28790,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -28538,9 +28908,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -28654,9 +29026,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -28876,9 +29250,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -29175,9 +29551,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenEReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -29291,9 +29669,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenFReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -29732,9 +30112,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -29830,9 +30212,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenHReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -29946,9 +30330,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenServiceTypeReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -30500,9 +30886,11 @@ namespace UnitTests.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDerivedServiceTypeReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31221,9 +31609,11 @@ namespace Orleans.SqlUtils.StorageProvider.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCustomerGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31346,9 +31736,11 @@ namespace Orleans.SqlUtils.StorageProvider.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDeviceGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31460,9 +31852,11 @@ namespace Orleans.UnitTest.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPrivateReturnTypeReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31558,9 +31952,11 @@ namespace Orleans.UnitTest.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSubDictionaryReturnTypeReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31656,9 +32052,11 @@ namespace Orleans.UnitTest.GrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenInternalReturnTypeReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31761,9 +32159,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCircularStateTestGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31859,9 +32259,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenJournaledPersonGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -31975,9 +32377,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratedEventCollectorGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -32064,9 +32468,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGeneratedEventReporterGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -32189,9 +32595,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDoSomethingWithMoreGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -32350,9 +32758,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDoSomethingEmptyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -32475,9 +32885,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDoSomethingEmptyWithMoreGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -32639,9 +33051,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDoSomethingWithMoreEmptyGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -32837,9 +33251,11 @@ namespace TestGrainInterfaces
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDoSomethingCombinedGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -33185,9 +33601,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenBasicGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -33292,9 +33710,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainWithTwoGenArgsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -33443,9 +33863,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainWithThreeGenArgsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -33594,9 +34016,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainReceivingRepeatedGenArgsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -33745,9 +34169,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPartiallySpecifyingInterfaceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -33918,9 +34344,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReceivingRepeatedGenArgsAmongstOthersReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -34069,9 +34497,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReceivingRepeatedGenArgsFromOtherInterfaceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -34220,9 +34650,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSpecifyingGenArgsRepeatedlyToParentInterfaceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -34393,9 +34825,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReceivingRearrangedGenArgsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -34544,9 +34978,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReceivingRearrangedGenArgsViaCastReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -34695,9 +35131,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSpecifyingRearrangedGenArgsToParentInterfaceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -34868,9 +35306,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenArbitraryInterfaceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -35019,9 +35459,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenInterfaceUnrelatedToConcreteGenArgsReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -35170,9 +35612,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenInterfaceTakingFurtherSpecializedGenArgReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -35321,9 +35765,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenAnotherReceivingFurtherSpecializedGenArgReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -35472,9 +35918,11 @@ namespace UnitTests.GrainInterfaces.Generic.EdgeCases
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenYetOneMoreReceivingFurtherSpecializedGenArgReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
