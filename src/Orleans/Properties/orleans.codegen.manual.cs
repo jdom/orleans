@@ -3241,9 +3241,11 @@ namespace Orleans
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMembershipTableGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3393,9 +3395,11 @@ namespace Orleans
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReminderTableGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3587,9 +3591,11 @@ namespace Orleans
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenReminderServiceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3730,9 +3736,11 @@ namespace Orleans
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenSiloControlReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -3963,9 +3971,11 @@ namespace Orleans
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenRemindableReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4061,9 +4071,11 @@ namespace Orleans
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenGrainWithStringKeyReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4157,9 +4169,11 @@ namespace Orleans.Streams
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamQueueBalanceListenerReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4255,9 +4269,11 @@ namespace Orleans.Streams
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistentStreamPullingAgentReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4449,9 +4465,11 @@ namespace Orleans.Streams
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPersistentStreamPullingManagerReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4583,9 +4601,11 @@ namespace Orleans.Streams
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamConsumerExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4766,9 +4786,11 @@ namespace Orleans.Streams
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenStreamProducerExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -4905,9 +4927,11 @@ namespace Orleans.Streams
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenPubSubRendezvousGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5091,9 +5115,11 @@ namespace Orleans.Storage
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMemoryStorageGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5214,9 +5240,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMultiClusterGossipServiceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5330,9 +5358,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCancellationSourcesExtensionReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5458,9 +5488,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenTypeManagerReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5565,9 +5597,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenCatalogReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5663,9 +5697,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenManagementGrainReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -5950,9 +5986,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenMembershipServiceReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6057,9 +6095,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenRemoteGrainDirectoryReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6227,9 +6267,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenDeploymentLoadPublisherReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
@@ -6325,9 +6367,11 @@ namespace Orleans.Runtime
         {
         }
 
+#if !NETSTANDARD1_6
         protected @OrleansCodeGenClientObserverRegistrarReference(global::System.Runtime.Serialization.SerializationInfo @info, global::System.Runtime.Serialization.StreamingContext @context): base (@info, @context)
         {
         }
+#endif
 
         protected override global::System.Int32 InterfaceId
         {
