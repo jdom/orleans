@@ -170,7 +170,7 @@ namespace Orleans.Serialization
             RegisterBuiltInSerializers();
             UseStandardSerializer = useStandardSerializer;
 
-#if DNXCORE50
+#if NETSTANDARD1_6
             if (!useJsonFallbackSerializer)
             {
                 logger.Warn(ErrorCode.SerMgr_UnavailableSerializer,
@@ -229,7 +229,9 @@ namespace Orleans.Serialization
                 IsBuiltInSerializersRegistered = true;
             }
 
+#if !NETSTANDARD1_6
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveEventHandler;
+#endif
             registeredTypes = new HashSet<Type>();
             externalSerializers = new List<IExternalSerializer>();
             typeToExternalSerializerDictionary = new ConcurrentDictionary<Type, IExternalSerializer>();
@@ -1997,7 +1999,7 @@ namespace Orleans.Serialization
             }
             else
             {
-#if DNXCORE50
+#if NETSTANDARD1_6
                 throw new OrleansException("Can't use binary formatter as fallback serializer while running on .Net Core");
 #else
                 serializer = new BinaryFormatterSerializer();
@@ -2008,6 +2010,7 @@ namespace Orleans.Serialization
             return serializer;
         }
 
+#if !NETSTANDARD1_6
         private static Assembly OnResolveEventHandler(Object sender, ResolveEventArgs arg)
         {
             // types defined in assemblies loaded by path name (e.g. Assembly.LoadFrom) aren't resolved during deserialization without some help.
@@ -2018,6 +2021,7 @@ namespace Orleans.Serialization
 
             return null;
         }
+#endif
 
         private static object FallbackSerializationDeepCopy(object obj)
         {

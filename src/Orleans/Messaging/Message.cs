@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Orleans.CodeGeneration;
@@ -549,7 +550,12 @@ namespace Orleans.Runtime
             response.RejectionType = type;
             response.RejectionInfo = info;
             response.BodyObject = ex;
-            if (logger.IsVerbose) logger.Verbose("Creating {0} rejection with info '{1}' for {2} at:" + Environment.NewLine + "{3}", type, info, this, new System.Diagnostics.StackTrace(true));
+            if (logger.IsVerbose)
+#if NETSTANDARD1_6
+                logger.Verbose("Creating {0} rejection with info '{1}' for {2}", type, info, this);
+#else
+                logger.Verbose("Creating {0} rejection with info '{1}' for {2} at:" + Environment.NewLine + "{3}", type, info, this, new System.Diagnostics.StackTrace(true));
+#endif
             return response;
         }
 
@@ -662,7 +668,7 @@ namespace Orleans.Runtime
             return Equals(SendingSilo, other.SendingSilo) && Equals(Id, other.Id);
         }
 
-        #region Serialization
+#region Serialization
 
         public List<ArraySegment<byte>> Serialize(out int headerLength)
         {
@@ -739,7 +745,7 @@ namespace Orleans.Runtime
             bodyBytes = null;
         }
 
-        #endregion
+#endregion
 
         // For testing and logging/tracing
         public string ToLongString()

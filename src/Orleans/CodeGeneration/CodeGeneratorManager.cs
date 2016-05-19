@@ -61,6 +61,7 @@ namespace Orleans.CodeGeneration
             }
         }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Ensures code for all currently loaded assemblies has been generated and loaded.
         /// </summary>
@@ -71,6 +72,7 @@ namespace Orleans.CodeGeneration
                 CodeGeneratorInstance.GenerateAndLoadForAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             }
         }
+#endif
 
         /// <summary>
         /// Returns the collection of generated assemblies as pairs of target assembly name to raw assembly bytes.

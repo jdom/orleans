@@ -24,8 +24,20 @@
         "System.Reflection.Emit.Lightweight": "4.0.1",
         "System.Diagnostics.FileVersionInfo": "4.0.0",
         "System.Threading.ThreadPool": "4.0.10"
+      },
+      "buildOptions": {
+        "compile": {
+          "exclude": [ "AssemblyLoader/*.cs" ],
+          "includeFiles": [ "AssemblyLoader/AssemblyProcessor.cs" ],
+          "excludeFiles": [
+            "Core/GrainClient.cs",
+            "Runtime/OutsideRuntimeClient.cs",
+            "Serialization/BinaryFormatterSerializer.cs",
+            "Statistics/RuntimeStatisticsGroup.cs",
+            "Statistics/ClientTableStatistics.cs",
+            "Statistics/ClientStatisticsManager.cs" ]
+        }
       }
-
     },
     "net451": {
       "frameworkAssemblies": {

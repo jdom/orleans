@@ -59,8 +59,16 @@ namespace Orleans.Runtime
                 }
 
                 // load the code generator before intercepting assembly loading
-                CodeGeneratorManager.Initialize(); 
+                CodeGeneratorManager.Initialize();
 
+#if NETSTANDARD1_6
+                Assembly[] assemblies = new[] 
+                {
+                    typeof(Exception).GetTypeInfo().Assembly,
+                    typeof(AssemblyProcessor).GetTypeInfo().Assembly,
+                };
+
+#else
                 // initialize serialization for all assemblies to be loaded.
                 AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
 
@@ -68,6 +76,7 @@ namespace Orleans.Runtime
 
                 // initialize serialization for already loaded assemblies.
                 CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
+#endif
                 foreach (var assembly in assemblies)
                 {
                     ProcessAssembly(assembly);
@@ -76,7 +85,8 @@ namespace Orleans.Runtime
                 initialized = true;
             }
         }
-
+        
+#if !NETSTANDARD1_6
         /// <summary>
         /// Handles <see cref="AppDomain.AssemblyLoad"/> events.
         /// </summary>
@@ -86,23 +96,27 @@ namespace Orleans.Runtime
         {
             ProcessAssembly(args.LoadedAssembly);
         }
+#endif
 
         /// <summary>
         /// Processes the provided assembly.
         /// </summary>
         /// <param name="assembly">The assembly to process.</param>
-        private static void ProcessAssembly(Assembly assembly)
+        public static void ProcessAssembly(Assembly assembly)
         {
             string assemblyName = assembly.GetName().Name;
             if (Logger.IsVerbose3)
             {
                 Logger.Verbose3("Processing assembly {0}", assemblyName);
             }
+
+#if !NETSTANDARD1_6
             // If the assembly is loaded for reflection only avoid processing it.
             if (assembly.ReflectionOnly)
             {
                 return;
             }
+#endif
 
             // Don't bother re-processing an assembly we've already scanned
             lock (ProcessedAssemblies)

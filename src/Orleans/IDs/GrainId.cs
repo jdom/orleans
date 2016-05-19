@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using Orleans.Core;
 using Orleans.Serialization;
@@ -110,7 +109,6 @@ namespace Orleans.Runtime
             return Key.PrimaryKeyToLong(out keyExt);
         }
 
-        [Pure]
         internal long GetPrimaryKeyLong()
         {
             return Key.PrimaryKeyToLong();

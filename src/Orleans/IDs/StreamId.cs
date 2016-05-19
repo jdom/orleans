@@ -11,7 +11,10 @@ namespace Orleans.Streams
     /// </summary>
     [Serializable]
     [Immutable]
-    internal class StreamId : IStreamIdentity, IRingIdentifier<StreamId>, IEquatable<StreamId>, IComparable<StreamId>, ISerializable
+    internal class StreamId : IStreamIdentity, IRingIdentifier<StreamId>, IEquatable<StreamId>, IComparable<StreamId>
+#if !NETSTANDARD1_6
+        , ISerializable
+#endif
     {
         [NonSerialized]
         private static readonly Lazy<Interner<StreamIdInternerKey, StreamId>> streamIdInternCache = new Lazy<Interner<StreamIdInternerKey, StreamId>>(
@@ -45,23 +48,23 @@ namespace Orleans.Streams
             return streamIdInternCache.Value.FindOrCreate(key, () => new StreamId(key));
         }
 
-        #region IComparable<StreamId> Members
+#region IComparable<StreamId> Members
 
         public int CompareTo(StreamId other)
         {
             return key.CompareTo(other.key);
         }
 
-        #endregion
+#endregion
 
-        #region IEquatable<StreamId> Members
+#region IEquatable<StreamId> Members
 
         public bool Equals(StreamId other)
         {
             return other != null && key.Equals(other.key);
         }
 
-        #endregion
+#endregion
 
         public override bool Equals(object obj)
         {
@@ -108,6 +111,7 @@ namespace Orleans.Streams
         }
 
         #region ISerializable Members
+#if !NETSTANDARD1_6
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -126,6 +130,7 @@ namespace Orleans.Streams
             var nameSpace = (string) info.GetValue("Namespace", typeof(string));
             key = new StreamIdInternerKey(guid, providerName, nameSpace);
         }
+#endif
         #endregion
     }
 
@@ -166,8 +171,8 @@ namespace Orleans.Streams
             int cmp1 = Guid.CompareTo(other.Guid);
             if (cmp1 == 0)
             {
-                int cmp2 = string.Compare(ProviderName, other.ProviderName, StringComparison.InvariantCulture);
-                return cmp2 == 0 ? string.Compare(Namespace, other.Namespace, StringComparison.InvariantCulture) : cmp2;
+                int cmp2 = string.Compare(ProviderName, other.ProviderName, StringComparison.Ordinal);
+                return cmp2 == 0 ? string.Compare(Namespace, other.Namespace, StringComparison.Ordinal) : cmp2;
             }
             
             return cmp1;

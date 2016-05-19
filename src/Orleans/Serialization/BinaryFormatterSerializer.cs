@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Orleans.Runtime;
 
-#if !DNXCORE50
+#if !NETSTANDARD1_6
 namespace Orleans.Serialization
 {
     public class BinaryFormatterSerializer : IExternalSerializer

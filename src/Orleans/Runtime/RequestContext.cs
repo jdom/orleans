@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 ﻿using System.Linq;
-﻿using System.Runtime.Remoting.Messaging;
-﻿using Orleans.Serialization;
-
+#if !NETSTANDARD1_6
+using System.Runtime.Remoting.Messaging;
+#endif
+using Orleans.Serialization;
+// TODO: fix or remove support entirely
 
 namespace Orleans.Runtime
 {
@@ -108,7 +110,9 @@ namespace Orleans.Runtime
                 {
                     activityIdObj = Guid.Empty;
                 }
+#if !NETSTANDARD1_6
                 Trace.CorrelationManager.ActivityId = (Guid) activityIdObj;
+#endif
             }
             if (contextData != null && contextData.Count > 0)
             {
@@ -128,6 +132,7 @@ namespace Orleans.Runtime
         {
             Dictionary<string, object> values = GetContextData();
 
+#if !NETSTANDARD1_6
             if (PropagateActivityId)
             {
                 Guid activityId = Trace.CorrelationManager.ActivityId;
@@ -139,6 +144,7 @@ namespace Orleans.Runtime
                     SetContextData(values);
                 }
             }
+#endif
             if (values != null && values.Count != 0)
                 return values.ToDictionary(kvp => kvp.Key, kvp => SerializationManager.DeepCopy(kvp.Value));
             return null;
@@ -147,17 +153,25 @@ namespace Orleans.Runtime
         public static void Clear()
         {
             // Remove the key to prevent passing of its value from this point on
+#if !NETSTANDARD1_6
             CallContext.FreeNamedDataSlot(ORLEANS_REQUEST_CONTEXT_KEY);
+#endif
         }
 
         private static void SetContextData(Dictionary<string, object> values)
         {
+#if !NETSTANDARD1_6
             CallContext.LogicalSetData(ORLEANS_REQUEST_CONTEXT_KEY, values);
+#endif
         }
 
         private static Dictionary<string, object> GetContextData()
         {
+#if !NETSTANDARD1_6
             return (Dictionary<string, object>) CallContext.LogicalGetData(ORLEANS_REQUEST_CONTEXT_KEY);
+#else
+            return null;
+#endif
         }
     }
 }
