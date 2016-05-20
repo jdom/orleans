@@ -390,11 +390,13 @@ namespace Orleans.Runtime
         {
             var grainType = typeof(Grain);
             var grainChevronType = typeof(Grain<>);
+#if !NETSTANDARD1_6
             if (type.Assembly.ReflectionOnly)
             {
                 grainType = ToReflectionOnlyType(grainType);
                 grainChevronType = ToReflectionOnlyType(grainChevronType);
             }
+#endif
 
             if (grainType == type || grainChevronType == type) return false;
 
@@ -404,6 +406,7 @@ namespace Orleans.Runtime
             return !IsGeneratedType(type);
         }
 
+#if !NETSTANDARD1_6
         public static bool IsSystemTargetClass(Type type)
         {
             Type systemTargetType;
@@ -425,6 +428,7 @@ namespace Orleans.Runtime
             // exclude generated classes.
             return !IsGeneratedType(type);
         }
+#endif
 
         public static bool IsConcreteGrainClass(Type type, out IEnumerable<string> complaints, bool complain)
         {
@@ -514,13 +518,21 @@ namespace Orleans.Runtime
         public static bool IsGrainMethodInvokerType(Type type)
         {
             var generalType = typeof(IGrainMethodInvoker);
+#if !NETSTANDARD1_6
             if (type.Assembly.ReflectionOnly)
             {
                 generalType = ToReflectionOnlyType(generalType);
             }
+#endif
             return generalType.IsAssignableFrom(type) && TypeHasAttribute(type, typeof(MethodInvokerAttribute));
         }
 
+#if NETSTANDARD1_6
+        public static Type ResolveType(string fullName)
+        {
+            return Type.GetType(fullName);
+        }
+#else
         public static Type ResolveType(string fullName)
         {
             return CachedTypeResolver.Instance.ResolveType(fullName);
@@ -540,6 +552,7 @@ namespace Orleans.Runtime
         {
             return type.Assembly.ReflectionOnly ? type : ResolveReflectionOnlyType(type.AssemblyQualifiedName);
         }
+#endif
 
         public static IEnumerable<Type> GetTypes(Assembly assembly, Predicate<Type> whereFunc, Logger logger)
         {
@@ -568,6 +581,7 @@ namespace Orleans.Runtime
             }
         }
 
+#if !NETSTANDARD1_6
         public static IEnumerable<Type> GetTypes(Predicate<Type> whereFunc, Logger logger)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -593,6 +607,7 @@ namespace Orleans.Runtime
             }
             return result;
         }
+#endif
 
         /// <summary>
         /// Returns a value indicating whether or not the provided <paramref name="methodInfo"/> is a grain method.
@@ -614,6 +629,7 @@ namespace Orleans.Runtime
 
         public static bool TypeHasAttribute(Type type, Type attribType)
         {
+#if !NETSTANDARD1_6
             if (type.Assembly.ReflectionOnly || attribType.Assembly.ReflectionOnly)
             {
                 type = ToReflectionOnlyType(type);
@@ -623,6 +639,7 @@ namespace Orleans.Runtime
                 return CustomAttributeData.GetCustomAttributes(type).Any(
                         attrib => attribType.IsAssignableFrom(attrib.AttributeType));
             }
+#endif
 
             return TypeHasAttribute(type.GetTypeInfo(), attribType);
         }
