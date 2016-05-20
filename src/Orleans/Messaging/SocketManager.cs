@@ -194,6 +194,7 @@ namespace Orleans.Runtime
                 // Ignore
             }
 
+#if !NETSTANDARD1_6
             try
             {
                 s.Disconnect(false);
@@ -202,6 +203,7 @@ namespace Orleans.Runtime
             {
                 // Ignore
             }
+#endif
             try
             {
                 s.Dispose();
