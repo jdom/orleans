@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 
 using Orleans.Runtime;
@@ -176,7 +177,7 @@ namespace Orleans
                     // Decide whether the old object or the new one has the most specific / derived type
                     Type tNew = obj.GetType();
                     Type tOld = obj2.GetType();
-                    if (tNew != tOld && tOld.IsAssignableFrom(tNew))
+                    if (tNew != tOld && tOld.GetTypeInfo().IsAssignableFrom(tNew.GetTypeInfo()))
                     {
                         // Keep and use the more specific type
                         cacheEntry.Target = obj;

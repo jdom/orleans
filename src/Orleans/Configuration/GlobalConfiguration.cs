@@ -951,10 +951,10 @@ namespace Orleans.Runtime.Configuration
         /// <param name="properties">Properties that will be passed to bootstrap provider upon initialization</param>
         public void RegisterBootstrapProvider<T>(string providerName, IDictionary<string, string> properties = null) where T : IBootstrapProvider
         {
-            Type providerTypeInfo = typeof(T).GetTypeInfo();
+            TypeInfo providerTypeInfo = typeof(T).GetTypeInfo();
             if (providerTypeInfo.IsAbstract ||
                 providerTypeInfo.IsGenericType ||
-                !typeof(IBootstrapProvider).IsAssignableFrom(providerTypeInfo))
+                !typeof(IBootstrapProvider).GetTypeInfo().IsAssignableFrom(providerTypeInfo))
                 throw new ArgumentException("Expected non-generic, non-abstract type which implements IBootstrapProvider interface", "typeof(T)");
 
             ProviderConfigurationUtility.RegisterProvider(ProviderConfigurations, ProviderCategoryConfiguration.BOOTSTRAP_PROVIDER_CATEGORY_NAME, providerTypeInfo.FullName, providerName, properties);
@@ -1009,10 +1009,10 @@ namespace Orleans.Runtime.Configuration
         /// <param name="properties">Properties that will be passed to storage provider upon initialization</param>
         public void RegisterStorageProvider<T>(string providerName, IDictionary<string, string> properties = null) where T : IStorageProvider
         {
-            Type providerTypeInfo = typeof(T).GetTypeInfo();
+            TypeInfo providerTypeInfo = typeof(T).GetTypeInfo();
             if (providerTypeInfo.IsAbstract ||
                 providerTypeInfo.IsGenericType ||
-                !typeof(IStorageProvider).IsAssignableFrom(providerTypeInfo))
+                !typeof(IStorageProvider).GetTypeInfo().IsAssignableFrom(providerTypeInfo))
                 throw new ArgumentException("Expected non-generic, non-abstract type which implements IStorageProvider interface", "typeof(T)");
 
             ProviderConfigurationUtility.RegisterProvider(ProviderConfigurations, ProviderCategoryConfiguration.STORAGE_PROVIDER_CATEGORY_NAME, providerTypeInfo.FullName, providerName, properties);

@@ -76,11 +76,14 @@ namespace Orleans.Runtime
 
         private static bool IsAssemblyDebugBuild(Assembly assembly)
         {
-            foreach (var attribute in assembly.GetCustomAttributes(false))
+            foreach (var debuggableAttribute in assembly.GetCustomAttributes<DebuggableAttribute>())
             {
-                var debuggableAttribute = attribute as DebuggableAttribute;
+#if NETSTANDARD1_5
+                return true;
+#else
                 if (debuggableAttribute != null)
                     return debuggableAttribute.IsJITTrackingEnabled;
+#endif
             }
             return false;
         }

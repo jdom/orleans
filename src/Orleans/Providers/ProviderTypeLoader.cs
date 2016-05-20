@@ -46,6 +46,8 @@ namespace Orleans.Providers
 
         private void ProcessLoadedAssemblies()
         {
+#if !NETSTANDARD1_5
+            // TODO: find a workaround
             lock (managers)
             {
                 // Walk through already-loaded assemblies. 
@@ -56,11 +58,12 @@ namespace Orleans.Providers
                     ProcessAssemblyLocally(assembly);
                 }
             }
+#endif
         }
 
-        private void ProcessType(Type type)
+        private void ProcessType(TypeInfo typeInfo)
         {
-            var typeInfo = type.GetTypeInfo();
+            var type = typeInfo.AsType();
             if (alreadyProcessed.Contains(type) || typeInfo.IsInterface || typeInfo.IsAbstract || !condition(type)) return;
 
             alreadyProcessed.Add(type);
