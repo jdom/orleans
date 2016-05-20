@@ -70,7 +70,10 @@ namespace Orleans.Runtime
                         return;
                     }
                     _logOutput.Flush();
+#if !NETSTANDARD1_6
                     _logOutput.Close();
+#endif
+                    _logOutput.Dispose();
                 }
             }
             catch (Exception exc)
