@@ -47,6 +47,8 @@ namespace Orleans.Providers
 
         private void ProcessLoadedAssemblies()
         {
+#if !NETSTANDARD_TODO
+            // TODO: find a workaround
             lock (managers)
             {
                 // Walk through already-loaded assemblies. 
@@ -57,6 +59,7 @@ namespace Orleans.Providers
                     ProcessAssemblyLocally(assembly);
                 }
             }
+#endif
         }
 
         private void ProcessType(TypeInfo typeInfo)
