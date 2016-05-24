@@ -36,12 +36,12 @@ namespace Orleans.Runtime
             return typeInfo.Name;
         }
 
-        public static string GetSimpleTypeName(Type t, Func<Type, bool> fullName = null, Language language = Language.CSharp)
+        public static string GetSimpleTypeName(Type t, Predicate<Type> fullName = null, Language language = Language.CSharp)
         {
             return GetSimpleTypeName(t.GetTypeInfo(), PredicateConverterFromTypeToTypeInfo(fullName), language);
         }
 
-        public static string GetSimpleTypeName(TypeInfo typeInfo, Func<TypeInfo, bool> fullName = null, Language language = Language.CSharp)
+        public static string GetSimpleTypeName(TypeInfo typeInfo, Predicate<TypeInfo> fullName = null, Language language = Language.CSharp)
         {
             if (typeInfo.IsNestedPublic || typeInfo.IsNestedPrivate)
             {
@@ -104,12 +104,12 @@ namespace Orleans.Runtime
             return t.IsArray && IsConcreteTemplateType(t.GetElementType());
         }
 
-        public static string GetTemplatedName(Type t, Func<Type, bool> fullName = null, Language language = Language.CSharp)
+        public static string GetTemplatedName(Type t, Predicate<Type> fullName = null, Language language = Language.CSharp)
         {
             return GetTemplatedName(t.GetTypeInfo(), PredicateConverterFromTypeToTypeInfo(fullName), language);
         }
 
-        public static string GetTemplatedName(TypeInfo typeInfo, Func<TypeInfo, bool> fullName = null, Language language = Language.CSharp)
+        public static string GetTemplatedName(TypeInfo typeInfo, Predicate<TypeInfo> fullName = null, Language language = Language.CSharp)
         {
             if (fullName == null)
                 fullName = _ => true; // default to full type names
@@ -147,12 +147,12 @@ namespace Orleans.Runtime
         }
 
 
-        public static string GetTemplatedName(string baseName, Type t, Type[] genericArguments, Func<Type, bool> fullName, Language language = Language.CSharp)
+        public static string GetTemplatedName(string baseName, Type t, Type[] genericArguments, Predicate<Type> fullName, Language language = Language.CSharp)
         {
             return GetTemplatedName(baseName, t.GetTypeInfo(), genericArguments.GetTypeInfos(), PredicateConverterFromTypeToTypeInfo(fullName), language);
         }
 
-        public static string GetTemplatedName(string baseName, TypeInfo typeInfo, IEnumerable<TypeInfo> genericArguments, Func<TypeInfo, bool> fullName, Language language = Language.CSharp)
+        public static string GetTemplatedName(string baseName, TypeInfo typeInfo, IEnumerable<TypeInfo> genericArguments, Predicate<TypeInfo> fullName, Language language = Language.CSharp)
         {
             if (!typeInfo.IsGenericType || (typeInfo.DeclaringType != null && typeInfo.DeclaringType.GetTypeInfo().IsGenericType)) return baseName;
             bool isVB = language == Language.VisualBasic;
@@ -163,7 +163,7 @@ namespace Orleans.Runtime
             return s;
         }
 
-        public static string GetGenericTypeArgs(Type[] args, Func<Type, bool> fullName, Language language = Language.CSharp)
+        public static string GetGenericTypeArgs(Type[] args, Predicate<Type> fullName, Language language = Language.CSharp)
         {
             string s = string.Empty;
 
@@ -188,7 +188,7 @@ namespace Orleans.Runtime
             return s;
         }
 
-        public static string GetGenericTypeArgs(IEnumerable<TypeInfo> args, Func<TypeInfo, bool> fullName, Language language = Language.CSharp)
+        public static string GetGenericTypeArgs(IEnumerable<TypeInfo> args, Predicate<TypeInfo> fullName, Language language = Language.CSharp)
         {
             string s = string.Empty;
 
@@ -213,7 +213,7 @@ namespace Orleans.Runtime
             return s;
         }
 
-        public static string GetParameterizedTemplateName(Type t, bool applyRecursively = false, Func<Type, bool> fullName = null, Language language = Language.CSharp)
+        public static string GetParameterizedTemplateName(Type t, bool applyRecursively = false, Predicate<Type> fullName = null, Language language = Language.CSharp)
         {
             if (fullName == null)
                 fullName = tt => true;
@@ -221,7 +221,7 @@ namespace Orleans.Runtime
             return GetParameterizedTemplateName(t, fullName, applyRecursively, language);
         }
 
-        public static string GetParameterizedTemplateName(Type t, Func<Type, bool> fullName, bool applyRecursively = false, Language language = Language.CSharp)
+        public static string GetParameterizedTemplateName(Type t, Predicate<Type> fullName, bool applyRecursively = false, Language language = Language.CSharp)
         {
             if (t.GetTypeInfo().IsGenericType)
             {
@@ -237,7 +237,7 @@ namespace Orleans.Runtime
             return t.Name;
         }
 
-        public static string GetParameterizedTemplateName(string baseName, Type t, bool applyRecursively = false, Func<Type, bool> fullName = null, Language language = Language.CSharp)
+        public static string GetParameterizedTemplateName(string baseName, Type t, bool applyRecursively = false, Predicate<Type> fullName = null, Language language = Language.CSharp)
         {
             if (fullName == null)
                 fullName = tt => false;
@@ -592,7 +592,7 @@ namespace Orleans.Runtime
         }
 #endif
 
-        public static IEnumerable<Type> GetTypes(Assembly assembly, Func<Type, bool> whereFunc, Logger logger)
+        public static IEnumerable<Type> GetTypes(Assembly assembly, Predicate<Type> whereFunc, Logger logger)
         {
             return assembly.IsDynamic ? Enumerable.Empty<Type>() : GetDefinedTypes(assembly, logger).Select(t => t.AsType()).Where(type => !type.GetTypeInfo().IsNestedPrivate && whereFunc(type));
         }
@@ -620,7 +620,7 @@ namespace Orleans.Runtime
         }
 
 #if !NETSTANDARD1_5
-        public static IEnumerable<Type> GetTypes(Func<Type, bool> whereFunc, Logger logger)
+        public static IEnumerable<Type> GetTypes(Predicate<Type> whereFunc, Logger logger)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var result = new List<Type>();
@@ -633,7 +633,7 @@ namespace Orleans.Runtime
             return result;
         }
 
-        public static IEnumerable<Type> GetTypes(List<string> assemblies, Func<Type, bool> whereFunc, Logger logger)
+        public static IEnumerable<Type> GetTypes(List<string> assemblies, Predicate<Type> whereFunc, Logger logger)
         {
             var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             var result = new List<Type>();
@@ -1336,10 +1336,16 @@ namespace Orleans.Runtime
             }
         }
 
-        private static Func<TypeInfo, bool> PredicateConverterFromTypeToTypeInfo(Func<Type, bool> fullNameFunc)
+        private static Predicate<TypeInfo> PredicateConverterFromTypeToTypeInfo(Predicate<Type> fullNameFunc)
         {
+#if NETSTANDARD1_5
             if (fullNameFunc == null) return null;
             return ti => fullNameFunc(ti.AsType());
+#else
+            // this is just an optimization to avoid more lambdas, but since TypeInfo inherits from Type in .NET 4.5.1, 
+            // there's no need to do this conversion, as Predicate is contravariant
+            return fullNameFunc;
+#endif
         }
     }
 }
