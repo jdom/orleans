@@ -131,6 +131,7 @@
     <Compile Include="Runtime\IGrainRuntime.cs" />
     <Compile Include="Serialization\OrleansJsonSerializer.cs" />
     <Compile Include="Serialization\BinaryFormatterSerializer.cs" />
+    <Compile Include="Shims\AssemblyLoader.cs" />
     <Compile Include="Shims\ClientStatisticsManager.cs" />
     <Compile Include="Shims\SerializableAttribute.cs" />
     <Compile Include="Streams\Core\StreamIdentity.cs" />
