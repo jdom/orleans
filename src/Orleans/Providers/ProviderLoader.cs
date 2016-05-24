@@ -189,18 +189,21 @@ namespace Orleans.Providers
                 if (fullConfig.Type != typeName) continue;
                 
                 // Found one! Now look for an appropriate constructor; try TProvider(string, Dictionary<string,string>) first
-                var constructor = t.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    null, constructorBindingTypes, null);
+                var constructor = GetConstructor(t, constructorBindingTypes);
                 var parms = new object[] { typeName, entry.Properties };
 
                 if (constructor == null)
                 {
                     // See if there's a default constructor to use, if there's no two-parameter constructor
-                    constructor = t.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                        null, Type.EmptyTypes, null);
+                    constructor = GetConstructor(t, Type.EmptyTypes);
                     parms = new object[0];
                 }
-                if (constructor == null) continue;
+                if (constructor == null)
+                {
+                    logger.Warn(ErrorCode.Provider_InstanceConstructionError1, $"Accessible constructor does not exist for type {t.Name}");
+
+                    continue;
+                }
 
                 TProvider instance;
                 try
@@ -221,6 +224,21 @@ namespace Orleans.Providers
                 
                 logger.Info(ErrorCode.Provider_Loaded, "Loaded provider of type {0} Name={1}", typeName, fullConfig.Name);
             }
+        }
+
+        private static ConstructorInfo GetConstructor(Type type, Type[] constructorArguments)
+        {
+#if NETSTANDARD1_6
+            // TODO: only public constructors are supported with GetConstructor. Should use a different API.
+            var constructorInfo = type.GetConstructor(constructorArguments);
+#else
+            var constructorInfo = type.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                constructorArguments,
+                null);
+#endif
+            return constructorInfo;
         }
     }
 }
