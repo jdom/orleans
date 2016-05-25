@@ -145,12 +145,17 @@ namespace Orleans.Serialization
         internal static CounterStatistic FallbackCopiesTimeStatistic;
 
         internal static int LARGE_OBJECT_LIMIT = Constants.LARGE_OBJECT_HEAP_THRESHOLD;
+#if NETSTANDARD
+        private const bool DefaultUseJsonFallbackSerializer = true;
+#else
+        private const bool DefaultUseJsonFallbackSerializer = false;
+#endif
 
         #endregion
 
         #region Static initialization
 
-        public static void InitializeForTesting(List<TypeInfo> serializationProviders = null, bool useJsonFallbackSerializer = false)
+        public static void InitializeForTesting(List<TypeInfo> serializationProviders = null, bool useJsonFallbackSerializer = DefaultUseJsonFallbackSerializer)
         {
             try
             {
