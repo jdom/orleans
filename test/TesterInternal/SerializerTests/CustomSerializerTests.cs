@@ -4,7 +4,9 @@ using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Serialization;
 using UnitTests.GrainInterfaces;
+#if !NETCORE_SUBSET
 using UnitTests.Grains;
+#endif
 using Xunit;
 
 namespace UnitTests.SerializerTests
@@ -73,6 +75,9 @@ namespace UnitTests.SerializerTests
             LogManager.Initialize(new NodeConfiguration());
 
             SerializationManager.InitializeForTesting();
+#if NETCORE_SUBSET
+            SubsetOfTests.Shims.Serializers.RegisterAll();
+#endif
         }
 
         [Fact, TestCategory("Serialization")]
@@ -131,7 +136,8 @@ namespace UnitTests.SerializerTests
         {
             Assert.NotNull(SerializationManager.GetSerializer(typeof(SerializerTestClass6))); //No serializer generated for return type of parameterless Task grain method
         }
-        
+
+#if !NETCORE_SUBSET
         [Fact, TestCategory("Serialization")]
         public void Serialize_AsyncObserverArgumentType()
         {
@@ -159,5 +165,6 @@ namespace UnitTests.SerializerTests
         {
             Assert.NotNull(SerializationManager.GetSerializer(typeof(StreamSubscriptionHandleArg))); //No serializer generated for argument type of stream subscription handle
         }
+#endif
     }
 }

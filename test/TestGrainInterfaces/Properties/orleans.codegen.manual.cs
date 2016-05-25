@@ -6042,6 +6042,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
 
+#if !NETSTANDARD1_6
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.3.0.0"), global::System.SerializableAttribute, global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute, global::Orleans.CodeGeneration.GrainReferenceAttribute(typeof (global::UnitTests.GrainInterfaces.IGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrain))]
     internal class OrleansCodeGenGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrainReference : global::Orleans.Runtime.GrainReference, global::UnitTests.GrainInterfaces.IGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrain
     {
@@ -6141,6 +6142,7 @@ namespace UnitTests.GrainInterfaces
             }
         }
     }
+#endif
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.3.0.0"), global::System.SerializableAttribute, global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute, global::Orleans.CodeGeneration.GrainReferenceAttribute(typeof (global::UnitTests.GrainInterfaces.IGeneratorTestDerivedFromFSharpInterfaceInExternalAssemblyGrain))]
     internal class OrleansCodeGenGeneratorTestDerivedFromFSharpInterfaceInExternalAssemblyGrainReference : global::Orleans.Runtime.GrainReference, global::UnitTests.GrainInterfaces.IGeneratorTestDerivedFromFSharpInterfaceInExternalAssemblyGrain

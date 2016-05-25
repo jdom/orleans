@@ -7,7 +7,6 @@
     "EnterpriseLibrary.TransientFaultHandling": "6.0.1304",
     "System.Data.Common": "4.1.0"
   },
-
   "frameworks": {
     "netstandard1.6": {
       "imports": [
