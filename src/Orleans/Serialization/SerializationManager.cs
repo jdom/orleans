@@ -72,7 +72,6 @@ namespace Orleans.Serialization
             set;
         }
 
-#if NETSTANDARD
         // Workaround for CoreCLR where FormatterServices.GetUninitializedObject is not public (but might change in RTM so we could remove this then).
         private static readonly Func<Type, object> getUninitializedObjectDelegate =
             (Func<Type, object>)
@@ -91,7 +90,6 @@ namespace Orleans.Serialization
         {
             return getUninitializedObjectDelegate.Invoke(type);
         }
-#endif
 
         #region Privates
 
