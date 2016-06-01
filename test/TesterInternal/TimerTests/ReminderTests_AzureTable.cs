@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -73,6 +74,30 @@ namespace UnitTests.TimerTests
         public async Task Rem_Azure_ReminderNotFound()
         {
             await Test_Reminders_ReminderNotFound();
+        }
+
+        [SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
+        public async Task Rem_Azure_Basic_CompoundKey()
+        {
+            // start up a test grain and get the period that it's programmed to use.
+            var grain = GrainClient.GrainFactory.GetGrain<IReminderTestGrain3>(Guid.NewGuid(), "test", null);
+            TimeSpan period = await grain.GetReminderPeriod(DR);
+            // start up the 'DR' reminder and wait for two ticks to pass.
+            await grain.StartReminder(DR);
+
+            //deactivate grain
+            await grain.DeactivateGrain();
+            Thread.Sleep(period.Multiply(2) + LEEWAY); // giving some leeway
+            // retrieve the value of the counter-- it should match the sequence number which is the number of periods
+            // we've waited.
+            long last = await grain.GetCounter(DR);
+            Assert.AreEqual(2, last, Time());
+            // stop the timer and wait for a whole period.
+            await grain.StopReminder(DR);
+            Thread.Sleep(period.Multiply(1) + LEEWAY); // giving some leeway
+            // the counter should not have changed.
+            long curr = await grain.GetCounter(DR);
+            Assert.AreEqual(last, curr, Time());
         }
 
         #region Basic test
@@ -193,59 +218,59 @@ namespace UnitTests.TimerTests
 
         #region Secondary failure ... Basic test
 
-        [SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
-        public async Task Rem_Azure_1F_Basic()
-        {
-            IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //[SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
+        //public async Task Rem_Azure_1F_Basic()
+        //{
+        //    IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
 
-            TimeSpan period = await g1.GetReminderPeriod(DR);
+        //    TimeSpan period = await g1.GetReminderPeriod(DR);
 
-            Task<bool> test = Task.Run(async () => { await PerGrainFailureTest(g1); return true; });
+        //    Task<bool> test = Task.Run(async () => { await PerGrainFailureTest(g1); return true; });
 
-            Thread.Sleep(period.Multiply(failAfter));
-            // stop the secondary silo
-            log.Info("Stopping secondary silo");
-            this.HostedCluster.StopSilo(this.HostedCluster.Secondary);
+        //    Thread.Sleep(period.Multiply(failAfter));
+        //    // stop the secondary silo
+        //    log.Info("Stopping secondary silo");
+        //    this.HostedCluster.StopSilo(this.HostedCluster.Secondary);
 
-            await test; // Block until test completes.
-        }
+        //    await test; // Block until test completes.
+        //}
         #endregion
 
-        #region Multiple failures ... multiple grains
-        [SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
-        public async Task Rem_Azure_2F_MultiGrain()
-        {
-            List<SiloHandle> silos = this.HostedCluster.StartAdditionalSilos(2);
+        //#region Multiple failures ... multiple grains
+        //[SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
+        //public async Task Rem_Azure_2F_MultiGrain()
+        //{
+        //    List<SiloHandle> silos = this.HostedCluster.StartAdditionalSilos(2);
 
-            IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g2 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g3 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g4 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g5 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestGrain2 g2 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestGrain2 g3 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestGrain2 g4 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestGrain2 g5 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
 
-            TimeSpan period = await g1.GetReminderPeriod(DR);
+        //    TimeSpan period = await g1.GetReminderPeriod(DR);
 
-            Task[] tasks =
-            {
-                Task.Run(() => PerGrainFailureTest(g1)),
-                Task.Run(() => PerGrainFailureTest(g2)),
-                Task.Run(() => PerGrainFailureTest(g3)),
-                Task.Run(() => PerGrainFailureTest(g4)),
-                Task.Run(() => PerGrainFailureTest(g5)),
-            };
+        //    Task[] tasks =
+        //    {
+        //        Task.Run(() => PerGrainFailureTest(g1)),
+        //        Task.Run(() => PerGrainFailureTest(g2)),
+        //        Task.Run(() => PerGrainFailureTest(g3)),
+        //        Task.Run(() => PerGrainFailureTest(g4)),
+        //        Task.Run(() => PerGrainFailureTest(g5)),
+        //    };
 
-            Thread.Sleep(period.Multiply(failAfter));
+        //    Thread.Sleep(period.Multiply(failAfter));
 
-            // stop a couple of silos
-            log.Info("Stopping 2 silos");
-            int i = random.Next(silos.Count);
-            this.HostedCluster.StopSilo(silos[i]);
-            silos.RemoveAt(i);
-            this.HostedCluster.StopSilo(silos[random.Next(silos.Count)]);
+        //    // stop a couple of silos
+        //    log.Info("Stopping 2 silos");
+        //    int i = random.Next(silos.Count);
+        //    this.HostedCluster.StopSilo(silos[i]);
+        //    silos.RemoveAt(i);
+        //    this.HostedCluster.StopSilo(silos[random.Next(silos.Count)]);
 
-            await Task.WhenAll(tasks).WithTimeout(ENDWAIT); // Block until all tasks complete.
-        }
-        #endregion
+        //    await Task.WhenAll(tasks).WithTimeout(ENDWAIT); // Block until all tasks complete.
+        //}
+        //#endregion
 
         #region 1 join 1 failure simulateneously ... multiple grains
         [SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
@@ -254,22 +279,12 @@ namespace UnitTests.TimerTests
             List<SiloHandle> silos = this.HostedCluster.StartAdditionalSilos(1);
             await this.HostedCluster.WaitForLivenessToStabilizeAsync();
 
-            IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g2 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g3 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g4 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g5 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+            var grains = Enumerable.Range(0, 30).Select(_ => 
+                GrainClient.GrainFactory.GetGrain<IReminderTestGrain3>(Guid.NewGuid(), "test", null)).ToArray();
 
-            TimeSpan period = await g1.GetReminderPeriod(DR);
+            TimeSpan period = await grains[0].GetReminderPeriod(DR);
 
-            Task[] tasks =
-            {
-                Task.Run(() => PerGrainFailureTest(g1)),
-                Task.Run(() => PerGrainFailureTest(g2)),
-                Task.Run(() => PerGrainFailureTest(g3)),
-                Task.Run(() => PerGrainFailureTest(g4)),
-                Task.Run(() => PerGrainFailureTest(g5)),
-            };
+            Task[] tasks = grains.Select(grain => Task.Run(() => PerGrainFailureTest(grain))).ToArray();
 
             Thread.Sleep(period.Multiply(failAfter));
 
@@ -334,46 +349,46 @@ namespace UnitTests.TimerTests
             Assert.AreEqual(4, curr2, string.Format("{0} CopyGrain fault", Time()));
         }
 
-        [SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
-        public async Task Rem_Azure_GT_1F1J_MultiGrain()
-        {
-            List<SiloHandle> silos = this.HostedCluster.StartAdditionalSilos(1);
-            await this.HostedCluster.WaitForLivenessToStabilizeAsync();
+        //[SkippableFact, TestCategory("Functional"), TestCategory("ReminderService")]
+        //public async Task Rem_Azure_GT_1F1J_MultiGrain()
+        //{
+        //    List<SiloHandle> silos = this.HostedCluster.StartAdditionalSilos(1);
+        //    await this.HostedCluster.WaitForLivenessToStabilizeAsync();
 
-            IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestGrain2 g2 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
-            IReminderTestCopyGrain g3 = GrainClient.GrainFactory.GetGrain<IReminderTestCopyGrain>(Guid.NewGuid());
-            IReminderTestCopyGrain g4 = GrainClient.GrainFactory.GetGrain<IReminderTestCopyGrain>(Guid.NewGuid());
+        //    IReminderTestGrain2 g1 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestGrain2 g2 = GrainClient.GrainFactory.GetGrain<IReminderTestGrain2>(Guid.NewGuid());
+        //    IReminderTestCopyGrain g3 = GrainClient.GrainFactory.GetGrain<IReminderTestCopyGrain>(Guid.NewGuid());
+        //    IReminderTestCopyGrain g4 = GrainClient.GrainFactory.GetGrain<IReminderTestCopyGrain>(Guid.NewGuid());
 
-            TimeSpan period = await g1.GetReminderPeriod(DR);
+        //    TimeSpan period = await g1.GetReminderPeriod(DR);
 
-            Task[] tasks =
-            {
-                Task.Run(() => PerGrainFailureTest(g1)),
-                Task.Run(() => PerGrainFailureTest(g2)),
-                Task.Run(() => PerCopyGrainFailureTest(g3)),
-                Task.Run(() => PerCopyGrainFailureTest(g4)),
-            };
+        //    Task[] tasks =
+        //    {
+        //        Task.Run(() => PerGrainFailureTest(g1)),
+        //        Task.Run(() => PerGrainFailureTest(g2)),
+        //        Task.Run(() => PerCopyGrainFailureTest(g3)),
+        //        Task.Run(() => PerCopyGrainFailureTest(g4)),
+        //    };
 
-            Thread.Sleep(period.Multiply(failAfter));
+        //    Thread.Sleep(period.Multiply(failAfter));
 
-            var siloToKill = silos[random.Next(silos.Count)];
-            // stop a silo and join a new one in parallel
-            log.Info("Stopping a silo and joining a silo");
-            Task<bool> t1 = Task.Run(() =>
-            {
-                this.HostedCluster.StopSilo(siloToKill);
-                return true;
-            });
-            Task<bool> t2 = Task.Run(() =>
-            {
-                this.HostedCluster.StartAdditionalSilos(1);
-                return true;
-            });
-            await Task.WhenAll(new[] { t1, t2 }).WithTimeout(ENDWAIT);
+        //    var siloToKill = silos[random.Next(silos.Count)];
+        //    // stop a silo and join a new one in parallel
+        //    log.Info("Stopping a silo and joining a silo");
+        //    Task<bool> t1 = Task.Run(() =>
+        //    {
+        //        this.HostedCluster.StopSilo(siloToKill);
+        //        return true;
+        //    });
+        //    Task<bool> t2 = Task.Run(() =>
+        //    {
+        //        this.HostedCluster.StartAdditionalSilos(1);
+        //        return true;
+        //    });
+        //    await Task.WhenAll(new[] { t1, t2 }).WithTimeout(ENDWAIT);
 
-            await Task.WhenAll(tasks).WithTimeout(ENDWAIT); // Block until all tasks complete.
-        }
+        //    await Task.WhenAll(tasks).WithTimeout(ENDWAIT); // Block until all tasks complete.
+        //}
         #endregion       
 
         #region Testing things that should fail

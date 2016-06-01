@@ -23,6 +23,23 @@ namespace UnitTests.GrainInterfaces
         Task EraseReminderTable();
     }
 
+    public interface IReminderTestGrain3 : IGrainWithGuidCompoundKey
+    {
+        Task<IGrainReminder> StartReminder(string reminderName, TimeSpan? period = null, bool validate = false);
+
+        Task StopReminder(string reminderName);
+        //Task StopReminder(IGrainReminder reminder);
+
+        Task<TimeSpan> GetReminderPeriod(string reminderName);
+        Task<long> GetCounter(string name);
+        //Task<IGrainReminder> GetReminderObject(string reminderName);
+        //Task<List<IGrainReminder>> GetRemindersList();
+
+        //Task EraseReminderTable();
+
+        Task DeactivateGrain();
+    }
+
     // to test reminders for different grain types
     public interface IReminderTestCopyGrain : IGrainWithGuidKey
     {

@@ -233,7 +233,7 @@ namespace UnitTests.TimerTests
             return true;
         }
 
-        protected async Task<bool> PerGrainFailureTest(IReminderTestGrain2 grain)
+        protected async Task<bool> PerGrainFailureTest(IReminderTestGrain3 grain)
         {
             TimeSpan period = await grain.GetReminderPeriod(DR);
 
@@ -358,8 +358,10 @@ namespace UnitTests.TimerTests
         protected void AssertIsInRange(long val, long lowerLimit, long upperLimit, IGrain grain, string reminderName, TimeSpan sleepFor)
         {
             StringBuilder sb = new StringBuilder();
+            string keyExtension;
+            var grainKey = grain.GetPrimaryKey(out keyExtension) + keyExtension;
             sb.AppendFormat("Grain: {0} Grain PrimaryKey: {1}, Reminder: {2}, SleepFor: {3} Time now: {4}",
-                grain.ToString(), grain.GetPrimaryKey(), reminderName, sleepFor, Time());
+                grain.ToString(), grainKey, reminderName, sleepFor, Time());
             sb.AppendFormat(
                 " -- Expecting value in the range between {0} and {1}, and got value {2}.",
                 lowerLimit, upperLimit, val);

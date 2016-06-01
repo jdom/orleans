@@ -16,7 +16,7 @@ using Orleans.Runtime.ReminderService;
 namespace UnitTests.Grains
 {
     // NOTE: if you make any changes here, copy them to ReminderTestCopyGrain
-    public class ReminderTestGrain2 : Grain, IReminderTestGrain2, IRemindable
+    public class ReminderTestGrain2 : Grain, IReminderTestGrain2, IRemindable, IReminderTestGrain3
     {
         Dictionary<string, IGrainReminder> allReminders;
         Dictionary<string, long> sequence;
@@ -35,9 +35,11 @@ namespace UnitTests.Grains
             allReminders = new Dictionary<string, IGrainReminder>();
             sequence = new Dictionary<string, long>();
             logger = GetLogger(string.Format("ReminderTestGrain {0}_{1}", RuntimeIdentity.ToString(), Identity));
-            period = GetDefaultPeriod(logger);            
-            logger.Info("OnActivateAsync.");
-            filePrefix = "g" + Identity.PrimaryKey + "_";
+            period = GetDefaultPeriod(logger);
+            string keyExtension;
+            var grainKey = this.GetPrimaryKey(out keyExtension) + keyExtension;
+            logger.Info("OnActivateAsync Key: {0}", grainKey);
+            filePrefix = "g" + grainKey + "_";
             return GetMissingReminders();
         }
 
@@ -68,6 +70,9 @@ namespace UnitTests.Grains
 
         public Task ReceiveReminder(string reminderName, TickStatus status)
         {
+            string keyExtension;
+            var grainKey = this.GetPrimaryKey(out keyExtension) + keyExtension;
+            logger.Info("ReceiveReminder Key: {0}", grainKey);
             // it can happen that due to failure, when a new activation is created, 
             // it doesn't know which reminders were registered against the grain
             // hence, this activation may receive a reminder that it didn't register itself, but
@@ -171,6 +176,12 @@ namespace UnitTests.Grains
             return Task.FromResult(counterValue);
         }
 
+        public Task DeactivateGrain()
+        {
+            DeactivateOnIdle();
+            return TaskDone.Done;
+        }
+
         public Task<IGrainReminder> GetReminderObject(string reminderName)
         {
             return base.GetReminder(reminderName);
@@ -236,8 +247,10 @@ namespace UnitTests.Grains
             sequence = new Dictionary<string, long>();
             logger = GetLogger(string.Format("ReminderCopyGrain {0}_{1}", myId, Identity));
             period = ReminderTestGrain2.GetDefaultPeriod(logger);
-            logger.Info("OnActivateAsync.");
-            filePrefix = "gc" + Identity.PrimaryKey + "_";
+            string keyExtension;
+            var grainKey = this.GetPrimaryKey(out keyExtension) + keyExtension;
+            logger.Info("OnActivateAsync Key: {0}", grainKey);
+            filePrefix = "gc" + grainKey + "_";
             await GetMissingReminders();
         }
 
