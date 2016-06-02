@@ -100,6 +100,13 @@ namespace Orleans.CodeGeneration
                     .Any(i => i.GetTypeInfo().GetCustomAttributes(typeof (StatelessWorkerAttribute), true).Any());
         }
 
+        public static bool IsStatelessWorker(TypeInfo grainTypeInfo)
+        {
+            return grainTypeInfo.GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any() ||
+                grainTypeInfo.GetInterfaces()
+                    .Any(i => i.GetTypeInfo().GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any());
+        }
+
         public static bool IsStatelessWorker(MethodInfo methodInfo)
         {
             return methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof (StatelessWorkerAttribute), true).Any() ||
@@ -172,10 +179,15 @@ namespace Orleans.CodeGeneration
 
         public static int GetGrainClassTypeCode(Type grainClass)
         {
+            return GetGrainClassTypeCode(grainClass.GetTypeInfo());
+        }
+
+        public static int GetGrainClassTypeCode(TypeInfo grainClass)
+        {
             return GetTypeCode(grainClass);
         }
 
-        
+
         internal static bool TryValidateInterfaceRules(Type type, out List<string> violations)
         {
             violations = new List<string>();
@@ -390,11 +402,16 @@ namespace Orleans.CodeGeneration
 
         private static int GetTypeCode(Type grainInterfaceOrClass)
         {
-            var attr = grainInterfaceOrClass.GetTypeInfo().GetCustomAttributes<TypeCodeOverrideAttribute>(false).FirstOrDefault();
+            return GetTypeCode(grainInterfaceOrClass.GetTypeInfo());
+        }
+
+        private static int GetTypeCode(TypeInfo grainInterfaceOrClass)
+        {
+            var attr = grainInterfaceOrClass.GetCustomAttributes<TypeCodeOverrideAttribute>(false).FirstOrDefault();
             var fullName = TypeUtils.GetTemplatedName(
                 TypeUtils.GetFullName(grainInterfaceOrClass), 
-                grainInterfaceOrClass, 
-                grainInterfaceOrClass.GetGenericArguments(), 
+                grainInterfaceOrClass,
+                TypeUtils.GetGenericArguments(grainInterfaceOrClass),
                 t => false);
             var typeCode = attr != null && attr.TypeCode > 0 ? attr.TypeCode : Utils.CalculateIdHash(fullName);
             return typeCode;

@@ -135,13 +135,13 @@ namespace Orleans.Runtime
             return typeInfo.AsType().IsConstructedGenericType;
         }
 
-        private static IEnumerable<TypeInfo> GetGenericArguments(TypeInfo typeInfo)
+        internal static IEnumerable<TypeInfo> GetGenericArguments(TypeInfo typeInfo)
         {
             // TODO: is there an API that returns generic arguments as type info already?
             return typeInfo.GetGenericArguments().GetTypeInfos();
         }
 
-        private static IEnumerable<TypeInfo> GetTypeInfos(this Type[] types)
+        internal static IEnumerable<TypeInfo> GetTypeInfos(this Type[] types)
         {
             return types.Select(t => t.GetTypeInfo());
         }

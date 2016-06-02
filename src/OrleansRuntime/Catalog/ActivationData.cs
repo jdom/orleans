@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -222,17 +223,17 @@ namespace Orleans.Runtime
             }
         }
 
-        internal Type GrainInstanceType { get; private set; }
+        internal TypeInfo GrainInstanceType { get; private set; }
 
         internal void SetGrainInstance(Grain grainInstance)
         {
             GrainInstance = grainInstance;
             if (grainInstance != null)
             {
-                GrainInstanceType = grainInstance.GetType();
+                GrainInstanceType = grainInstance.GetType().GetTypeInfo();
 
                 // Don't ever collect system grains or reminder table grain or memory store grains.
-                bool doNotCollect = typeof(IReminderTableGrain).IsAssignableFrom(GrainInstanceType) || typeof(IMemoryStorageGrain).IsAssignableFrom(GrainInstanceType);
+                bool doNotCollect = typeof(IReminderTableGrain).GetTypeInfo().IsAssignableFrom(GrainInstanceType) || typeof(IMemoryStorageGrain).GetTypeInfo().IsAssignableFrom(GrainInstanceType);
                 if (doNotCollect)
                 {
                     this.collector = null;
