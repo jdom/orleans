@@ -36,7 +36,10 @@ namespace Orleans.Runtime
     /// <summary>
     /// Orleans silo.
     /// </summary>
-    public class Silo : MarshalByRefObject // for hosting multiple silos in app domains of the same process
+    public class Silo 
+#if !NETSTANDARD
+        : MarshalByRefObject // for hosting multiple silos in app domains of the same process
+#endif
     {
         /// <summary> Standard name for Primary silo. </summary>
         public const string PrimarySiloName = "Primary";
@@ -231,8 +234,10 @@ namespace Orleans.Runtime
             PlacementStrategy.Initialize(globalConfig);
 
             UnobservedExceptionsHandlerClass.SetUnobservedExceptionHandler(UnobservedExceptionHandler);
+#if !NETSTANDARD
             AppDomain.CurrentDomain.UnhandledException +=
                 (obj, ev) => DomainUnobservedExceptionHandler(obj, (Exception)ev.ExceptionObject);
+#endif
 
             grainFactory = new GrainFactory();
             typeManager = new GrainTypeManager(
@@ -242,7 +247,9 @@ namespace Orleans.Runtime
 
             // Performance metrics
             siloStatistics = new SiloStatisticsManager(globalConfig, nodeConfig);
+#if !NETSTANDARD
             config.OnConfigChange("Defaults/LoadShedding", () => siloStatistics.MetricsTable.NodeConfig = nodeConfig, false);
+#endif
 
             // The scheduler
             scheduler = new OrleansTaskScheduler(globalConfig, nodeConfig);
@@ -304,10 +311,12 @@ namespace Orleans.Runtime
             messageCenter.RerouteHandler = InsideRuntimeClient.Current.RerouteMessage;
             messageCenter.SniffIncomingMessage = InsideRuntimeClient.Current.SniffIncomingMessage;
 
+#if !NETSTANDARD
             siloStatistics.MetricsTable.Scheduler = scheduler;
             siloStatistics.MetricsTable.ActivationDirectory = activationDirectory;
             siloStatistics.MetricsTable.ActivationCollector = catalog.ActivationCollector;
             siloStatistics.MetricsTable.MessageCenter = messageCenter;
+#endif
 
             DeploymentLoadPublisher.CreateDeploymentLoadPublisher(this, globalConfig);
             PlacementDirectorsManager.CreatePlacementDirectorsManager(globalConfig);
@@ -428,7 +437,11 @@ namespace Orleans.Runtime
             logger.Info(ErrorCode.SiloStarting, "Silo Start()");
 
             // Hook up to receive notification of process exit / Ctrl-C events
+#if NETSTANDARD
+            System.Runtime.Loader.AssemblyLoadContext.Default.Unloading += s => HandleProcessExit(s, EventArgs.Empty);
+#else
             AppDomain.CurrentDomain.ProcessExit += HandleProcessExit;
+#endif
             Console.CancelKeyPress += HandleProcessExit;
 
             ConfigureThreadPoolAndServicePointSettings();
@@ -604,6 +617,7 @@ namespace Orleans.Runtime
 
         private void ConfigureThreadPoolAndServicePointSettings()
         {
+#if !NETSTANDARD
             if (nodeConfig.MinDotNetThreadPoolSize > 0)
             {
                 int workerThreads;
@@ -619,14 +633,14 @@ namespace Orleans.Runtime
                     if (ok)
                     {
                         logger.Info(ErrorCode.SiloConfiguredThreadPool,
-                                    "Configured ThreadPool.SetMinThreads() to values: {0},{1}. Previous values are: {2},{3}.",
-                                    newWorkerThreads, newCompletionPortThreads, workerThreads, completionPortThreads);
+                            "Configured ThreadPool.SetMinThreads() to values: {0},{1}. Previous values are: {2},{3}.",
+                            newWorkerThreads, newCompletionPortThreads, workerThreads, completionPortThreads);
                     }
                     else
                     {
                         logger.Warn(ErrorCode.SiloFailedToConfigureThreadPool,
-                                    "Failed to configure ThreadPool.SetMinThreads(). Tried to set values to: {0},{1}. Previous values are: {2},{3}.",
-                                    newWorkerThreads, newCompletionPortThreads, workerThreads, completionPortThreads);
+                            "Failed to configure ThreadPool.SetMinThreads(). Tried to set values to: {0},{1}. Previous values are: {2},{3}.",
+                            newWorkerThreads, newCompletionPortThreads, workerThreads, completionPortThreads);
                     }
                 }
             }
@@ -639,6 +653,7 @@ namespace Orleans.Runtime
             ServicePointManager.Expect100Continue = nodeConfig.Expect100Continue;
             ServicePointManager.DefaultConnectionLimit = nodeConfig.DefaultConnectionLimit;
             ServicePointManager.UseNagleAlgorithm = nodeConfig.UseNagleAlgorithm;
+#endif
         }
 
         /// <summary>
@@ -869,7 +884,10 @@ namespace Orleans.Runtime
         /// <summary>
         /// Test hook functions for white box testing.
         /// </summary>
-        public class TestHooks : MarshalByRefObject
+        public class TestHooks 
+#if !NETSTANDARD
+            : MarshalByRefObject
+#endif
         {
             private readonly Silo silo;
             internal bool ExecuteFastKillInProcessExit;
@@ -1027,11 +1045,13 @@ namespace Orleans.Runtime
             private static T CheckReturnBoundaryReference<T>(string what, T obj) where T : class
             {
                 if (obj == null) return null;
+#if !NETSTANDARD
                 if (obj is MarshalByRefObject || obj is ISerializable)
                 {
                     // Referernce to the provider can safely be passed across app-domain boundary in unit test process
                     return obj;
                 }
+#endif
                 throw new InvalidOperationException(string.Format("Cannot return reference to {0} {1} if it is not MarshalByRefObject or Serializable",
                     what, TypeUtils.GetFullName(obj.GetType())));
             }
@@ -1039,7 +1059,10 @@ namespace Orleans.Runtime
             /// <summary>
             /// Represents a collection of generated assemblies accross an application domain.
             /// </summary>
-            public class GeneratedAssemblies : MarshalByRefObject
+            public class GeneratedAssemblies 
+#if !NETSTANDARD
+                : MarshalByRefObject
+#endif
             {
                 /// <summary>
                 /// Initializes a new instance of the <see cref="GeneratedAssemblies"/> class.
@@ -1075,7 +1098,10 @@ namespace Orleans.Runtime
             /// <summary>
             /// Methods for optimizing the code generator.
             /// </summary>
-            public class CodeGeneratorOptimizer : MarshalByRefObject
+            public class CodeGeneratorOptimizer 
+#if !NETSTANDARD
+                : MarshalByRefObject
+#endif
             {
                 /// <summary>
                 /// Adds a cached assembly to the code generator.
