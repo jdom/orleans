@@ -47,21 +47,23 @@ namespace Orleans.Runtime
 
         private void LoadApplicationAssemblies()
         {
+#if !NETSTANDARD1_6
             AssemblyLoaderPathNameCriterion[] excludeCriteria =
-                {
-                    AssemblyLoaderCriteria.ExcludeResourceAssemblies,
-                    AssemblyLoaderCriteria.ExcludeSystemBinaries()
-                };
+            {
+                AssemblyLoaderCriteria.ExcludeResourceAssemblies,
+                AssemblyLoaderCriteria.ExcludeSystemBinaries()
+            };
             AssemblyLoaderReflectionCriterion[] loadCriteria =
-                {
-                    AssemblyLoaderReflectionCriterion.NewCriterion(
-                        TypeUtils.IsConcreteGrainClass,
-                        "Assembly does not contain any acceptable grain types."),
-                    AssemblyLoaderCriteria.LoadTypesAssignableFrom(
-                        typeof(IProvider))
-                };
+            {
+                AssemblyLoaderReflectionCriterion.NewCriterion(
+                    TypeUtils.IsConcreteGrainClass,
+                    "Assembly does not contain any acceptable grain types."),
+                AssemblyLoaderCriteria.LoadTypesAssignableFrom(
+                    typeof(IProvider))
+            };
 
             discoveredAssemblyLocations = AssemblyLoader.LoadAssemblies(directories, excludeCriteria, loadCriteria, logger);
+#endif
         }
 
         public IDictionary<string, GrainTypeData> GetGrainClassTypes(bool strict)

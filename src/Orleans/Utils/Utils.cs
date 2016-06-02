@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -350,6 +351,23 @@ namespace Orleans.Runtime
             {
                 yield return batch; //batch.ToArray();
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static string GetStackTrace(int skipFrames = 0)
+        {
+            skipFrames += 1; //skip this method from the stack trace
+#if NETSTANDARD1_6
+            skipFrames += 2; //skip the 2 Environment.StackTrace related methods.
+            var stackTrace = Environment.StackTrace;
+            for (int i = 0; i < skipFrames; i++)
+            {
+                stackTrace = stackTrace.Substring(stackTrace.IndexOf(Environment.NewLine) + Environment.NewLine.Length);
+            }
+            return stackTrace;
+#else
+            return new System.Diagnostics.StackTrace(skipFrames).ToString();
+#endif
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
@@ -126,7 +125,7 @@ namespace Orleans.Runtime
             ActivationData sendingActivation = null;
             if (schedulingContext == null)
             {
-                throw new InvalidExpressionException(
+                throw new InvalidOperationException(
                     String.Format("Trying to send a message {0} on a silo not from within grain and not from within system target (RuntimeContext is not set to SchedulingContext) "
                         + "RuntimeContext.Current={1} TaskScheduler.Current={2}",
                         message,
@@ -172,7 +171,7 @@ namespace Orleans.Runtime
 
             var oneWay = (options & InvokeMethodOptions.OneWay) != 0;
             if (context == null && !oneWay)
-                logger.Warn(ErrorCode.IGC_SendRequest_NullContext, "Null context {0}: {1}", message, new StackTrace());
+                logger.Warn(ErrorCode.IGC_SendRequest_NullContext, "Null context {0}: {1}", message, Utils.GetStackTrace());
 
             if (message.IsExpirableMessage(Config.Globals))
                 message.Expiration = DateTime.UtcNow + ResponseTimeout + Constants.MAXIMUM_CLOCK_SKEW;
@@ -357,7 +356,7 @@ namespace Orleans.Runtime
                         var exc = new GrainExtensionNotInstalledException(error);
                         string extraDebugInfo = null;
 #if DEBUG
-                        extraDebugInfo = new StackTrace().ToString();
+                        extraDebugInfo = Utils.GetStackTrace();
 #endif
                         logger.Warn(ErrorCode.Stream_ExtensionNotInstalled, 
                             string.Format("{0} for message {1} {2}", error, message, extraDebugInfo), exc);
@@ -755,7 +754,7 @@ namespace Orleans.Runtime
 
         public string CaptureRuntimeEnvironment()
         {
-            var callStack = new System.Diagnostics.StackTrace(1); // Don't include this method in stack trace
+            var callStack = Utils.GetStackTrace(1); // Don't include this method in stack trace
             return String.Format(
                   "   TaskScheduler={0}" + Environment.NewLine 
                 + "   RuntimeContext={1}" + Environment.NewLine

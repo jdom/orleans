@@ -7,6 +7,16 @@
   },
   "frameworks": {
     "netstandard1.6": {
+      "buildOptions": {
+        "compile": {
+          "exclude": [
+            "Counters/*.cs"
+          ],
+          "excludeFiles": [
+            "GrainTypeManager/AssemblyLoaderUtils.cs"
+          ]
+        }
+      },
       "dependencies": {
         "System.Runtime": "4.1.0"
       }

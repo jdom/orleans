@@ -48,8 +48,10 @@ namespace Orleans.Runtime
             // 1. We scan the file system for assemblies meeting pre-determined criteria, specified in SiloAssemblyLoader.LoadApplicationAssemblies (called by the constructor).
             // 2. We load those assemblies into memory. In the official distribution of Orleans, this is usually 4 assemblies.
 
+#if !NETSTANDARD1_6
             // Generate code for newly loaded assemblies.
             CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
+#endif
 
             // (no more assemblies should be loaded into memory, so now is a good time to log all types registered with the serialization manager)
             SerializationManager.LogRegisteredTypes();
