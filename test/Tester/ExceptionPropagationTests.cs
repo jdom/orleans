@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using FluentAssertions.Collections;
 using UnitTests.GrainInterfaces;
 using UnitTests.Tester;
 using Xunit;
@@ -47,13 +46,34 @@ namespace UnitTests.General
         public async Task ExceptionContainsOriginalStackTrace2()
         {
             IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
-            grain.ThrowsInvalidOperationException().Wait();
-            var exception = Assert.Throws<AggregateException>(
+            // Explicitly using .Wait() instead of await the task to avoid any modification of the inner exception
+            var aggEx = Assert.Throws<AggregateException>(
                 () => grain.ThrowsInvalidOperationException().Wait());
 
+            var exception = aggEx.InnerException;
             output.WriteLine(exception.ToString());
             Assert.Equal("Test exception", exception.Message);
             Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public void ExceptionContainsOriginalStackTrace3()
+        {
+            IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
+            try
+            {
+                // Explicitly not using Assert.Throws, since it modifies the stacktrace
+                // Explicitly using .Wait() instead of await to avoid any modification of the exception
+                grain.ThrowsInvalidOperationException().Wait();
+                Assert.True(false, "Exception not thrown");
+            }
+            catch (AggregateException aggEx)
+            {
+                var exception = aggEx.InnerException;
+                output.WriteLine(exception.ToString());
+                Assert.Equal("Test exception", exception.Message);
+                Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+            }
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional")]
