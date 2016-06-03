@@ -9,17 +9,10 @@ namespace Orleans
     /// <summary>
     /// Utility functions for dealing with Task's.
     /// </summary>
-    public static class PublicOrleansTaskExtentions
+    public static class PublicOrleansTaskExtensions
     {
-        private static readonly Task<object> CanceledTask;
+        internal static readonly Task<object> CanceledTask = TaskFromCanceled<object>();
         internal static readonly Task<object> CompletedTask = Task.FromResult(default(object));
-
-        static PublicOrleansTaskExtentions()
-        {
-            var completion = new TaskCompletionSource<object>();
-            completion.SetCanceled();
-            CanceledTask = completion.Task;
-        }
 
         /// <summary>
         /// Observes and ignores a potential exception on a given Task.
@@ -133,9 +126,7 @@ namespace Orleans
 
                 case TaskStatus.Canceled:
                     {
-                        var completion = new TaskCompletionSource<T>();
-                        completion.SetCanceled();
-                        return completion.Task;
+                        return TaskFromCanceled<T>();
                     }
 
                 default:
@@ -187,6 +178,13 @@ namespace Orleans
         {
             var completion = new TaskCompletionSource<T> ();
             completion.SetException(task.Exception.InnerExceptions);
+            return completion.Task;
+        }
+
+        private static Task<T> TaskFromCanceled<T>()
+        {
+            var completion = new TaskCompletionSource<T>();
+            completion.SetCanceled();
             return completion.Task;
         }
     }
