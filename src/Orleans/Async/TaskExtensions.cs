@@ -113,17 +113,14 @@ namespace Orleans
         /// <summary>
         /// Returns a <see cref="Task{Object}"/> for the provided <see cref="Task{T}"/>.
         /// </summary>
-        /// <typeparam name="T">
-        /// The underlying type of <paramref name="task"/>.
-        /// </typeparam>
-        /// <param name="task">
-        /// The task.
-        /// </param>
-        /// <returns>
-        /// The response.
-        /// </returns>
+        /// <typeparam name="T">The underlying type of <paramref name="task"/>.</typeparam>
+        /// <param name="task">The task.</param>
+        /// <returns>The response.</returns>
         public static Task<T> Unbox<T>(this Task<object> task)
         {
+            if (typeof(T) == typeof(object))
+                return task as Task<T>;
+
             switch (task.Status)
             {
                 case TaskStatus.RanToCompletion:
