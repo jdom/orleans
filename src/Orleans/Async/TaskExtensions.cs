@@ -12,7 +12,7 @@ namespace Orleans
     public static class PublicOrleansTaskExtentions
     {
         private static readonly Task<object> CanceledTask;
-        private static readonly Task<object> CompletedTask = Task.FromResult(default(object));
+        internal static readonly Task<object> CompletedTask = Task.FromResult(default(object));
 
         static PublicOrleansTaskExtentions()
         {
@@ -142,7 +142,7 @@ namespace Orleans
                     }
 
                 default:
-                    return UnboxAwait<T>(task);
+                    return UnboxContinuation<T>(task);
             }
         }
 
@@ -174,12 +174,7 @@ namespace Orleans
             return await task;
         }
 
-        //private static async Task<T> UnboxAwait<T>(Task<object> task)
-        //{
-        //    return (T)await task;
-        //}
-
-        private static Task<T> UnboxAwait<T>(Task<object> task)
+        private static Task<T> UnboxContinuation<T>(Task<object> task)
         {
             return task.ContinueWith(t => t.Unbox<T>()).Unwrap();
         }

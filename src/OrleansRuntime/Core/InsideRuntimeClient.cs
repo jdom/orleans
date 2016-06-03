@@ -386,8 +386,7 @@ namespace Orleans.Runtime
                     {
 						// The call is not intercepted.
                         // TODO: this await here is just grabbing the first exception of the AggregateException. As a framework we shouldn't do that.
-						// TODO: added Unbox just as a way to put a breakpoint to inspect the exception and see that it wasn't updated up to now
-                        resultObject = await invoker.Invoke(target, request); //.Unbox<object>();
+                        resultObject = await invoker.Invoke(target, request);
                     }
                 }
                 catch (Exception exc1)
