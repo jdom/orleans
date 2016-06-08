@@ -1252,10 +1252,18 @@ namespace Orleans.Serialization
                 // Note that the "!t.IsSerializable" is redundant in this if, but it's there in case
                 // this code block moves.
                 var rawException = obj as Exception;
+
+#if NETSTANDARD1_6
+                var foo = new OrleansException(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
+                    t.OrleansTypeName(), rawException.Message,
+                    rawException.StackTrace));
+                SerializeInner(foo, stream, typeof(object));
+#else
                 var foo = new Exception(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
-                                                      t.OrleansTypeName(), rawException.Message,
-                                                      rawException.StackTrace));
+                                      t.OrleansTypeName(), rawException.Message,
+                                      rawException.StackTrace));
                 FallbackSerializer(foo, stream, t);
+#endif
                 return;
             }
 
