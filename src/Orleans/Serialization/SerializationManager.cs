@@ -712,19 +712,26 @@ namespace Orleans.Serialization
                             }
                             else if (!typeInfo.IsSerializable)
                             {
-                                // Comparers with no fields can be safely dealt with as just a type name
-                                var comparer = false;
-                                foreach (var iface in type.GetInterfaces()) {
-                                    var ifaceTypeInfo = iface.GetTypeInfo();
-                                    if (ifaceTypeInfo.IsGenericType
-                                        && (ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IComparer<>)
-                                            || ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IEqualityComparer<>)))
-                                    {
-                                        comparer = true;
-                                        break;
-                                    }
+                                if (typeof(Exception).IsAssignableFrom(type))
+                                {
+                                    ExceptionSerializer.Register(type);
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) Register(type);
+                                else
+                                {
+                                    // Comparers with no fields can be safely dealt with as just a type name
+                                    var comparer = false;
+                                    foreach (var iface in type.GetInterfaces()) {
+                                        var ifaceTypeInfo = iface.GetTypeInfo();
+                                        if (ifaceTypeInfo.IsGenericType
+                                            && (ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IComparer<>)
+                                                || ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IEqualityComparer<>)))
+                                        {
+                                            comparer = true;
+                                            break;
+                                        }
+                                    }
+                                    if (comparer && (type.GetFields().Length == 0)) Register(type);
+                                }
                             }
                             else
                             {
@@ -736,6 +743,13 @@ namespace Orleans.Serialization
                     {
                         // type is abstract, an interface, system-defined, or its namespace is null
                         Register(type);
+                    }
+                }
+                else
+                {
+                    if (!typeInfo.IsSerializable && typeof(Exception).IsAssignableFrom(type))
+                    {
+                        ExceptionSerializer.Register(type);
                     }
                 }
             }
@@ -921,6 +935,10 @@ namespace Orleans.Serialization
                 var typeInfo = t.GetTypeInfo();
                 if (typeInfo.IsGenericType && copiers.TryGetValue(typeInfo.GetGenericTypeDefinition().TypeHandle, out copier))
                     return copier;
+
+                //// TODO: optimize to avoid the lookup for this common case.
+                //if (typeof(Exception).GetTypeInfo().IsAssignableFrom(t))
+                //    return copiers[typeof(Exception).TypeHandle];
             }
 
             return null;
@@ -1123,6 +1141,10 @@ namespace Orleans.Serialization
                 if (typeInfo.IsGenericType)
                     if (serializers.TryGetValue(typeInfo.GetGenericTypeDefinition().TypeHandle, out ser))
                         return ser;
+
+                //// TODO: optimize to avoid the lookup for this common case.
+                //if (typeof(Exception).GetTypeInfo().IsAssignableFrom(t))
+                //    return serializers[typeof(Exception).TypeHandle];
             }
 
             return null;
@@ -1253,17 +1275,19 @@ namespace Orleans.Serialization
                 // this code block moves.
                 var rawException = obj as Exception;
 
-#if NETSTANDARD1_6
-                var foo = new OrleansException(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
-                    t.OrleansTypeName(), rawException.Message,
-                    rawException.StackTrace));
-                SerializeInner(foo, stream, typeof(object));
-#else
+//#if NETSTANDARD1_6
+//                var foo = new OrleansException(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
+//                    t.OrleansTypeName(), rawException.Message,
+//                    rawException.StackTrace));
+//                SerializeInner(foo, stream, typeof(object));
+//#else
+                // TODO: we shouldn't use System.Exception, and instead use a specific exception for this case.
                 var foo = new Exception(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
                                       t.OrleansTypeName(), rawException.Message,
                                       rawException.StackTrace));
-                FallbackSerializer(foo, stream, t);
-#endif
+                SerializeInner(foo, stream, typeof(object));
+                //FallbackSerializer(foo, stream, t);
+//#endif
                 return;
             }
 

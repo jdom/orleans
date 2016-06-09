@@ -492,18 +492,19 @@ namespace UnitTests.Serialization
         [Theory, TestCategory("Functional"), TestCategory("Serialization")]
         [InlineData(SerializerToUse.Default)]
         [InlineData(SerializerToUse.Fallback)]
-        public void Serialize_UnserializableException(SerializerToUse serializerToUse)
+        public void Serialize_UnserializableUnregisteredException(SerializerToUse serializerToUse)
         {
             InitializeSerializer(serializerToUse);
             SerializationManager.UseStandardSerializer = false;
 
             const string message = "This is a test message";
             // throw the exception so that stack trace is populated
-            var source = Assert.Throws<UnserializableException>((Action)(() => { throw new UnserializableException(message); }));
+            Exception source = Assert.Throws<UnserializableException>((Action)(() => { throw new UnserializableException(message); }));
             object deserialized = OrleansSerializationLoop(source);
             var result = Assert.IsAssignableFrom<Exception>(deserialized); //Type is wrong after round trip of unserializable exception
             var expectedMessage = "Non-serializable exception of type " +
                                   typeof(UnserializableException).OrleansTypeName() + ": " + message;
+            output.WriteLine(result.ToString());
             Assert.Contains(expectedMessage, result.Message); //Exception message is wrong after round trip of unserializable exception
         }
 
@@ -1135,11 +1136,11 @@ namespace UnitTests.Serialization
 
             var deserialized = (CircularTest1)OrleansSerializationLoop(c1);
             Assert.Equal(c1.CircularTest2.CircularTest1List.Count, deserialized.CircularTest2.CircularTest1List.Count);
-            Assert.Equal(deserialized, deserialized.CircularTest2.CircularTest1List[0]);
+            Assert.Same(deserialized, deserialized.CircularTest2.CircularTest1List[0]);
 
             deserialized = (CircularTest1)OrleansSerializationLoop(c1, true);
             Assert.Equal(c1.CircularTest2.CircularTest1List.Count, deserialized.CircularTest2.CircularTest1List.Count);
-            Assert.Equal(deserialized, deserialized.CircularTest2.CircularTest1List[0]);
+            Assert.Same(deserialized, deserialized.CircularTest2.CircularTest1List[0]);
         }
 
         [Serializable]
