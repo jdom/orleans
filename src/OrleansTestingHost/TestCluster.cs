@@ -450,9 +450,10 @@ namespace Orleans.TestingHost
                 }
             }
 
+            Task<SiloHandle> primarySiloStartTask = null;
             if (silos.Contains(Silo.PrimarySiloName))
             {
-                Primary = StartOrleansSilo(Silo.SiloType.Primary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[Silo.PrimarySiloName]);
+                primarySiloStartTask = Task.Run(() => StartOrleansSilo(Silo.SiloType.Primary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[Silo.PrimarySiloName]));
             }
 
             var secondarySiloNames = silos.Where(name => !string.Equals(Silo.PrimarySiloName, name)).ToList();
@@ -465,12 +466,25 @@ namespace Orleans.TestingHost
 
                 try
                 {
-                    await Task.WhenAll(siloStartTasks);
+                    var allTasks = primarySiloStartTask != null
+                        ? siloStartTasks.Union(new[] {primarySiloStartTask})
+                        : siloStartTasks;
+                    await Task.WhenAll(allTasks);
                 }
                 catch (Exception)
                 {
+                    if (primarySiloStartTask != null && primarySiloStartTask.Exception == null)
+                    {
+                        Primary = primarySiloStartTask.Result;
+                    }
                     this.additionalSilos.AddRange(siloStartTasks.Where(t => t.Exception != null).Select(t => t.Result));
+
                     throw;
+                }
+
+                if (primarySiloStartTask != null && primarySiloStartTask.Exception == null)
+                {
+                    Primary = primarySiloStartTask.Result;
                 }
 
                 this.additionalSilos.AddRange(siloStartTasks.Select(t => t.Result));
