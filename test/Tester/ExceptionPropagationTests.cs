@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnitTests.GrainInterfaces;
 using UnitTests.Tester;
@@ -43,6 +44,58 @@ namespace UnitTests.General
             Assert.IsAssignableFrom<InvalidOperationException>(exception);
             Assert.Equal("Test exception", exception.Message);
             Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task ExceptionContainsOriginalStackTraceWhenRethrowingLocally()
+        {
+            IExceptionGrain grain = GrainFactory.GetGrain<IExceptionGrain>(GetRandomGrainId());
+            try
+            {
+                // Use await to force the exception to be rethrown and validate that the remote stack trace is still present
+                await grain.ThrowsInvalidOperationException();
+                Assert.True(false, "should have thrown");
+            }
+            catch (InvalidOperationException exception)
+            {
+                output.WriteLine(exception.ToString());
+                Assert.IsAssignableFrom<InvalidOperationException>(exception);
+                Assert.Equal("Test exception", exception.Message);
+                Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+            }
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public void ExceptionContainsOriginalStackTraceNoOrleans()
+        {
+            var grain = new Grains.ExceptionGrain();
+            // Explicitly using .Wait() instead of await the task to avoid any modification of the inner exception
+            var aggEx = Assert.Throws<AggregateException>(
+                () => grain.ThrowsInvalidOperationException().Wait());
+
+            var exception = aggEx.InnerException;
+            output.WriteLine(exception.ToString());
+            Assert.IsAssignableFrom<InvalidOperationException>(exception);
+            Assert.Equal("Test exception", exception.Message);
+            Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task ExceptionContainsOriginalStackTrace2NoOrleans()
+        {
+            var grain = new Grains.ExceptionGrain();
+            try
+            {
+                await grain.ThrowsInvalidOperationException();
+                Assert.True(false, "should have thrown");
+            }
+            catch (InvalidOperationException exception)
+            {
+                output.WriteLine(exception.ToString());
+                Assert.IsAssignableFrom<InvalidOperationException>(exception);
+                Assert.Equal("Test exception", exception.Message);
+                Assert.Contains("ThrowsInvalidOperationException", exception.StackTrace);
+            }
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional")]

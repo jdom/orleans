@@ -1,5 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Orleans.Async;
@@ -310,7 +313,9 @@ namespace Orleans
             }
             else if (task.IsFaulted)
             {
-                resolver.TrySetException(task.Exception.InnerExceptions);
+                //var exceptions = task.Exception.InnerExceptions.Select(PrepareForRemoting);
+                var exceptions = task.Exception.InnerExceptions;
+                resolver.TrySetException(exceptions);
             }
             else if (task.IsCanceled)
             {
@@ -324,7 +329,9 @@ namespace Orleans
                 {
                     if (t.IsFaulted)
                     {
-                        resolver.TrySetException(t.Exception.InnerExceptions);
+                        //var exceptions = t.Exception.InnerExceptions.Select(PrepareForRemoting);
+                        var exceptions = t.Exception.InnerExceptions;
+                        resolver.TrySetException(exceptions);
                     }
                     else if (t.IsCanceled)
                     {
@@ -337,6 +344,15 @@ namespace Orleans
                 });
             }
             return resolver.Task;
+        }
+
+        internal static Exception PrepareForRemoting(this Exception exception)
+        {
+            typeof(Exception).InvokeMember(
+                "PrepForRemoting",
+                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod,
+                null, exception, new object[0]);
+            return exception;
         }
 
         //The rationale for GetAwaiter().GetResult() instead of .Result

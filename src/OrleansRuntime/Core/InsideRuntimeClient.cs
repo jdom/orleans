@@ -438,7 +438,9 @@ namespace Orleans.Runtime
         {
             try
             {
-                SendResponse(message, Response.ExceptionResponse((Exception)SerializationManager.DeepCopy(ex)));
+                var copiedException = (Exception) SerializationManager.DeepCopy(ex);
+                copiedException.PrepareForRemoting();
+                SendResponse(message, Response.ExceptionResponse(copiedException));
             }
             catch (Exception exc1)
             {
