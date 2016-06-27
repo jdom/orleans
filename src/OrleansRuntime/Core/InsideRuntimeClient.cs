@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -434,12 +435,29 @@ namespace Orleans.Runtime
             }
         }
 
+        private static readonly Lazy<Func<Exception, Exception>> prepForRemotingLazy = 
+            new Lazy<Func<Exception, Exception>>(() =>
+            {
+                // call the Exception.PrepForRemoting internal method
+                ParameterExpression exceptionParameter = Expression.Parameter(typeof(Exception));
+                MethodCallExpression prepForRemotingCall = Expression.Call(exceptionParameter, "PrepForRemoting", Type.EmptyTypes);
+                Expression<Func<Exception, Exception>> lambda = Expression.Lambda<Func<Exception, Exception>>(prepForRemotingCall, exceptionParameter);
+                Func<Exception, Exception> func = lambda.Compile();
+                return func;
+            });
+
+        private static Exception PrepareForRemoting(Exception exception)
+        {
+            prepForRemotingLazy.Value.Invoke(exception);
+            return exception;
+        }
+
         private void SafeSendExceptionResponse(Message message, Exception ex)
         {
             try
             {
-                var copiedException = (Exception) SerializationManager.DeepCopy(ex);
-                copiedException.PrepareForRemoting();
+                var copiedException = (Exception)SerializationManager.DeepCopy(ex);
+                PrepareForRemoting(copiedException);
                 SendResponse(message, Response.ExceptionResponse(copiedException));
             }
             catch (Exception exc1)

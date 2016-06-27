@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Orleans.Async;
@@ -311,9 +310,7 @@ namespace Orleans
             }
             else if (task.IsFaulted)
             {
-                //var exceptions = task.Exception.InnerExceptions.Select(PrepareForRemoting);
-                var exceptions = task.Exception.InnerExceptions;
-                resolver.TrySetException(exceptions);
+                resolver.TrySetException(task.Exception.InnerExceptions);
             }
             else if (task.IsCanceled)
             {
@@ -327,9 +324,7 @@ namespace Orleans
                 {
                     if (t.IsFaulted)
                     {
-                        //var exceptions = t.Exception.InnerExceptions.Select(PrepareForRemoting);
-                        var exceptions = t.Exception.InnerExceptions;
-                        resolver.TrySetException(exceptions);
+                        resolver.TrySetException(t.Exception.InnerExceptions);
                     }
                     else if (t.IsCanceled)
                     {
@@ -342,23 +337,6 @@ namespace Orleans
                 });
             }
             return resolver.Task;
-        }
-
-        private static readonly Lazy<Func<Exception, Exception>> prepForRemoting = new Lazy<Func<Exception, Exception>>(
-            () =>
-            {
-                // call the Exception.PrepForRemoting internal method
-                ParameterExpression exceptionParameter = Expression.Parameter(typeof(Exception));
-                MethodCallExpression prepForRemotingCall = Expression.Call(exceptionParameter, "PrepForRemoting", Type.EmptyTypes);
-                Expression<Func<Exception, Exception>> lambda = Expression.Lambda<Func<Exception, Exception>>(prepForRemotingCall, exceptionParameter);
-                Func<Exception, Exception> func = lambda.Compile();
-                return func;
-            });
-
-        internal static Exception PrepareForRemoting(this Exception exception)
-        {
-            prepForRemoting.Value.Invoke(exception);
-            return exception;
         }
 
         //The rationale for GetAwaiter().GetResult() instead of .Result
