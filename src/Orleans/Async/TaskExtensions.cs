@@ -1,8 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Orleans.Async;
@@ -346,12 +344,20 @@ namespace Orleans
             return resolver.Task;
         }
 
+        private static readonly Lazy<Func<Exception, Exception>> prepForRemoting = new Lazy<Func<Exception, Exception>>(
+            () =>
+            {
+                // call the Exception.PrepForRemoting internal method
+                ParameterExpression exceptionParameter = Expression.Parameter(typeof(Exception));
+                MethodCallExpression prepForRemotingCall = Expression.Call(exceptionParameter, "PrepForRemoting", Type.EmptyTypes);
+                Expression<Func<Exception, Exception>> lambda = Expression.Lambda<Func<Exception, Exception>>(prepForRemotingCall, exceptionParameter);
+                Func<Exception, Exception> func = lambda.Compile();
+                return func;
+            });
+
         internal static Exception PrepareForRemoting(this Exception exception)
         {
-            typeof(Exception).InvokeMember(
-                "PrepForRemoting",
-                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod,
-                null, exception, new object[0]);
+            prepForRemoting.Value.Invoke(exception);
             return exception;
         }
 
