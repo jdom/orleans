@@ -25,15 +25,10 @@ namespace Orleans.Runtime
 
         private static string GetSimpleNameHandleArray(Type t, Language language)
         {
-            return GetSimpleNameHandleArray(t.GetTypeInfo(), language);
-        }
+            if (t.IsArray && language == Language.VisualBasic)
+                return t.Name.Replace('[', '(').Replace(']', ')');
 
-        private static string GetSimpleNameHandleArray(TypeInfo typeInfo, Language language)
-        {
-            if (typeInfo.IsArray && language == Language.VisualBasic)
-                return typeInfo.Name.Replace('[', '(').Replace(']', ')');
-
-            return typeInfo.Name;
+            return t.Name;
         }
 
         public static string GetSimpleTypeName(Type t, Predicate<Type> fullName = null, Language language = Language.CSharp)

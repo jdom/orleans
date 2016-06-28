@@ -693,7 +693,7 @@ namespace Orleans.Runtime
             var grainTypeName = grainType.FullName;
 
             // Get the storage provider name, using the default if not specified.
-            var attr = data.GrainInstanceType.GetCustomAttributes<StorageProviderAttribute>(true).FirstOrDefault();
+            var attr = grainType.GetTypeInfo().GetCustomAttributes<StorageProviderAttribute>(true).FirstOrDefault();
             var storageProviderName = attr != null ? attr.ProviderName : Constants.DEFAULT_STORAGE_PROVIDER_NAME;
 
             IStorageProvider provider;

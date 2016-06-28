@@ -87,17 +87,19 @@ namespace Orleans.CodeGeneration
 
         public static bool IsUnordered(MethodInfo methodInfo)
         {
-            return methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof (UnorderedAttribute), true).Any() ||
-                (methodInfo.DeclaringType.GetInterfaces().Any(i => i.GetTypeInfo().GetCustomAttributes(typeof (UnorderedAttribute), true)
-                    .Any() && methodInfo.DeclaringType.GetTypeInfo().GetRuntimeInterfaceMap(i)
-                    .TargetMethods.Contains(methodInfo))) || IsStatelessWorker(methodInfo);
+            var declaringTypeInfo = methodInfo.DeclaringType.GetTypeInfo();
+            return declaringTypeInfo.GetCustomAttributes(typeof(UnorderedAttribute), true).Any() 
+                || (declaringTypeInfo.GetInterfaces().Any(
+                    i => i.GetTypeInfo().GetCustomAttributes(typeof(UnorderedAttribute), true).Any() 
+                        && declaringTypeInfo.GetRuntimeInterfaceMap(i).TargetMethods.Contains(methodInfo)))
+                || IsStatelessWorker(methodInfo);
         }
 
         public static bool IsStatelessWorker(Type grainType)
         {
-            return grainType.GetTypeInfo().GetCustomAttributes(typeof (StatelessWorkerAttribute), true).Any() ||
+            return grainType.GetTypeInfo().GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any() ||
                 grainType.GetInterfaces()
-                    .Any(i => i.GetTypeInfo().GetCustomAttributes(typeof (StatelessWorkerAttribute), true).Any());
+                    .Any(i => i.GetTypeInfo().GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any());
         }
 
         public static bool IsStatelessWorker(TypeInfo grainTypeInfo)
@@ -187,7 +189,7 @@ namespace Orleans.CodeGeneration
             return GetTypeCode(grainClass);
         }
 
-
+        
         internal static bool TryValidateInterfaceRules(Type type, out List<string> violations)
         {
             violations = new List<string>();
