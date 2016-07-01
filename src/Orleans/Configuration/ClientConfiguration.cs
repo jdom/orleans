@@ -352,7 +352,7 @@ namespace Orleans.Runtime.Configuration
         /// <param name="properties">Properties that will be passed to stream provider upon initialization</param>
         public void RegisterStreamProvider<T>(string providerName, IDictionary<string, string> properties = null) where T : Orleans.Streams.IStreamProvider
         {
-            var providerTypeInfo = typeof(T).GetTypeInfo();
+            TypeInfo providerTypeInfo = typeof(T).GetTypeInfo();
             if (providerTypeInfo.IsAbstract ||
                 providerTypeInfo.IsGenericType ||
                 !typeof(Orleans.Streams.IStreamProvider).GetTypeInfo().IsAssignableFrom(providerTypeInfo))

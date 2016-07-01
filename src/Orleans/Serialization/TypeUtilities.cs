@@ -14,12 +14,6 @@ namespace Orleans.Serialization
 
     internal static class TypeUtilities
     {
-        internal static bool IsOrleansPrimitive(this Type t)
-        {
-            var typeInfo = t.GetTypeInfo();
-            return typeInfo.IsPrimitive || typeInfo.IsEnum || t == typeof(string) || t == typeof(DateTime) || t == typeof(Decimal) || (typeInfo.IsArray && typeInfo.GetElementType().IsOrleansPrimitive());
-        }
-
         internal static bool IsOrleansPrimitive(this TypeInfo typeInfo)
         {
             var t = typeInfo.AsType();

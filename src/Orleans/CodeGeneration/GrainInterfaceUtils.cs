@@ -151,7 +151,7 @@ namespace Orleans.CodeGeneration
 
         public static int GetGrainInterfaceId(Type grainInterface)
         {
-            return GetTypeCode(grainInterface.GetTypeInfo());
+            return GetTypeCode(grainInterface);
         }
 
         public static bool IsTaskBasedInterface(Type type)
@@ -175,15 +175,9 @@ namespace Orleans.CodeGeneration
 
         public static int GetGrainClassTypeCode(Type grainClass)
         {
-            return GetGrainClassTypeCode(grainClass.GetTypeInfo());
-        }
-
-        public static int GetGrainClassTypeCode(TypeInfo grainClass)
-        {
             return GetTypeCode(grainClass);
         }
 
-        
         internal static bool TryValidateInterfaceRules(Type type, out List<string> violations)
         {
             violations = new List<string>();
@@ -396,16 +390,21 @@ namespace Orleans.CodeGeneration
             }
         }
 
-        private static int GetTypeCode(TypeInfo grainInterfaceOrClass)
+        private static int GetTypeCode(Type grainInterfaceOrClass)
         {
-            var attr = grainInterfaceOrClass.GetCustomAttributes<TypeCodeOverrideAttribute>(false).FirstOrDefault();
+            var typeInfo = grainInterfaceOrClass.GetTypeInfo();
+            var attr = typeInfo.GetCustomAttributes<TypeCodeOverrideAttribute>(false).FirstOrDefault();
+            if (attr != null && attr.TypeCode > 0)
+            {
+                return attr.TypeCode;
+            }
+
             var fullName = TypeUtils.GetTemplatedName(
                 TypeUtils.GetFullName(grainInterfaceOrClass), 
                 grainInterfaceOrClass,
-                TypeUtils.GetGenericArguments(grainInterfaceOrClass),
+                grainInterfaceOrClass.GetGenericArguments(),
                 t => false);
-            var typeCode = attr != null && attr.TypeCode > 0 ? attr.TypeCode : Utils.CalculateIdHash(fullName);
-            return typeCode;
+            return Utils.CalculateIdHash(fullName);
         }
     }
 }

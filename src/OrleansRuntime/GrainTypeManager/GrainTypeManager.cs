@@ -155,7 +155,7 @@ namespace Orleans.Runtime
             var grainTypeInfo = grainClass.GetTypeInfo();
             var grainClassCompleteName = TypeUtils.GetFullName(grainTypeInfo);
             var isGenericGrainClass = grainTypeInfo.ContainsGenericParameters;
-            var grainClassTypeCode = GrainInterfaceUtils.GetGrainClassTypeCode(grainTypeInfo);
+            var grainClassTypeCode = GrainInterfaceUtils.GetGrainClassTypeCode(grainClass);
             var placement = GrainTypeData.GetPlacementStrategy(grainClass);
             var registrationStrategy = GrainTypeData.GetMultiClusterRegistrationStrategy(grainClass);
 

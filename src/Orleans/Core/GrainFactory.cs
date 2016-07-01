@@ -227,7 +227,7 @@ namespace Orleans
         {
             var typeInfo = interfaceType.GetTypeInfo(); 
             CodeGeneratorManager.GenerateAndCacheCodeForAssembly(typeInfo.Assembly);
-            var genericInterfaceType = typeInfo.IsConstructedGenericType()
+            var genericInterfaceType = interfaceType.IsConstructedGenericType
                                            ? typeInfo.GetGenericTypeDefinition()
                                            : interfaceType;
 
@@ -238,7 +238,7 @@ namespace Orleans
                 return null;
             }
 
-            if (typeInfo.IsConstructedGenericType())
+            if (interfaceType.IsConstructedGenericType)
             {
                 invokerType = invokerType.MakeGenericType(typeInfo.GenericTypeArguments);
             }
@@ -269,7 +269,7 @@ namespace Orleans
         {
             var typeInfo = interfaceType.GetTypeInfo();
             CodeGeneratorManager.GenerateAndCacheCodeForAssembly(typeInfo.Assembly);
-            var genericInterfaceType = typeInfo.IsConstructedGenericType()
+            var genericInterfaceType = interfaceType.IsConstructedGenericType
                                            ? typeInfo.GetGenericTypeDefinition()
                                            : interfaceType;
 
@@ -281,7 +281,7 @@ namespace Orleans
                     string.Format("Cannot find generated GrainReference class for interface '{0}'", interfaceType));
             }
 
-            if (typeInfo.IsConstructedGenericType())
+            if (interfaceType.IsConstructedGenericType)
             {
                 grainReferenceType = grainReferenceType.MakeGenericType(typeInfo.GenericTypeArguments);
             }
