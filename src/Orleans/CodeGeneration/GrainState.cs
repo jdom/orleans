@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Orleans.Serialization;
 
 namespace Orleans
@@ -121,7 +120,7 @@ namespace Orleans
             var type = this.GetType();
             foreach (var key in values.Keys)
             {
-                var property = type.GetTypeInfo().GetProperty(key);
+                var property = type.GetProperty(key);
                 // property doesn't have setter
                 if (property.GetSetMethod() == null) { continue; }
                 property.SetValue(this, values[key]);

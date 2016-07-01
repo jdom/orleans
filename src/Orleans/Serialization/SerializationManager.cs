@@ -819,7 +819,12 @@ namespace Orleans.Serialization
                 type = type.MakeGenericType(genericArgs);
             }
 
-            var constructor = GetConstructor(typeInfo);
+            var constructor =
+                typeInfo.GetConstructor(
+                                BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Instance,
+                                null,
+                                new[] { typeof(GrainReference) },
+                                null);
 
             var ctorParam = Expression.Parameter(typeof(GrainReference), "grainRef");
             var lambda = Expression.Lambda(
@@ -830,22 +835,6 @@ namespace Orleans.Serialization
             return (Func<GrainReference, GrainReference>)lambda.Compile();
         }
 
-        private static ConstructorInfo GetConstructor(TypeInfo typeInfo)
-        {
-            var constructorInfo = 
-#if NETSTANDARD1_5
-            // TODO: only public constructors are supported. Update codegen
-            typeInfo.GetConstructor(new[] { typeof(GrainReference) });
-#else
-            typeInfo.GetConstructor(
-                BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Instance,
-                null,
-                new[] { typeof(GrainReference) },
-                null);
-#endif
-            if (constructorInfo == null) throw new InvalidOperationException($"Constructor does not exist for type {typeInfo.Name}");
-            return constructorInfo;
-        }
 
         private static SerializerMethods RegisterConcreteSerializer(Type concreteType, Type genericSerializerType)
         {

@@ -95,13 +95,6 @@ namespace Orleans.CodeGeneration
                 || IsStatelessWorker(methodInfo);
         }
 
-        public static bool IsStatelessWorker(Type grainType)
-        {
-            return grainType.GetTypeInfo().GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any() ||
-                grainType.GetInterfaces()
-                    .Any(i => i.GetTypeInfo().GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any());
-        }
-
         public static bool IsStatelessWorker(TypeInfo grainTypeInfo)
         {
             return grainTypeInfo.GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any() ||
@@ -111,10 +104,11 @@ namespace Orleans.CodeGeneration
 
         public static bool IsStatelessWorker(MethodInfo methodInfo)
         {
-            return methodInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof (StatelessWorkerAttribute), true).Any() ||
-                (methodInfo.DeclaringType.GetInterfaces().Any(i => i.GetTypeInfo().GetCustomAttributes(
-                    typeof (StatelessWorkerAttribute), true).Any() &&
-                    methodInfo.DeclaringType.GetTypeInfo().GetRuntimeInterfaceMap(i).TargetMethods.Contains(methodInfo)));
+            var declaringTypeInfo = methodInfo.DeclaringType.GetTypeInfo();
+            return declaringTypeInfo.GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any() ||
+                (declaringTypeInfo.GetInterfaces().Any(
+                    i => i.GetTypeInfo().GetCustomAttributes(typeof(StatelessWorkerAttribute), true).Any()
+                        && declaringTypeInfo.GetRuntimeInterfaceMap(i).TargetMethods.Contains(methodInfo)));
         }
 
         public static Dictionary<int, Type> GetRemoteInterfaces(Type type, bool checkIsGrainInterface = true)
@@ -157,7 +151,7 @@ namespace Orleans.CodeGeneration
 
         public static int GetGrainInterfaceId(Type grainInterface)
         {
-            return GetTypeCode(grainInterface);
+            return GetTypeCode(grainInterface.GetTypeInfo());
         }
 
         public static bool IsTaskBasedInterface(Type type)
@@ -377,7 +371,7 @@ namespace Orleans.CodeGeneration
                 var mapping = new InterfaceMapping();
                 
                 if (typeInfo.IsClass)
-                    mapping = grainType.GetTypeInfo().GetRuntimeInterfaceMap(iType);
+                    mapping = typeInfo.GetRuntimeInterfaceMap(iType);
 
                 if (typeInfo.IsInterface || mapping.TargetType == grainType)
                 {
@@ -400,11 +394,6 @@ namespace Orleans.CodeGeneration
                     }
                 }
             }
-        }
-
-        private static int GetTypeCode(Type grainInterfaceOrClass)
-        {
-            return GetTypeCode(grainInterfaceOrClass.GetTypeInfo());
         }
 
         private static int GetTypeCode(TypeInfo grainInterfaceOrClass)
