@@ -36,7 +36,7 @@ namespace Orleans.CodeGeneration
             if (t == typeof (ISystemTarget))
                 return false;
 
-            return typeof (IAddressable).GetTypeInfo().IsAssignableFrom(t);
+            return typeof (IAddressable).IsAssignableFrom(t);
         }
 
         public static MethodInfo[] GetMethods(Type grainType, bool bAllMethods = true)

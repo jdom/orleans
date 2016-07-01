@@ -355,7 +355,7 @@ namespace Orleans.Runtime.Configuration
             TypeInfo providerTypeInfo = typeof(T).GetTypeInfo();
             if (providerTypeInfo.IsAbstract ||
                 providerTypeInfo.IsGenericType ||
-                !typeof(Orleans.Streams.IStreamProvider).GetTypeInfo().IsAssignableFrom(providerTypeInfo))
+                !typeof(Orleans.Streams.IStreamProvider).IsAssignableFrom(typeof(T)))
                 throw new ArgumentException("Expected non-generic, non-abstract type which implements IStreamProvider interface", "typeof(T)");
 
             ProviderConfigurationUtility.RegisterProvider(ProviderConfigurations, ProviderCategoryConfiguration.STREAM_PROVIDER_CATEGORY_NAME, providerTypeInfo.FullName, providerName, properties);

@@ -455,22 +455,22 @@ namespace Orleans.Runtime
 
             Type sourceType = grainRef.GetType();
 
-            if (!typeof(IAddressable).GetTypeInfo().IsAssignableFrom(targetReferenceType.GetTypeInfo()))
+            if (!typeof(IAddressable).IsAssignableFrom(targetReferenceType))
             {
                 throw new InvalidCastException(String.Format("Target type must be derived from Orleans.IAddressable - cannot handle {0}", targetReferenceType));
             }
-            else if (typeof(Grain).GetTypeInfo().IsAssignableFrom(sourceType.GetTypeInfo()))
+            else if (typeof(Grain).IsAssignableFrom(sourceType))
             {
                 Grain grainClassRef = (Grain)grainRef;
                 GrainReference g = FromGrainId(grainClassRef.Data.Identity);
                 grainRef = g;
             }
-            else if (!typeof(GrainReference).GetTypeInfo().IsAssignableFrom(sourceType.GetTypeInfo()))
+            else if (!typeof(GrainReference).IsAssignableFrom(sourceType))
             {
                 throw new InvalidCastException(String.Format("Grain reference object must an Orleans.GrainReference - cannot handle {0}", sourceType));
             }
 
-            if (targetReferenceType.GetTypeInfo().IsAssignableFrom(sourceType.GetTypeInfo()))
+            if (targetReferenceType.IsAssignableFrom(sourceType))
             {
                 // Already compatible - no conversion or wrapping necessary
                 return grainRef;

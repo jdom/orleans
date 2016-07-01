@@ -400,7 +400,7 @@ namespace Orleans.Runtime
 
             if (grainType == type || grainChevronType == type) return false;
 
-            if (!grainType.GetTypeInfo().IsAssignableFrom(type)) return false;
+            if (!grainType.IsAssignableFrom(type)) return false;
 
             // exclude generated classes.
             return !IsGeneratedType(type);
@@ -421,9 +421,9 @@ namespace Orleans.Runtime
                 systemTargetBaseInterfaceType = ToReflectionOnlyType(systemTargetBaseInterfaceType);
             }
 
-            if (!systemTargetInterfaceType.GetTypeInfo().IsAssignableFrom(type) ||
-                !systemTargetBaseInterfaceType.GetTypeInfo().IsAssignableFrom(type) ||
-                !systemTargetType.GetTypeInfo().IsAssignableFrom(type)) return false;
+            if (!systemTargetInterfaceType.IsAssignableFrom(type) ||
+                !systemTargetBaseInterfaceType.IsAssignableFrom(type) ||
+                !systemTargetType.IsAssignableFrom(type)) return false;
 
             // exclude generated classes.
             return !IsGeneratedType(type);
@@ -524,7 +524,7 @@ namespace Orleans.Runtime
                 generalType = ToReflectionOnlyType(generalType);
             }
 #endif
-            return generalType.GetTypeInfo().IsAssignableFrom(type) && TypeHasAttribute(type, typeof(MethodInvokerAttribute));
+            return generalType.IsAssignableFrom(type) && TypeHasAttribute(type, typeof(MethodInvokerAttribute));
         }
 
 #if NETSTANDARD1_5
@@ -637,7 +637,7 @@ namespace Orleans.Runtime
 
                 // we can't use Type.GetCustomAttributes here because we could potentially be working with a reflection-only type.
                 return CustomAttributeData.GetCustomAttributes(type).Any(
-                        attrib => attribType.GetTypeInfo().IsAssignableFrom(attrib.AttributeType));
+                        attrib => attribType.IsAssignableFrom(attrib.AttributeType));
             }
 #endif
 

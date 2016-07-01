@@ -705,22 +705,22 @@ namespace Orleans.Serialization
                             {
                                 // the lookup registers the serializer.
                             }
-                            else if (!type.GetTypeInfo().IsSerializable)
+                            else if (!typeInfo.IsSerializable)
                             {
-                                // Comparers with no fields can be safely dealt with as just a type name
-                                var comparer = false;
-                                foreach (var iface in type.GetInterfaces()) {
-                                    var ifaceTypeInfo = iface.GetTypeInfo();
-                                    if (ifaceTypeInfo.IsGenericType
-                                        && (ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IComparer<>)
-                                            || ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IEqualityComparer<>)))
-                                    {
-                                        comparer = true;
-                                        break;
+                                    // Comparers with no fields can be safely dealt with as just a type name
+                                    var comparer = false;
+                                    foreach (var iface in type.GetInterfaces()) {
+                                        var ifaceTypeInfo = iface.GetTypeInfo();
+                                        if (ifaceTypeInfo.IsGenericType
+                                            && (ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IComparer<>)
+                                                || ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IEqualityComparer<>)))
+                                        {
+                                            comparer = true;
+                                            break;
+                                        }
                                     }
+                                    if (comparer && (type.GetFields().Length == 0)) Register(type);
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) Register(type);
-                            }
                             else
                             {
                                 Register(type);
@@ -733,7 +733,7 @@ namespace Orleans.Serialization
                         Register(type);
                     }
                 }
-            }
+                    }
             catch (ReflectionTypeLoadException rtle)
             {
                 var sb = new StringBuilder();
@@ -1236,8 +1236,9 @@ namespace Orleans.Serialization
                 // this code block moves.
                 var rawException = obj as Exception;
                 var foo = new Exception(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
-                                                      t.OrleansTypeName(), rawException.Message,
-                                                      rawException.StackTrace));
+                                      t.OrleansTypeName(), rawException.Message,
+                                      rawException.StackTrace));
+                // TODO: I believe we should use: SerializeInner(foo, stream, typeof(object));
                 FallbackSerializer(foo, stream, t);
                 return;
             }

@@ -223,17 +223,17 @@ namespace Orleans.Runtime
             }
         }
 
-        internal TypeInfo GrainInstanceType { get; private set; }
+        internal Type GrainInstanceType { get; private set; }
 
         internal void SetGrainInstance(Grain grainInstance)
         {
             GrainInstance = grainInstance;
             if (grainInstance != null)
             {
-                GrainInstanceType = grainInstance.GetType().GetTypeInfo();
+                GrainInstanceType = grainInstance.GetType();
 
                 // Don't ever collect system grains or reminder table grain or memory store grains.
-                bool doNotCollect = typeof(IReminderTableGrain).GetTypeInfo().IsAssignableFrom(GrainInstanceType) || typeof(IMemoryStorageGrain).GetTypeInfo().IsAssignableFrom(GrainInstanceType);
+                bool doNotCollect = typeof(IReminderTableGrain).IsAssignableFrom(GrainInstanceType) || typeof(IMemoryStorageGrain).IsAssignableFrom(GrainInstanceType);
                 if (doNotCollect)
                 {
                     this.collector = null;
@@ -546,7 +546,7 @@ namespace Orleans.Runtime
             if (maxEnqueuedRequestsLimit != null) return maxEnqueuedRequestsLimit;
             if (GrainInstanceType != null)
             {
-                string limitName = CodeGeneration.GrainInterfaceUtils.IsStatelessWorker(GrainInstanceType)
+                string limitName = CodeGeneration.GrainInterfaceUtils.IsStatelessWorker(GrainInstanceType.GetTypeInfo())
                     ? LimitNames.LIMIT_MAX_ENQUEUED_REQUESTS_STATELESS_WORKER
                     : LimitNames.LIMIT_MAX_ENQUEUED_REQUESTS;
                 maxEnqueuedRequestsLimit = nodeConfiguration.LimitManager.GetLimit(limitName); // Cache for next time

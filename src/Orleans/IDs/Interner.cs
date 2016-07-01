@@ -177,7 +177,7 @@ namespace Orleans
                     // Decide whether the old object or the new one has the most specific / derived type
                     Type tNew = obj.GetType();
                     Type tOld = obj2.GetType();
-                    if (tNew != tOld && tOld.GetTypeInfo().IsAssignableFrom(tNew.GetTypeInfo()))
+                    if (tNew != tOld && tOld.IsAssignableFrom(tNew))
                     {
                         // Keep and use the more specific type
                         cacheEntry.Target = obj;
