@@ -675,13 +675,13 @@ namespace Orleans.Runtime
                 }
                 //Create a new instance of a stateful grain
                 else
-                    {
+                {
                     SetupStorageProvider(grainType, data);
                     grain = grainCreator.CreateGrainInstance(grainType, data.Identity, stateObjectType, data.StorageProvider);
-                    }
+                }
                 grain.Data = data;
                 data.SetGrainInstance(grain);
-                }
+            }
 
             activations.IncrementGrainCounter(grainClassName);
 
