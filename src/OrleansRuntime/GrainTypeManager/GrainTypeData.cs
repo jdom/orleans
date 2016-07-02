@@ -91,10 +91,7 @@ namespace Orleans.Runtime
 
             if (GetPlacementStrategy<StatelessWorkerAttribute>(
                 grainClass,
-                (StatelessWorkerAttribute attr) =>
-                {
-                    return new StatelessWorkerPlacement(attr.MaxLocalWorkers);
-                },
+                attr => new StatelessWorkerPlacement(attr.MaxLocalWorkers),
                 out placement))
             {
                 return placement;
