@@ -1237,9 +1237,8 @@ namespace Orleans.Serialization
                 // this code block moves.
                 var rawException = obj as Exception;
                 var foo = new Exception(String.Format("Non-serializable exception of type {0}: {1}" + Environment.NewLine + "at {2}",
-                                      t.OrleansTypeName(), rawException.Message,
-                                      rawException.StackTrace));
-                // TODO: I believe we should use: SerializeInner(foo, stream, typeof(object));
+                                                      t.OrleansTypeName(), rawException.Message,
+                                                      rawException.StackTrace));
                 FallbackSerializer(foo, stream, t);
                 return;
             }
