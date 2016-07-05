@@ -21,7 +21,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.Unit input = ((global::Microsoft.FSharp.Core.Unit)original);
-            global::Microsoft.FSharp.Core.Unit result = (global::Microsoft.FSharp.Core.Unit)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.Unit));
+            global::Microsoft.FSharp.Core.Unit result = (global::Microsoft.FSharp.Core.Unit)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.Unit));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -35,7 +35,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.Unit result = (global::Microsoft.FSharp.Core.Unit)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.Unit));
+            global::Microsoft.FSharp.Core.Unit result = (global::Microsoft.FSharp.Core.Unit)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.Unit));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Core.Unit)result;
         }
@@ -295,7 +295,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.DefaultAugmentationAttribute input = ((global::Microsoft.FSharp.Core.DefaultAugmentationAttribute)original);
-            global::Microsoft.FSharp.Core.DefaultAugmentationAttribute result = (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute));
+            global::Microsoft.FSharp.Core.DefaultAugmentationAttribute result = (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -311,7 +311,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.DefaultAugmentationAttribute result = (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute));
+            global::Microsoft.FSharp.Core.DefaultAugmentationAttribute result = (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
             return (global::Microsoft.FSharp.Core.DefaultAugmentationAttribute)result;
@@ -412,7 +412,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.AutoSerializableAttribute input = ((global::Microsoft.FSharp.Core.AutoSerializableAttribute)original);
-            global::Microsoft.FSharp.Core.AutoSerializableAttribute result = (global::Microsoft.FSharp.Core.AutoSerializableAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.AutoSerializableAttribute));
+            global::Microsoft.FSharp.Core.AutoSerializableAttribute result = (global::Microsoft.FSharp.Core.AutoSerializableAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.AutoSerializableAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -428,7 +428,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.AutoSerializableAttribute result = (global::Microsoft.FSharp.Core.AutoSerializableAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.AutoSerializableAttribute));
+            global::Microsoft.FSharp.Core.AutoSerializableAttribute result = (global::Microsoft.FSharp.Core.AutoSerializableAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.AutoSerializableAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
             return (global::Microsoft.FSharp.Core.AutoSerializableAttribute)result;
@@ -837,7 +837,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompiledNameAttribute input = ((global::Microsoft.FSharp.Core.CompiledNameAttribute)original);
-            global::Microsoft.FSharp.Core.CompiledNameAttribute result = (global::Microsoft.FSharp.Core.CompiledNameAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompiledNameAttribute));
+            global::Microsoft.FSharp.Core.CompiledNameAttribute result = (global::Microsoft.FSharp.Core.CompiledNameAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompiledNameAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -853,7 +853,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompiledNameAttribute result = (global::Microsoft.FSharp.Core.CompiledNameAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompiledNameAttribute));
+            global::Microsoft.FSharp.Core.CompiledNameAttribute result = (global::Microsoft.FSharp.Core.CompiledNameAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompiledNameAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.CompiledNameAttribute)result;
@@ -1108,7 +1108,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute input = ((global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute)original);
-            global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute result = (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute));
+            global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute result = (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute));
             setField2(result, getField2(input));
             setField1(result, getField1(input));
             setField0(result, getField0(input));
@@ -1128,7 +1128,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute result = (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute));
+            global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute result = (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpInterfaceDataVersionAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField2(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -1169,7 +1169,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilationMappingAttribute input = ((global::Microsoft.FSharp.Core.CompilationMappingAttribute)original);
-            global::Microsoft.FSharp.Core.CompilationMappingAttribute result = (global::Microsoft.FSharp.Core.CompilationMappingAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationMappingAttribute));
+            global::Microsoft.FSharp.Core.CompilationMappingAttribute result = (global::Microsoft.FSharp.Core.CompilationMappingAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationMappingAttribute));
             setField4(result, getField4(input));
             setField3(result, getField3(input));
             setField2(result, getField2(input));
@@ -1193,7 +1193,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilationMappingAttribute result = (global::Microsoft.FSharp.Core.CompilationMappingAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationMappingAttribute));
+            global::Microsoft.FSharp.Core.CompilationMappingAttribute result = (global::Microsoft.FSharp.Core.CompilationMappingAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationMappingAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField4(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField3(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -1224,7 +1224,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilationSourceNameAttribute input = ((global::Microsoft.FSharp.Core.CompilationSourceNameAttribute)original);
-            global::Microsoft.FSharp.Core.CompilationSourceNameAttribute result = (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute));
+            global::Microsoft.FSharp.Core.CompilationSourceNameAttribute result = (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1240,7 +1240,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilationSourceNameAttribute result = (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute));
+            global::Microsoft.FSharp.Core.CompilationSourceNameAttribute result = (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.CompilationSourceNameAttribute)result;
@@ -1267,7 +1267,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilationRepresentationAttribute input = ((global::Microsoft.FSharp.Core.CompilationRepresentationAttribute)original);
-            global::Microsoft.FSharp.Core.CompilationRepresentationAttribute result = (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute));
+            global::Microsoft.FSharp.Core.CompilationRepresentationAttribute result = (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1283,7 +1283,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilationRepresentationAttribute result = (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute));
+            global::Microsoft.FSharp.Core.CompilationRepresentationAttribute result = (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::Microsoft.FSharp.Core.CompilationRepresentationFlags)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::Microsoft.FSharp.Core.CompilationRepresentationFlags), stream));
             return (global::Microsoft.FSharp.Core.CompilationRepresentationAttribute)result;
@@ -1310,7 +1310,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.ExperimentalAttribute input = ((global::Microsoft.FSharp.Core.ExperimentalAttribute)original);
-            global::Microsoft.FSharp.Core.ExperimentalAttribute result = (global::Microsoft.FSharp.Core.ExperimentalAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.ExperimentalAttribute));
+            global::Microsoft.FSharp.Core.ExperimentalAttribute result = (global::Microsoft.FSharp.Core.ExperimentalAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.ExperimentalAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1326,7 +1326,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.ExperimentalAttribute result = (global::Microsoft.FSharp.Core.ExperimentalAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.ExperimentalAttribute));
+            global::Microsoft.FSharp.Core.ExperimentalAttribute result = (global::Microsoft.FSharp.Core.ExperimentalAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.ExperimentalAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.ExperimentalAttribute)result;
@@ -1353,7 +1353,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute input = ((global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute)original);
-            global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute result = (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute));
+            global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute result = (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute));
             setField0(result, (global::System.Int32[])global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1369,7 +1369,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute result = (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute));
+            global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute result = (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.Int32[])global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32[]), stream));
             return (global::Microsoft.FSharp.Core.CompilationArgumentCountsAttribute)result;
@@ -1417,7 +1417,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CustomOperationAttribute input = ((global::Microsoft.FSharp.Core.CustomOperationAttribute)original);
-            global::Microsoft.FSharp.Core.CustomOperationAttribute result = (global::Microsoft.FSharp.Core.CustomOperationAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CustomOperationAttribute));
+            global::Microsoft.FSharp.Core.CustomOperationAttribute result = (global::Microsoft.FSharp.Core.CustomOperationAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CustomOperationAttribute));
             setField2(result, getField2(input));
             setField1(result, getField1(input));
             setField4(result, getField4(input));
@@ -1447,7 +1447,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CustomOperationAttribute result = (global::Microsoft.FSharp.Core.CustomOperationAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CustomOperationAttribute));
+            global::Microsoft.FSharp.Core.CustomOperationAttribute result = (global::Microsoft.FSharp.Core.CustomOperationAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CustomOperationAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField2(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
             setField1(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
@@ -1518,7 +1518,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute input = ((global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute)original);
-            global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute result = (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute));
+            global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute result = (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1534,7 +1534,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute result = (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute));
+            global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute result = (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.StructuredFormatDisplayAttribute)result;
@@ -1570,7 +1570,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilerMessageAttribute input = ((global::Microsoft.FSharp.Core.CompilerMessageAttribute)original);
-            global::Microsoft.FSharp.Core.CompilerMessageAttribute result = (global::Microsoft.FSharp.Core.CompilerMessageAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerMessageAttribute));
+            global::Microsoft.FSharp.Core.CompilerMessageAttribute result = (global::Microsoft.FSharp.Core.CompilerMessageAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerMessageAttribute));
             setField2(result, getField2(input));
             setField3(result, getField3(input));
             setField1(result, getField1(input));
@@ -1592,7 +1592,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilerMessageAttribute result = (global::Microsoft.FSharp.Core.CompilerMessageAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerMessageAttribute));
+            global::Microsoft.FSharp.Core.CompilerMessageAttribute result = (global::Microsoft.FSharp.Core.CompilerMessageAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerMessageAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField2(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
             setField3(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
@@ -1887,7 +1887,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1903,7 +1903,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             return (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice1Of2)result;
@@ -1934,7 +1934,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1950,7 +1950,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
             return (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2>.Choice2Of2)result;
@@ -1981,7 +1981,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -1997,7 +1997,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             return (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice1Of3)result;
@@ -2028,7 +2028,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -2044,7 +2044,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
             return (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice2Of3)result;
@@ -2075,7 +2075,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -2091,7 +2091,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T3), stream));
             return (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3>.Choice3Of3)result;
@@ -2125,7 +2125,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4));
             setField1(result, getField1(input));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2143,7 +2143,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice1Of4));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
@@ -2178,7 +2178,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4));
             setField1(result, getField1(input));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2196,7 +2196,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice2Of4));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -2231,7 +2231,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4));
             setField1(result, getField1(input));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2249,7 +2249,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice3Of4));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T3), stream));
@@ -2284,7 +2284,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4));
             setField1(result, getField1(input));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2302,7 +2302,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4>.Choice4Of4));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T4), stream));
@@ -2337,7 +2337,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5));
             setField1(result, getField1(input));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2355,7 +2355,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice1Of5));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
@@ -2390,7 +2390,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5));
             setField1(result, getField1(input));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2408,7 +2408,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice2Of5));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -2443,7 +2443,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5));
             setField1(result, getField1(input));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2461,7 +2461,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice3Of5));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T3), stream));
@@ -2496,7 +2496,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5));
             setField1(result, getField1(input));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2514,7 +2514,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice4Of5));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T4), stream));
@@ -2549,7 +2549,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5));
             setField1(result, getField1(input));
             setField0(result, (T5)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2567,7 +2567,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5>.Choice5Of5));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T5)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T5), stream));
@@ -2602,7 +2602,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6));
             setField1(result, getField1(input));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2620,7 +2620,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice1Of6));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
@@ -2655,7 +2655,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6));
             setField1(result, getField1(input));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2673,7 +2673,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice2Of6));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -2708,7 +2708,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6));
             setField1(result, getField1(input));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2726,7 +2726,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice3Of6));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T3), stream));
@@ -2761,7 +2761,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6));
             setField1(result, getField1(input));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2779,7 +2779,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice4Of6));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T4), stream));
@@ -2814,7 +2814,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6));
             setField1(result, getField1(input));
             setField0(result, (T5)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2832,7 +2832,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice5Of6));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T5)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T5), stream));
@@ -2867,7 +2867,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6));
             setField1(result, getField1(input));
             setField0(result, (T6)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2885,7 +2885,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6>.Choice6Of6));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T6)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T6), stream));
@@ -2920,7 +2920,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7));
             setField1(result, getField1(input));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2938,7 +2938,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice1Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
@@ -2973,7 +2973,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7));
             setField1(result, getField1(input));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -2991,7 +2991,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice2Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -3026,7 +3026,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7));
             setField1(result, getField1(input));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3044,7 +3044,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice3Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T3)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T3), stream));
@@ -3079,7 +3079,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7));
             setField1(result, getField1(input));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3097,7 +3097,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice4Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T4)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T4), stream));
@@ -3132,7 +3132,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7));
             setField1(result, getField1(input));
             setField0(result, (T5)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3150,7 +3150,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice5Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T5)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T5), stream));
@@ -3185,7 +3185,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7));
             setField1(result, getField1(input));
             setField0(result, (T6)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3203,7 +3203,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice6Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T6)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T6), stream));
@@ -3238,7 +3238,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7 input = ((global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7)original);
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7));
             setField1(result, getField1(input));
             setField0(result, (T7)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3256,7 +3256,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7));
+            global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7 result = (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpChoice<T1, T2, T3, T4, T5, T6, T7>.Choice7Of7));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (T7)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T7), stream));
@@ -3288,7 +3288,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpRef<T> input = ((global::Microsoft.FSharp.Core.FSharpRef<T>)original);
-            global::Microsoft.FSharp.Core.FSharpRef<T> result = (global::Microsoft.FSharp.Core.FSharpRef<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpRef<T>));
+            global::Microsoft.FSharp.Core.FSharpRef<T> result = (global::Microsoft.FSharp.Core.FSharpRef<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpRef<T>));
             setField0(result, (T)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3304,7 +3304,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpRef<T> result = (global::Microsoft.FSharp.Core.FSharpRef<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpRef<T>));
+            global::Microsoft.FSharp.Core.FSharpRef<T> result = (global::Microsoft.FSharp.Core.FSharpRef<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpRef<T>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T), stream));
             return (global::Microsoft.FSharp.Core.FSharpRef<T>)result;
@@ -3335,7 +3335,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.FSharpOption<T> input = ((global::Microsoft.FSharp.Core.FSharpOption<T>)original);
-            global::Microsoft.FSharp.Core.FSharpOption<T> result = (global::Microsoft.FSharp.Core.FSharpOption<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpOption<T>));
+            global::Microsoft.FSharp.Core.FSharpOption<T> result = (global::Microsoft.FSharp.Core.FSharpOption<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpOption<T>));
             setField0(result, (T)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3351,7 +3351,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.FSharpOption<T> result = (global::Microsoft.FSharp.Core.FSharpOption<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.FSharpOption<T>));
+            global::Microsoft.FSharp.Core.FSharpOption<T> result = (global::Microsoft.FSharp.Core.FSharpOption<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.FSharpOption<T>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T), stream));
             return (global::Microsoft.FSharp.Core.FSharpOption<T>)result;
@@ -3385,7 +3385,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Collections.FSharpList<T> input = ((global::Microsoft.FSharp.Collections.FSharpList<T>)original);
-            global::Microsoft.FSharp.Collections.FSharpList<T> result = (global::Microsoft.FSharp.Collections.FSharpList<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Collections.FSharpList<T>));
+            global::Microsoft.FSharp.Collections.FSharpList<T> result = (global::Microsoft.FSharp.Collections.FSharpList<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Collections.FSharpList<T>));
             setField0(result, (T)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (global::Microsoft.FSharp.Collections.FSharpList<T>)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3403,7 +3403,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Collections.FSharpList<T> result = (global::Microsoft.FSharp.Collections.FSharpList<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Collections.FSharpList<T>));
+            global::Microsoft.FSharp.Collections.FSharpList<T> result = (global::Microsoft.FSharp.Collections.FSharpList<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Collections.FSharpList<T>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T), stream));
             setField1(result, (global::Microsoft.FSharp.Collections.FSharpList<T>)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::Microsoft.FSharp.Collections.FSharpList<T>), stream));
@@ -3435,7 +3435,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue> input = ((global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>)original);
-            global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue> result = (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>));
+            global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue> result = (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>));
             setField0(result, (global::System.Collections.Generic.KeyValuePair<TKey, TValue>[])global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3451,7 +3451,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue> result = (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>));
+            global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue> result = (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.Collections.Generic.KeyValuePair<TKey, TValue>[])global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Collections.Generic.KeyValuePair<TKey, TValue>[]), stream));
             return (global::Microsoft.FSharp.Collections.FSharpMap<TKey, TValue>)result;
@@ -3482,7 +3482,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Collections.FSharpSet<T> input = ((global::Microsoft.FSharp.Collections.FSharpSet<T>)original);
-            global::Microsoft.FSharp.Collections.FSharpSet<T> result = (global::Microsoft.FSharp.Collections.FSharpSet<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Collections.FSharpSet<T>));
+            global::Microsoft.FSharp.Collections.FSharpSet<T> result = (global::Microsoft.FSharp.Collections.FSharpSet<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Collections.FSharpSet<T>));
             setField0(result, (T[])global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3498,7 +3498,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Collections.FSharpSet<T> result = (global::Microsoft.FSharp.Collections.FSharpSet<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Collections.FSharpSet<T>));
+            global::Microsoft.FSharp.Collections.FSharpSet<T> result = (global::Microsoft.FSharp.Collections.FSharpSet<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Collections.FSharpSet<T>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T[])global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T[]), stream));
             return (global::Microsoft.FSharp.Collections.FSharpSet<T>)result;
@@ -3535,7 +3535,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Reflection.UnionCaseInfo input = ((global::Microsoft.FSharp.Reflection.UnionCaseInfo)original);
-            global::Microsoft.FSharp.Reflection.UnionCaseInfo result = (global::Microsoft.FSharp.Reflection.UnionCaseInfo)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Reflection.UnionCaseInfo));
+            global::Microsoft.FSharp.Reflection.UnionCaseInfo result = (global::Microsoft.FSharp.Reflection.UnionCaseInfo)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Reflection.UnionCaseInfo));
             setField2(result, (global::Microsoft.FSharp.Core.FSharpOption<global::Microsoft.FSharp.Core.FSharpFunc<global::System.Int32, global::System.String>>)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
             setField1(result, getField1(input));
             setField0(result, (global::System.Type)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
@@ -3555,7 +3555,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Reflection.UnionCaseInfo result = (global::Microsoft.FSharp.Reflection.UnionCaseInfo)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Reflection.UnionCaseInfo));
+            global::Microsoft.FSharp.Reflection.UnionCaseInfo result = (global::Microsoft.FSharp.Reflection.UnionCaseInfo)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Reflection.UnionCaseInfo));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField2(result, (global::Microsoft.FSharp.Core.FSharpOption<global::Microsoft.FSharp.Core.FSharpFunc<global::System.Int32, global::System.String>>)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::Microsoft.FSharp.Core.FSharpOption<global::Microsoft.FSharp.Core.FSharpFunc<global::System.Int32, global::System.String>>), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -3631,7 +3631,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult> input = ((global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>)original);
-            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>));
+            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3647,7 +3647,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>));
+            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult>)result;
@@ -3678,7 +3678,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple> input = ((global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>)original);
-            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>));
+            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3694,7 +3694,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>));
+            global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple> result = (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.PrintfFormat<TPrinter, TState, TResidue, TResult, TTuple>)result;
@@ -3734,7 +3734,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Quotations.FSharpVar input = ((global::Microsoft.FSharp.Quotations.FSharpVar)original);
-            global::Microsoft.FSharp.Quotations.FSharpVar result = (global::Microsoft.FSharp.Quotations.FSharpVar)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Quotations.FSharpVar));
+            global::Microsoft.FSharp.Quotations.FSharpVar result = (global::Microsoft.FSharp.Quotations.FSharpVar)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Quotations.FSharpVar));
             setField3(result, getField3(input));
             setField1(result, getField1(input));
             setField2(result, getField2(input));
@@ -3756,7 +3756,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Quotations.FSharpVar result = (global::Microsoft.FSharp.Quotations.FSharpVar)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Quotations.FSharpVar));
+            global::Microsoft.FSharp.Quotations.FSharpVar result = (global::Microsoft.FSharp.Quotations.FSharpVar)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Quotations.FSharpVar));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField3(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
             setField1(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
@@ -3783,7 +3783,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Control.FSharpAsyncBuilder input = ((global::Microsoft.FSharp.Control.FSharpAsyncBuilder)original);
-            global::Microsoft.FSharp.Control.FSharpAsyncBuilder result = (global::Microsoft.FSharp.Control.FSharpAsyncBuilder)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Control.FSharpAsyncBuilder));
+            global::Microsoft.FSharp.Control.FSharpAsyncBuilder result = (global::Microsoft.FSharp.Control.FSharpAsyncBuilder)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Control.FSharpAsyncBuilder));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -3797,7 +3797,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Control.FSharpAsyncBuilder result = (global::Microsoft.FSharp.Control.FSharpAsyncBuilder)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Control.FSharpAsyncBuilder));
+            global::Microsoft.FSharp.Control.FSharpAsyncBuilder result = (global::Microsoft.FSharp.Control.FSharpAsyncBuilder)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Control.FSharpAsyncBuilder));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Control.FSharpAsyncBuilder)result;
         }
@@ -3820,7 +3820,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Control.FSharpAsync input = ((global::Microsoft.FSharp.Control.FSharpAsync)original);
-            global::Microsoft.FSharp.Control.FSharpAsync result = (global::Microsoft.FSharp.Control.FSharpAsync)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Control.FSharpAsync));
+            global::Microsoft.FSharp.Control.FSharpAsync result = (global::Microsoft.FSharp.Control.FSharpAsync)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Control.FSharpAsync));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -3834,7 +3834,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Control.FSharpAsync result = (global::Microsoft.FSharp.Control.FSharpAsync)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Control.FSharpAsync));
+            global::Microsoft.FSharp.Control.FSharpAsync result = (global::Microsoft.FSharp.Control.FSharpAsync)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Control.FSharpAsync));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Control.FSharpAsync)result;
         }
@@ -3860,7 +3860,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply> input = ((global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>)original);
-            global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply> result = (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>));
+            global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply> result = (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>));
             setField0(result, (global::Microsoft.FSharp.Core.FSharpFunc<TReply, global::Microsoft.FSharp.Core.Unit>)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3876,7 +3876,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply> result = (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>));
+            global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply> result = (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::Microsoft.FSharp.Core.FSharpFunc<TReply, global::Microsoft.FSharp.Core.Unit>)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::Microsoft.FSharp.Core.FSharpFunc<TReply, global::Microsoft.FSharp.Core.Unit>), stream));
             return (global::Microsoft.FSharp.Control.FSharpAsyncReplyChannel<TReply>)result;
@@ -3907,7 +3907,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -3923,7 +3923,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             return (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1>)result;
@@ -3957,7 +3957,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -3975,7 +3975,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4013,7 +4013,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField2(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -4033,7 +4033,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4075,7 +4075,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField2(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -4097,7 +4097,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4143,7 +4143,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField2(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -4167,7 +4167,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4217,7 +4217,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField2(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -4243,7 +4243,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4297,7 +4297,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField2(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -4325,7 +4325,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4383,7 +4383,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>));
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField2(result, (T3)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -4413,7 +4413,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.AnonymousObject<T1, T2, T3, T4, T5, T6, T7, T8>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (T1)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T1), stream));
             setField1(result, (T2)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (T2), stream));
@@ -4454,7 +4454,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T> input = ((global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>)original);
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>));
             setField1(result, (K)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             setField0(result, (global::System.Collections.Generic.IEnumerable<T>)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -4472,7 +4472,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>));
+            global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T> result = (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.RuntimeHelpers.Grouping<K, T>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (K)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (K), stream));
             setField0(result, (global::System.Collections.Generic.IEnumerable<T>)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Collections.Generic.IEnumerable<T>), stream));
@@ -4504,7 +4504,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Linq.QuerySource<T, Q> input = ((global::Microsoft.FSharp.Linq.QuerySource<T, Q>)original);
-            global::Microsoft.FSharp.Linq.QuerySource<T, Q> result = (global::Microsoft.FSharp.Linq.QuerySource<T, Q>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.QuerySource<T, Q>));
+            global::Microsoft.FSharp.Linq.QuerySource<T, Q> result = (global::Microsoft.FSharp.Linq.QuerySource<T, Q>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.QuerySource<T, Q>));
             setField0(result, (global::System.Collections.Generic.IEnumerable<T>)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField0(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -4520,7 +4520,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Linq.QuerySource<T, Q> result = (global::Microsoft.FSharp.Linq.QuerySource<T, Q>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Linq.QuerySource<T, Q>));
+            global::Microsoft.FSharp.Linq.QuerySource<T, Q> result = (global::Microsoft.FSharp.Linq.QuerySource<T, Q>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Linq.QuerySource<T, Q>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.Collections.Generic.IEnumerable<T>)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Collections.Generic.IEnumerable<T>), stream));
             return (global::Microsoft.FSharp.Linq.QuerySource<T, Q>)result;
@@ -4585,7 +4585,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4599,7 +4599,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.metre)result;
         }
@@ -4622,7 +4622,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4636,7 +4636,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kilogram)result;
         }
@@ -4659,7 +4659,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4673,7 +4673,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.second)result;
         }
@@ -4696,7 +4696,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4710,7 +4710,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.ampere)result;
         }
@@ -4733,7 +4733,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4747,7 +4747,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.kelvin)result;
         }
@@ -4770,7 +4770,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4784,7 +4784,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.mole)result;
         }
@@ -4807,7 +4807,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela input = ((global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela)original);
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4821,7 +4821,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela));
+            global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela result = (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Data.UnitSystems.SI.UnitNames.candela)result;
         }
@@ -4844,7 +4844,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2> input = ((global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>)original);
-            global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>));
+            global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4858,7 +4858,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>));
+            global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Core.CompilerServices.MeasureProduct<TMeasure1, TMeasure2>)result;
         }
@@ -4885,7 +4885,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure> input = ((global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>)original);
-            global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>));
+            global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4899,7 +4899,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>));
+            global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure> result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Core.CompilerServices.MeasureInverse<TMeasure>)result;
         }
@@ -4926,7 +4926,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilerServices.MeasureOne input = ((global::Microsoft.FSharp.Core.CompilerServices.MeasureOne)original);
-            global::Microsoft.FSharp.Core.CompilerServices.MeasureOne result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne));
+            global::Microsoft.FSharp.Core.CompilerServices.MeasureOne result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
         }
@@ -4940,7 +4940,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilerServices.MeasureOne result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne));
+            global::Microsoft.FSharp.Core.CompilerServices.MeasureOne result = (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             return (global::Microsoft.FSharp.Core.CompilerServices.MeasureOne)result;
         }
@@ -5046,7 +5046,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute input = ((global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute)original);
-            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute));
+            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute));
             setField0(result, getField0(input));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
             return result;
@@ -5062,7 +5062,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute));
+            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             return (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderXmlDocAttribute)result;
@@ -5202,7 +5202,7 @@ namespace Microsoft.FSharp.Core
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig input = ((global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig)original);
-            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig));
+            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig));
             setField5(result, getField5(input));
             setField3(result, (global::System.String[])global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField3(input)));
             setField1(result, getField1(input));
@@ -5232,7 +5232,7 @@ namespace Microsoft.FSharp.Core
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig));
+            global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig result = (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Microsoft.FSharp.Core.CompilerServices.TypeProviderConfig));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField5(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
             setField3(result, (global::System.String[])global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String[]), stream));

@@ -45,7 +45,7 @@ namespace Orleans.Runtime
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Orleans.Runtime.GenericGrainTypeData input = ((global::Orleans.Runtime.GenericGrainTypeData)original);
-            global::Orleans.Runtime.GenericGrainTypeData result = (global::Orleans.Runtime.GenericGrainTypeData)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Runtime.GenericGrainTypeData));
+            global::Orleans.Runtime.GenericGrainTypeData result = (global::Orleans.Runtime.GenericGrainTypeData)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Runtime.GenericGrainTypeData));
             setField3(result, getField3(input));
             setField6(result, getField6(input));
             setField7(result, getField7(input));
@@ -75,7 +75,7 @@ namespace Orleans.Runtime
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Orleans.Runtime.GenericGrainTypeData result = (global::Orleans.Runtime.GenericGrainTypeData)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Runtime.GenericGrainTypeData));
+            global::Orleans.Runtime.GenericGrainTypeData result = (global::Orleans.Runtime.GenericGrainTypeData)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Runtime.GenericGrainTypeData));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField3(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField6(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
@@ -124,7 +124,7 @@ namespace Orleans.Runtime
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Orleans.Runtime.GrainTypeData input = ((global::Orleans.Runtime.GrainTypeData)original);
-            global::Orleans.Runtime.GrainTypeData result = (global::Orleans.Runtime.GrainTypeData)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Runtime.GrainTypeData));
+            global::Orleans.Runtime.GrainTypeData result = (global::Orleans.Runtime.GrainTypeData)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Runtime.GrainTypeData));
             setField1(result, getField1(input));
             setField4(result, getField4(input));
             setField5(result, getField5(input));
@@ -150,7 +150,7 @@ namespace Orleans.Runtime
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Orleans.Runtime.GrainTypeData result = (global::Orleans.Runtime.GrainTypeData)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Runtime.GrainTypeData));
+            global::Orleans.Runtime.GrainTypeData result = (global::Orleans.Runtime.GrainTypeData)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Runtime.GrainTypeData));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField4(result, (global::System.Boolean)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Boolean), stream));
@@ -346,7 +346,7 @@ namespace Orleans.Runtime
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Orleans.TableVersion result = (global::Orleans.TableVersion)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.TableVersion));
+            global::Orleans.TableVersion result = (global::Orleans.TableVersion)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.TableVersion));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField1(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
@@ -494,7 +494,7 @@ namespace Orleans.Runtime
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Orleans.MultiCluster.MultiClusterConfiguration input = ((global::Orleans.MultiCluster.MultiClusterConfiguration)original);
-            global::Orleans.MultiCluster.MultiClusterConfiguration result = (global::Orleans.MultiCluster.MultiClusterConfiguration)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.MultiCluster.MultiClusterConfiguration));
+            global::Orleans.MultiCluster.MultiClusterConfiguration result = (global::Orleans.MultiCluster.MultiClusterConfiguration)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.MultiCluster.MultiClusterConfiguration));
             setField0(result, input.@AdminTimestamp);
             setField1(result, (global::System.Collections.Generic.IReadOnlyList<global::System.String>)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(input.@Clusters));
             setField2(result, input.@Comment);
@@ -514,7 +514,7 @@ namespace Orleans.Runtime
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Orleans.MultiCluster.MultiClusterConfiguration result = (global::Orleans.MultiCluster.MultiClusterConfiguration)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.MultiCluster.MultiClusterConfiguration));
+            global::Orleans.MultiCluster.MultiClusterConfiguration result = (global::Orleans.MultiCluster.MultiClusterConfiguration)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.MultiCluster.MultiClusterConfiguration));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.DateTime)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.DateTime), stream));
             setField1(result, (global::System.Collections.Generic.IReadOnlyList<global::System.String>)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Collections.Generic.IReadOnlyList<global::System.String>), stream));

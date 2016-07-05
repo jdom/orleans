@@ -571,7 +571,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.StreamItem input = ((global::UnitTests.Grains.StreamItem)original);
-            global::UnitTests.Grains.StreamItem result = (global::UnitTests.Grains.StreamItem)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.StreamItem));
+            global::UnitTests.Grains.StreamItem result = (global::UnitTests.Grains.StreamItem)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.StreamItem));
             setField0(result, getField0(input));
             setField1(result, (global::System.Guid)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -589,7 +589,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.StreamItem result = (global::UnitTests.Grains.StreamItem)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.StreamItem));
+            global::UnitTests.Grains.StreamItem result = (global::UnitTests.Grains.StreamItem)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.StreamItem));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField1(result, (global::System.Guid)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Guid), stream));
@@ -625,7 +625,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.ConsumerObserver input = ((global::UnitTests.Grains.ConsumerObserver)original);
-            global::UnitTests.Grains.ConsumerObserver result = (global::UnitTests.Grains.ConsumerObserver)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.ConsumerObserver));
+            global::UnitTests.Grains.ConsumerObserver result = (global::UnitTests.Grains.ConsumerObserver)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.ConsumerObserver));
             setField3(result, input.@ProviderName);
             setField0(result, getField0(input));
             setField1(result, (global::System.Guid)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField1(input)));
@@ -647,7 +647,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.ConsumerObserver result = (global::UnitTests.Grains.ConsumerObserver)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.ConsumerObserver));
+            global::UnitTests.Grains.ConsumerObserver result = (global::UnitTests.Grains.ConsumerObserver)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.ConsumerObserver));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField3(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField0(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -692,7 +692,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.ProducerObserver input = ((global::UnitTests.Grains.ProducerObserver)original);
-            global::UnitTests.Grains.ProducerObserver result = (global::UnitTests.Grains.ProducerObserver)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.ProducerObserver));
+            global::UnitTests.Grains.ProducerObserver result = (global::UnitTests.Grains.ProducerObserver)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.ProducerObserver));
             setField5(result, (global::UnitTests.TestHelper.InterlockedFlag)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField5(input)));
             setField1(result, getField1(input));
             setField0(result, getField0(input));
@@ -718,7 +718,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.ProducerObserver result = (global::UnitTests.Grains.ProducerObserver)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.ProducerObserver));
+            global::UnitTests.Grains.ProducerObserver result = (global::UnitTests.Grains.ProducerObserver)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.ProducerObserver));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField5(result, (global::UnitTests.TestHelper.InterlockedFlag)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::UnitTests.TestHelper.InterlockedFlag), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -934,7 +934,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.MyStreamObserver<T> input = ((global::UnitTests.Grains.MyStreamObserver<T>)original);
-            global::UnitTests.Grains.MyStreamObserver<T> result = (global::UnitTests.Grains.MyStreamObserver<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.MyStreamObserver<T>));
+            global::UnitTests.Grains.MyStreamObserver<T> result = (global::UnitTests.Grains.MyStreamObserver<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.MyStreamObserver<T>));
             setField1(result, getField1(input));
             setField0(result, getField0(input));
             setField2(result, (global::Orleans.Runtime.Logger)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(getField2(input)));
@@ -954,7 +954,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.MyStreamObserver<T> result = (global::UnitTests.Grains.MyStreamObserver<T>)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.MyStreamObserver<T>));
+            global::UnitTests.Grains.MyStreamObserver<T> result = (global::UnitTests.Grains.MyStreamObserver<T>)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.MyStreamObserver<T>));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
             setField0(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -988,7 +988,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.AsyncObserverArg input = ((global::UnitTests.Grains.AsyncObserverArg)original);
-            global::UnitTests.Grains.AsyncObserverArg result = (global::UnitTests.Grains.AsyncObserverArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.AsyncObserverArg));
+            global::UnitTests.Grains.AsyncObserverArg result = (global::UnitTests.Grains.AsyncObserverArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.AsyncObserverArg));
             setField0(result, input.@A);
             setField1(result, input.@B);
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -1006,7 +1006,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.AsyncObserverArg result = (global::UnitTests.Grains.AsyncObserverArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.AsyncObserverArg));
+            global::UnitTests.Grains.AsyncObserverArg result = (global::UnitTests.Grains.AsyncObserverArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.AsyncObserverArg));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -1035,7 +1035,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.AsyncObservableArg input = ((global::UnitTests.Grains.AsyncObservableArg)original);
-            global::UnitTests.Grains.AsyncObservableArg result = (global::UnitTests.Grains.AsyncObservableArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.AsyncObservableArg));
+            global::UnitTests.Grains.AsyncObservableArg result = (global::UnitTests.Grains.AsyncObservableArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.AsyncObservableArg));
             setField0(result, input.@A);
             setField1(result, input.@B);
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -1053,7 +1053,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.AsyncObservableArg result = (global::UnitTests.Grains.AsyncObservableArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.AsyncObservableArg));
+            global::UnitTests.Grains.AsyncObservableArg result = (global::UnitTests.Grains.AsyncObservableArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.AsyncObservableArg));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -1082,7 +1082,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.AsyncStreamArg input = ((global::UnitTests.Grains.AsyncStreamArg)original);
-            global::UnitTests.Grains.AsyncStreamArg result = (global::UnitTests.Grains.AsyncStreamArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.AsyncStreamArg));
+            global::UnitTests.Grains.AsyncStreamArg result = (global::UnitTests.Grains.AsyncStreamArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.AsyncStreamArg));
             setField0(result, input.@A);
             setField1(result, input.@B);
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -1100,7 +1100,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.AsyncStreamArg result = (global::UnitTests.Grains.AsyncStreamArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.AsyncStreamArg));
+            global::UnitTests.Grains.AsyncStreamArg result = (global::UnitTests.Grains.AsyncStreamArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.AsyncStreamArg));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
@@ -1129,7 +1129,7 @@ namespace UnitTests.TestHelper
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::UnitTests.Grains.StreamSubscriptionHandleArg input = ((global::UnitTests.Grains.StreamSubscriptionHandleArg)original);
-            global::UnitTests.Grains.StreamSubscriptionHandleArg result = (global::UnitTests.Grains.StreamSubscriptionHandleArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.StreamSubscriptionHandleArg));
+            global::UnitTests.Grains.StreamSubscriptionHandleArg result = (global::UnitTests.Grains.StreamSubscriptionHandleArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.StreamSubscriptionHandleArg));
             setField0(result, input.@A);
             setField1(result, input.@B);
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -1147,7 +1147,7 @@ namespace UnitTests.TestHelper
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::UnitTests.Grains.StreamSubscriptionHandleArg result = (global::UnitTests.Grains.StreamSubscriptionHandleArg)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::UnitTests.Grains.StreamSubscriptionHandleArg));
+            global::UnitTests.Grains.StreamSubscriptionHandleArg result = (global::UnitTests.Grains.StreamSubscriptionHandleArg)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::UnitTests.Grains.StreamSubscriptionHandleArg));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField0(result, (global::System.String)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.String), stream));
             setField1(result, (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream));
