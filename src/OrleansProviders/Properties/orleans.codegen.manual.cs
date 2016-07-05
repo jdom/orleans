@@ -29,7 +29,7 @@ namespace Orleans.Providers.Streams.Generator
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer input = ((global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer)original);
-            global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer result = (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer));
+            global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer result = (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer));
             setField3(result, (global::System.Object)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(input.@Payload));
             setField2(result, (global::Orleans.Providers.Streams.Common.EventSequenceToken)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(input.@RealToken));
             setField0(result, (global::System.Guid)global::Orleans.Serialization.SerializationManager.@DeepCopyInner(input.@StreamGuid));
@@ -51,7 +51,7 @@ namespace Orleans.Providers.Streams.Generator
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer result = (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer));
+            global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer result = (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Providers.Streams.Generator.GeneratedBatchContainer));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             setField3(result, (global::System.Object)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Object), stream));
             setField2(result, (global::Orleans.Providers.Streams.Common.EventSequenceToken)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::Orleans.Providers.Streams.Common.EventSequenceToken), stream));
@@ -164,7 +164,7 @@ namespace Orleans.Providers.Streams.Generator
         public static global::System.Object DeepCopier(global::System.Object original)
         {
             global::Orleans.Providers.Streams.Common.EventSequenceToken input = ((global::Orleans.Providers.Streams.Common.EventSequenceToken)original);
-            global::Orleans.Providers.Streams.Common.EventSequenceToken result = (global::Orleans.Providers.Streams.Common.EventSequenceToken)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Providers.Streams.Common.EventSequenceToken));
+            global::Orleans.Providers.Streams.Common.EventSequenceToken result = (global::Orleans.Providers.Streams.Common.EventSequenceToken)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Providers.Streams.Common.EventSequenceToken));
             result.@EventIndex = input.@EventIndex;
             result.@SequenceNumber = input.@SequenceNumber;
             global::Orleans.@Serialization.@SerializationContext.@Current.@RecordObject(original, result);
@@ -182,7 +182,7 @@ namespace Orleans.Providers.Streams.Generator
         [global::Orleans.CodeGeneration.DeserializerMethodAttribute]
         public static global::System.Object Deserializer(global::System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
         {
-            global::Orleans.Providers.Streams.Common.EventSequenceToken result = (global::Orleans.Providers.Streams.Common.EventSequenceToken)global::System.Runtime.Serialization.FormatterServices.@GetUninitializedObject(typeof (global::Orleans.Providers.Streams.Common.EventSequenceToken));
+            global::Orleans.Providers.Streams.Common.EventSequenceToken result = (global::Orleans.Providers.Streams.Common.EventSequenceToken)global::Orleans.Serialization.SerializationManager.GetUninitializedObjectWithFormatterServices(typeof (global::Orleans.Providers.Streams.Common.EventSequenceToken));
             global::Orleans.@Serialization.@DeserializationContext.@Current.@RecordObject(result);
             result.@EventIndex = (global::System.Int32)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int32), stream);
             result.@SequenceNumber = (global::System.Int64)global::Orleans.Serialization.SerializationManager.@DeserializeInner(typeof (global::System.Int64), stream);
