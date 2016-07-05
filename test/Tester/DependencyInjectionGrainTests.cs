@@ -44,6 +44,16 @@ namespace UnitTests.General
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task ResolvesGrainUsingLongestConstructor()
+        {
+            ISimpleDIGrain grain = GrainFactory.GetGrain<ISimpleDIGrain>(GetRandomGrainId());
+            long actual = await grain.GetTicksFromAnotherService();
+
+            // if the second service was not injected (picked different ctor) then this returns 0
+            Assert.NotEqual(0, actual);
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
         public async Task CannotGetExplictlyRegisteredGrain()
         {
             ISimpleDIGrain grain = GrainFactory.GetGrain<ISimpleDIGrain>(GetRandomGrainId(), grainClassNamePrefix: "UnitTests.Grains.ExplicitlyRegistered");
@@ -58,6 +68,7 @@ namespace UnitTests.General
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IInjectedService, InjectedService>();
+            services.AddTransient<IAnotherInjectedService, AnotherInjectedService>();
 
             services.AddTransient<ExplicitlyRegisteredSimpleDIGrain>(
                 sp => new ExplicitlyRegisteredSimpleDIGrain(

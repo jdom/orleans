@@ -9,15 +9,32 @@ namespace UnitTests.Grains
     public class SimpleDIGrain : Grain, ISimpleDIGrain
     {
         private readonly IInjectedService injectedService;
+        private readonly IAnotherInjectedService anotherInjectedService;
 
         public SimpleDIGrain(IInjectedService injectedService)
+            : this(injectedService, null)
+        {
+            
+        }
+        public SimpleDIGrain(IInjectedService injectedService, IAnotherInjectedService anotherInjectedService)
         {
             this.injectedService = injectedService;
+            this.anotherInjectedService = anotherInjectedService;
         }
 
         public Task<long> GetTicksFromService()
         {
             return injectedService.GetTicks();
+        }
+
+        public Task<long> GetTicksFromAnotherService()
+        {
+            if (this.anotherInjectedService != null)
+            {
+                return injectedService.GetTicks();
+            }
+
+            return Task.FromResult(0l);
         }
 
         public Task<string> GetStringValue()
@@ -40,6 +57,11 @@ namespace UnitTests.Grains
         public Task<long> GetTicksFromService()
         {
             return injectedService.GetTicks();
+        }
+
+        public Task<long> GetTicksFromAnotherService()
+        {
+            return Task.FromResult(0l);
         }
 
         public Task<string> GetStringValue()
@@ -66,6 +88,19 @@ namespace UnitTests.Grains
         public string GetInstanceValue()
         {
             return this.instanceValue;
+        }
+    }
+
+    public interface IAnotherInjectedService
+    {
+        Task<long> GetTicks();
+    }
+
+    public class AnotherInjectedService : IAnotherInjectedService
+    {
+        public Task<long> GetTicks()
+        {
+            return Task.FromResult(DateTime.UtcNow.Ticks);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace UnitTests.GrainInterfaces
     public interface ISimpleDIGrain : IGrainWithIntegerKey
     {
         Task<long> GetTicksFromService();
+        Task<long> GetTicksFromAnotherService();
         Task<string> GetStringValue();
     }
 }
