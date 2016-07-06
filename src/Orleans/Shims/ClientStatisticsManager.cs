@@ -7,6 +7,10 @@ namespace Orleans.Runtime
 {
     internal class ClientStatisticsManager
     {
+        public ClientStatisticsManager(IStatisticsConfiguration configuration)
+        {
+        }
+
         internal Task Start(ClientConfiguration config, StatisticsProviderManager statsManager, IMessageCenter transport, GrainId clientId)
         {
             return TaskDone.Done;
