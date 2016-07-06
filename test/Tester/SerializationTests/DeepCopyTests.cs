@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orleans.Serialization;
 using UnitTests.GrainInterfaces;
@@ -59,6 +60,9 @@ namespace UnitTests.Serialization
         [Fact, TestCategory("BVT"), TestCategory("Functional"), TestCategory("Serialization")]
         public void DeepCopyTests_UserDefinedType()
         {
+#if NETCORE_SUBSET
+            SubsetOfTests.Shims.Serializers.RegisterAll();
+#endif
             {
                 var original = new LargeTestData();
                 original.SetNumber("a", 1);
