@@ -147,7 +147,9 @@ namespace Orleans
                 {
                     UnobservedExceptionsHandlerClass.SetUnobservedExceptionHandler(UnhandledException);
                 }
+#if !NETSTANDARD
                 AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;
+#endif
 
                 // Ensure SerializationManager static constructor is called before AssemblyLoad event is invoked
                 SerializationManager.GetDeserializer(typeof(String));
@@ -214,6 +216,7 @@ namespace Orleans
 
         private static void LoadAdditionalAssemblies()
         {
+#if !NETSTANDARD
             var logger = LogManager.GetLogger("AssemblyLoader.Client", LoggerType.Runtime);
 
             var directories =
@@ -237,6 +240,7 @@ namespace Orleans
                     };
 
             AssemblyLoader.LoadAssemblies(directories, excludeCriteria, loadProvidersCriteria, logger);
+#endif
         }
         
         private void UnhandledException(ISchedulingContext context, Exception exception)
@@ -750,11 +754,13 @@ namespace Orleans
                 UnobservedExceptionsHandlerClass.ResetUnobservedExceptionHandler();
             }
             catch (Exception) { }
+#if !NETSTANDARD
             try
             {
                 AppDomain.CurrentDomain.DomainUnload -= CurrentDomain_DomainUnload;
             }
             catch (Exception) { }
+#endif
             try
             {
                 if (clientProviderRuntime != null)
@@ -855,7 +861,11 @@ namespace Orleans
         }
         private string PrintAppDomainDetails()
         {
+#if NETSTANDARD
+            return "N/A";
+#else
             return string.Format("<AppDomain.Id={0}, AppDomain.FriendlyName={1}>", AppDomain.CurrentDomain.Id, AppDomain.CurrentDomain.FriendlyName);
+#endif
         }
 
 

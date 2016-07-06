@@ -31,8 +31,6 @@
           "exclude": [ "AssemblyLoader/*.cs" ],
           "includeFiles": [ "AssemblyLoader/AssemblyProcessor.cs" ],
           "excludeFiles": [
-            "Core/GrainClient.cs",
-            "Runtime/OutsideRuntimeClient.cs",
             "Serialization/BinaryFormatterSerializer.cs",
             "Statistics/RuntimeStatisticsGroup.cs",
             "Statistics/ClientTableStatistics.cs",
