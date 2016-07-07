@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Orleans.Core;
 using Orleans.Storage;
 using System.Collections.Concurrent;
+using System.Linq;
+using System.Reflection;
 
 namespace Orleans.Runtime
 {
@@ -14,6 +16,7 @@ namespace Orleans.Runtime
         private readonly IGrainRuntime _grainRuntime;
         private readonly IServiceProvider _services;
         private readonly Func<Type, ObjectFactory> _createFactory;
+        private readonly LoggerImpl _logger;
         private ConcurrentDictionary<Type, ObjectFactory> _typeActivatorCache = new ConcurrentDictionary<Type, ObjectFactory>();
 
         /// <summary>
@@ -25,16 +28,44 @@ namespace Orleans.Runtime
         {
             _grainRuntime = grainRuntime;
             _services = services;
+            _logger = LogManager.GetLogger(typeof(GrainCreator).Name, LoggerType.Runtime);
             if (_services != null)
             {
-                _createFactory = (type) => ActivatorUtilities.CreateFactory(type, Type.EmptyTypes);
+                _createFactory = CreateGrainFactory;
             }
             else
             {
-                // TODO: we could optimize instance creation for the non-DI path also
-                _createFactory = (type) => ((sp, args) => Activator.CreateInstance(type));
+                _createFactory = CreateGrainFactoryDefaultConstructor;
             }
     }
+
+        private ObjectFactory CreateGrainFactory(Type grainType)
+        {
+            try
+            {
+                return ActivatorUtilities.CreateFactory(grainType, Type.EmptyTypes);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (grainType.GetTypeInfo().DeclaredConstructors.Any(c => c.GetParameters().Length == 0))
+                {
+                    _logger.Warn(ErrorCode.Catalog_ActivationMultipleCtorsWarning, $"Found multiple public constructors for type '{grainType}' where as only one is expected. Falling back to using the default constructor for this grain type.", ex);
+                    return CreateGrainFactoryDefaultConstructor(grainType);
+                }
+                else
+                {
+                    var message = $"Found multiple public constructors for type '{grainType}' where as only one is expected and there is no parameterless constructor to fall back to.";
+                    _logger.Error(ErrorCode.Catalog_ActivationException, message, ex);
+                    return (sp, args) => { throw new InvalidOperationException(message, ex); };
+                }
+            }
+        }
+
+        private ObjectFactory CreateGrainFactoryDefaultConstructor(Type grainType)
+        {
+            // TODO: we could optimize instance creation for the non-DI path also
+            return (sp, args) => Activator.CreateInstance(grainType);
+        }
 
         /// <summary>
         /// Create a new instance of a grain
