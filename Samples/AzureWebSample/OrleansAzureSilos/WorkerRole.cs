@@ -36,19 +36,11 @@ namespace Orleans.Azure.Silos
             bool ok = base.OnStart();
 
             Trace.WriteLine("OrleansAzureSilos-OnStart called base.OnStart ok=" + ok, "Information");
-
-            return ok;
-        }
-
-        public override void Run()
-        {
-            Trace.WriteLine("OrleansAzureSilos-Run entry point called", "Information");
-
             Trace.WriteLine("OrleansAzureSilos-OnStart Starting Orleans silo", "Information");
 
             var config = AzureSilo.DefaultConfiguration();
             config.AddMemoryStorageProvider();
-            
+
             // First example of how to configure an existing provider
             Example_ConfigureExistingStorageProvider(config);
             Example_ConfigureNewStorageProvider(config);
@@ -57,9 +49,15 @@ namespace Orleans.Azure.Silos
             // It is IMPORTANT to start the silo not in OnStart but in Run.
             // Azure may not have the firewalls open yet (on the remote silos) at the OnStart phase.
             orleansAzureSilo = new AzureSilo();
-            bool ok = orleansAzureSilo.Start(config);
+            ok = orleansAzureSilo.Start(config);
 
-            Trace.WriteLine("OrleansAzureSilos-OnStart Orleans silo started ok=" + ok, "Information");
+            return ok;
+        }
+
+        public override void Run()
+        {
+            Trace.WriteLine("OrleansAzureSilos-Run entry point called", "Information");
+
 
             orleansAzureSilo.Run(); // Call will block until silo is shutdown
         }
