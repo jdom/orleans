@@ -6,6 +6,15 @@
     "FSharp.Core": "4.0.0.1"
   },
   "frameworks": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    },
     "net451": {}
   }
 }

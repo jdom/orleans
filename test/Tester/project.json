@@ -32,18 +32,30 @@
     "TestInternalGrains": { "target": "project" },
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "FluentAssertions": "4.0.0",
-    "System.Management.Automation.dll": "10.0.10586",
+    "WindowsAzure.Storage": "7.0.0",
     "xunit": "2.2.0-beta2-build3300",
     "Xunit.SkippableFact": "1.2.14"
   },
   "frameworks": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ],
+        "compile": { "exclude": [ "DeploymentTests/**" ] }
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    },
     "net451": {
       "buildOptions": {
         "compile": {
           "exclude": [ "PSClientTests/**", "**/SQS*" ]
         }
       },
-      "frameworkAssemblies": {
+      "dependencies": {
+        "System.Management.Automation": "6.1.7601.17515"
+      },      "frameworkAssemblies": {
         "System.Management": "4.0.0.0"
       }
     }

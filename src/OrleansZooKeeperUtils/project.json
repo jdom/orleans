@@ -5,6 +5,11 @@
     "ZooKeeperNetEx": "3.4.8.5"
   },
   "frameworks": {
-     "net451": {}
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net451": {}
   }
 }

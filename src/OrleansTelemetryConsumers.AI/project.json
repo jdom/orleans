@@ -5,6 +5,11 @@
     "Microsoft.ApplicationInsights": "1.2.3"
   },
   "frameworks": {
-     "net451": {}
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net451": {}
   }
 }

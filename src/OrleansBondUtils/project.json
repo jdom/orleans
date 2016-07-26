@@ -6,7 +6,12 @@
     "Bond.Runtime.CSharp": "3.0.7"
   },
   "frameworks": {
-     "net451": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net451": {
       "frameworkAssemblies": {
         "System.Runtime": "4.0.10.0",
         "System.Text.Encoding": "4.0.0.0"

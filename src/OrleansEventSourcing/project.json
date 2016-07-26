@@ -4,6 +4,11 @@
     "Orleans": { "target": "project" }
   },
   "frameworks": {
-     "net451": {}
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net451": {}
   }
 }

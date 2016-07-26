@@ -2,12 +2,21 @@
   "version": "1.0.0-*",
   "dependencies": {
     "Orleans": { "target": "project" },
-    "OrleansRuntime": { "target": "project" },
     "TestFSharpInterfaces": { "target": "project" },
-    "TestInterfaces": { "target": "project" },
-    "FSharp.Core": "4.0.0.1"
+    "TestInterfaces": { "target": "project" }
   },
   "frameworks": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "imports": [
+        "portable-net45+win8"
+      ],
+      "dependencies": {
+        "System.Collections.Specialized": "4.0.1"
+      }
+    },
     "net451": {}
   }
 }

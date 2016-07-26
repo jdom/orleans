@@ -18,6 +18,14 @@
     }
   },
   "frameworks": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "dependencies": {
+        "Microsoft.FSharp.Core.netcore": "1.0.0-*"
+      }
+    },
     "net451": {
       "dependencies": {
         "FSharp.Core": "4.0.0.1"

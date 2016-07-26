@@ -5,6 +5,18 @@
     "System.Data.Common": "4.1.0"
   },
   "frameworks": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ],
+      "dependencies": {
+        "System.Data.SqlClient": "4.1.0"
+      }
+    },
     "net451": {
       "frameworkAssemblies": {
         "System.Runtime": "4.0.10.0",

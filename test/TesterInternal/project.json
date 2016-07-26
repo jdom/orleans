@@ -29,20 +29,31 @@
     "TestInternalGrainInterfaces": { "target": "project" },
     "TestInternalGrains": { "target": "project" },
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
-    "System.Threading.Tasks.Parallel": "4.0.1",
     "xunit": "2.2.0-beta2-build3300",
     "Xunit.SkippableFact": "1.2.14"
   },
   "frameworks": {
-    "net451": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ],
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ],
+      "dependencies": {
+        "System.Threading.Tasks.Parallel": "4.0.1"
+      }
+    },
+    "net451":{
       "buildOptions": {
         "compile": {
           "exclude": [ "StorageTests/AWSUtils/**", "**/DynamoDb*", "**/SQS*" ]
         }
       },
-      "frameworkAssemblies": {
+      "frameworkAssemblies": { 
         "System.Web.Extensions": "4.0.0.0"
-      }
     }
   }
+}
 }

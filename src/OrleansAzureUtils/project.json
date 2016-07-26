@@ -7,7 +7,12 @@
     "WindowsAzure.Storage": "7.0.0"
   },
   "frameworks": {
-     "net451":{
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net451":{
       "frameworkAssemblies": {
         "System.Web": "4.0.0.0"
       }

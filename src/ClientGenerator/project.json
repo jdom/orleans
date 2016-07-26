@@ -12,6 +12,11 @@
     "codegen": "ClientGenerator"
   },
   "frameworks": {
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
      "net451": {}
   }
 }

@@ -5,6 +5,11 @@
     "NewRelic.Agent.Api": "5.10.59"
   },
   "frameworks": {
-     "net451": {}
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net451": {}
   }
 }

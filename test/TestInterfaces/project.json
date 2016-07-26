@@ -1,6 +1,14 @@
 ﻿{
   "version": "1.0.0-*",
   "frameworks": {
-     "net451": {}
+    "netstandard1.6": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "dependencies": {
+        "System.Threading.Tasks": "4.0.11"
+      }
+    },
+    "net451": {}
   }
 }
