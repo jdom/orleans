@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Orleans;
 using Orleans.CodeGeneration;
@@ -13,7 +12,6 @@ using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Serialization;
 using UnitTests.GrainInterfaces;
-using UnitTests.Grains;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -54,6 +52,9 @@ namespace UnitTests.Serialization
             }
 
             SerializationManager.Initialize(useStandardSerializer, serializationProviders, useJsonFallbackSerializer);
+#if NETCORE_SUBSET
+            SubsetOfTests.Shims.Serializers.RegisterAll();
+#endif
             BufferPool.InitGlobalBufferPool(new MessagingConfiguration(false));
         }
 
@@ -682,6 +683,7 @@ namespace UnitTests.Serialization
             Assert.Equal(input, grainRef); //Wrong contents after round-trip of input
         }
 
+#if !NETCORE_SUBSET
         [Theory, TestCategory("Functional"), TestCategory("Serialization")]
         [InlineData(SerializerToUse.Default)]
         [InlineData(SerializerToUse.Fallback)]
@@ -705,7 +707,7 @@ namespace UnitTests.Serialization
         public void Serialize_GrainBase(SerializerToUse serializerToUse)
         {
             InitializeSerializer(serializerToUse);
-            Grain input = new EchoTaskGrain();
+            Grain input = new UnitTests.Grains.EchoTaskGrain();
 
             // Expected exception:
             // OrleansException: No copier found for object of type EchoTaskGrain. Perhaps you need to mark it [Serializable]?
@@ -720,7 +722,7 @@ namespace UnitTests.Serialization
         public void Serialize_GrainBase_ViaStandardSerializer(SerializerToUse serializerToUse)
         {
             InitializeSerializer(serializerToUse);
-            Grain input = new EchoTaskGrain();
+            Grain input = new UnitTests.Grains.EchoTaskGrain();
 
             // Expected exception:
             // System.Runtime.Serialization.SerializationException: Type 'Echo.Grains.EchoTaskGrain' in Assembly 'UnitTestGrains, Version=1.0.0.0, Culture=neutral, PublicKeyToken=070f47935e3ed133' is not marked as serializable.
@@ -729,6 +731,7 @@ namespace UnitTests.Serialization
 
             Assert.Contains("is not marked as serializable", exc.Message);
         }
+#endif
 
         private static int staticFilterValue1 = 41;
         private static int staticFilterValue2 = 42;
@@ -1011,21 +1014,25 @@ namespace UnitTests.Serialization
 
         private object DotNetSerializationLoop(object input)
         {
+#if NETSTANDARD
+            throw new NotImplementedException("Cannot use binary formatter in .NET Standard");
+#else
             byte[] bytes;
             object deserialized;
             using (var str = new MemoryStream())
             {
-                IFormatter formatter = new BinaryFormatter();
+                System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 formatter.Serialize(str, input);
                 str.Flush();
                 bytes = str.ToArray();
             }
             using (var inStream = new MemoryStream(bytes))
             {
-                IFormatter formatter = new BinaryFormatter();
+                System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 deserialized = formatter.Deserialize(inStream);
             }
             return deserialized;
+#endif
         }
 
         private void ValidateDictionary<K, V>(Dictionary<K, V> source, object deserialized, string type)

@@ -35,3 +35,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("OrleansBenchmarks")]
 [assembly: InternalsVisibleTo("TestInternalGrains")]
 [assembly: InternalsVisibleTo("OrleansCodeGen")]
+[assembly: InternalsVisibleTo("SubsetOfTests")]

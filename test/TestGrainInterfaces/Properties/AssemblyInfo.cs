@@ -21,3 +21,4 @@ using UnitTests.GrainInterfaces;
 [assembly: InternalsVisibleTo("TesterInternal")]
 [assembly: GenerateSerializer(typeof(SomeTypeDerivedFromTypeUsedInGrainInterface))]
 [assembly: InternalsVisibleTo("OrleansCodeGen")]
+[assembly: InternalsVisibleTo("SubsetOfTests")]

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Orleans.Serialization;
-using Orleans.TestingHost.Utils;
 using Xunit;
 
 namespace UnitTests.Serialization
@@ -130,7 +129,9 @@ namespace UnitTests.Serialization
             input.Collection = new HashSet<TestTypeA>();
             input.Collection.Add(input);
 
-            TestTypeA output1 = TestingUtils.RoundTripDotNetSerializer(input);
+#if !NETCORE_SUBSET
+            TestTypeA output1 = Orleans.TestingHost.Utils.TestingUtils.RoundTripDotNetSerializer(input);
+#endif
 
             TestTypeA output2 = SerializationManager.RoundTripSerializationForTesting(input);
         }
