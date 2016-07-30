@@ -38,6 +38,11 @@ namespace Orleans.Runtime.Configuration
         public string DNSHostName { get; private set; }
 
         /// <summary>
+        /// The assembly catalog
+        /// </summary>
+        public IAssemblyCatalog AssemblyCatalog { get; set; }
+
+        /// <summary>
         /// The host name or IP address of this silo.
         /// This is a configurable IP address or Hostname.
         /// </summary>
@@ -488,6 +493,9 @@ namespace Orleans.Runtime.Configuration
                         {
                             StartupTypeName = child.GetAttribute("Type");
                         }
+                        break;
+                    case "AssemblyCatalog":
+                        AssemblyCatalog = ConfigUtilities.ParseAssemblyCatalog(child);
                         break;
                     case "Telemetry":
                         ConfigUtilities.ParseTelemetry(child);

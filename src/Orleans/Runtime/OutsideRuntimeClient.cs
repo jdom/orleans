@@ -136,8 +136,8 @@ namespace Orleans
 
             try
             {
-                LoadAdditionalAssemblies();
-                
+                AssemblyLoader.NewAssemblyLoader(cfg.AssemblyCatalog);
+
                 PlacementStrategy.Initialize();
 
                 callbacks = new ConcurrentDictionary<CorrelationId, CallbackData>();
@@ -211,34 +211,7 @@ namespace Orleans
                 .Wait();
             CurrentStreamProviderManager = streamProviderManager;
         }
-
-        private static void LoadAdditionalAssemblies()
-        {
-            var logger = LogManager.GetLogger("AssemblyLoader.Client", LoggerType.Runtime);
-
-            var directories =
-                new Dictionary<string, SearchOption>
-                    {
-                        {
-                            Path.GetDirectoryName(typeof(OutsideRuntimeClient).GetTypeInfo().Assembly.Location), 
-                            SearchOption.AllDirectories
-                        }
-                    };
-            var excludeCriteria =
-                new AssemblyLoaderPathNameCriterion[]
-                    {
-                        AssemblyLoaderCriteria.ExcludeResourceAssemblies,
-                        AssemblyLoaderCriteria.ExcludeSystemBinaries()
-                    };
-            var loadProvidersCriteria =
-                new AssemblyLoaderReflectionCriterion[]
-                    {
-                        AssemblyLoaderCriteria.LoadTypesAssignableFrom(typeof(IProvider))
-                    };
-
-            AssemblyLoader.LoadAssemblies(directories, excludeCriteria, loadProvidersCriteria, logger);
-        }
-        
+                
         private void UnhandledException(ISchedulingContext context, Exception exception)
         {
             logger.Error(ErrorCode.Runtime_Error_100007, String.Format("OutsideRuntimeClient caught an UnobservedException."), exception);

@@ -388,6 +388,12 @@ namespace Orleans.Runtime.Configuration
             }
         }
 
+        internal static IAssemblyCatalog ParseAssemblyCatalog(XmlElement child)
+        {
+            //Load assemblies from XML
+            throw new NotImplementedException();
+        }
+
         // Time spans are entered as a string of decimal digits, optionally followed by a unit string: "ms", "s", "m", "hr"
         internal static TimeSpan ParseTimeSpan(string input, string errorMessage)
         {

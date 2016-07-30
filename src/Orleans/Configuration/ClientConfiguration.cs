@@ -40,6 +40,11 @@ namespace Orleans.Runtime.Configuration
         public string SourceFile { get; private set; }
 
         /// <summary>
+        /// The assembly catalog
+        /// </summary>
+        public IAssemblyCatalog AssemblyCatalog { get; set; }
+
+        /// <summary>
         /// The list fo the gateways to use.
         /// Each GatewayNode element specifies an outside grain client gateway node.
         /// If outside (non-Orleans) clients are to connect to the Orleans system, then at least one gateway node must be specified.
@@ -302,6 +307,9 @@ namespace Orleans.Runtime.Configuration
                                 Port = ConfigUtilities.ParseInt(child.GetAttribute("Port"),
                                     "Invalid integer value for the Port attribute on the LocalAddress element");
                             }
+                            break;
+                        case "AssemblyCatalog":
+                            AssemblyCatalog = ConfigUtilities.ParseAssemblyCatalog(child);
                             break;
                         case "Telemetry":
                             ConfigUtilities.ParseTelemetry(child);

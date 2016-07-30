@@ -21,7 +21,7 @@ namespace Orleans.Runtime
         /// The logger.
         /// </summary>
         private static readonly Logger Logger;
-        
+
         /// <summary>
         /// The initialization lock.
         /// </summary>
@@ -45,22 +45,17 @@ namespace Orleans.Runtime
         /// </summary>
         public static void Initialize()
         {
-            if (initialized)
+        }
+
+        /// <summary>
+        /// Process a list of assemblies.
+        /// </summary>
+        /// <param name="assemblies">The assemblies to process.</param>
+        public static void ProcessAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            foreach (var asm in assemblies)
             {
-                return;
-            }
-
-            lock (InitializationLock)
-            {
-                if (initialized)
-                {
-                    return;
-                }
-
-                // load the code generator before intercepting assembly loading
-                CodeGeneratorManager.Initialize(); 
-
-                initialized = true;
+                ProcessAssembly(asm);
             }
         }
 
@@ -70,6 +65,17 @@ namespace Orleans.Runtime
         /// <param name="assembly">The assembly to process.</param>
         public static void ProcessAssembly(Assembly assembly)
         {
+            lock (InitializationLock)
+            {
+                if (!initialized)
+                {
+                    // load the code generator before intercepting assembly loading
+                    CodeGeneratorManager.Initialize();
+
+                    initialized = true;
+                }
+            }
+
             string assemblyName = assembly.GetName().Name;
             if (Logger.IsVerbose3)
             {
@@ -116,7 +122,7 @@ namespace Orleans.Runtime
                     {
                         SerializationManager.FindSerializationInfo(type);
                     }
-    
+
                     GrainFactory.FindSupportClasses(type);
                 }
                 catch (Exception exception)

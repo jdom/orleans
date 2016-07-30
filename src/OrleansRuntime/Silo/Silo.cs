@@ -234,10 +234,14 @@ namespace Orleans.Runtime
                 (obj, ev) => DomainUnobservedExceptionHandler(obj, (Exception)ev.ExceptionObject);
 
             grainFactory = new GrainFactory();
+            //typeManager = new GrainTypeManager(
+            //    here.Address.Equals(IPAddress.Loopback),
+            //    grainFactory, 
+            //    new SiloAssemblyLoader(OrleansConfig.Defaults.AdditionalAssemblyDirectories));
             typeManager = new GrainTypeManager(
                 here.Address.Equals(IPAddress.Loopback),
-                grainFactory, 
-                new SiloAssemblyLoader(OrleansConfig.Defaults.AdditionalAssemblyDirectories));
+                grainFactory,
+                new SiloAssemblyLoader(OrleansConfig.Defaults.AssemblyCatalog));
 
             // Performance metrics
             siloStatistics = new SiloStatisticsManager(globalConfig, nodeConfig);
