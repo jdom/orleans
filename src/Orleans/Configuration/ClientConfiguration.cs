@@ -40,9 +40,9 @@ namespace Orleans.Runtime.Configuration
         public string SourceFile { get; private set; }
 
         /// <summary>
-        /// The assembly catalog
+        /// The assemblies for the AssemblyCatalog
         /// </summary>
-        public IAssemblyCatalog AssemblyCatalog { get; set; }
+        public List<string> Assemblies { get; set; }
 
         /// <summary>
         /// The list fo the gateways to use.
@@ -309,7 +309,7 @@ namespace Orleans.Runtime.Configuration
                             }
                             break;
                         case "AssemblyCatalog":
-                            AssemblyCatalog = ConfigUtilities.ParseAssemblyCatalog(child);
+                            Assemblies = ConfigUtilities.ParseAssemblyList(child);
                             break;
                         case "Telemetry":
                             ConfigUtilities.ParseTelemetry(child);

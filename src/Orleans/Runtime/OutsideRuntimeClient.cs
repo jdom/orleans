@@ -98,6 +98,11 @@ namespace Orleans
             get { throw new InvalidOperationException("Storage provider only available from inside grain"); }
         }
 
+        /// <summary>
+        /// The assembly catalog
+        /// </summary>
+        public IAssemblyCatalog AssemblyCatalog { get; private set; }
+
         internal IList<Uri> Gateways
         {
             get
@@ -115,7 +120,7 @@ namespace Orleans
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "MessageCenter is IDisposable but cannot call Dispose yet as it lives past the end of this method call.")]
-        public OutsideRuntimeClient(ClientConfiguration cfg, GrainFactory grainFactory, bool secondary = false)
+        public OutsideRuntimeClient(ClientConfiguration cfg, GrainFactory grainFactory, bool secondary = false, IAssemblyCatalog assemblyCatalog = null)
         {
             this.grainFactory = grainFactory;
             this.clientId = GrainId.NewClientId();
@@ -136,7 +141,24 @@ namespace Orleans
 
             try
             {
-                AssemblyLoader.NewAssemblyLoader(cfg.AssemblyCatalog);
+                AssemblyCatalog = assemblyCatalog;
+
+                if (AssemblyCatalog == null)
+                {
+                    if (config.Assemblies == null ||
+                        config.Assemblies.Count == 0)
+                        throw new InvalidOperationException("No IAssemblyCatalog implementation or assembly list were provided.");
+
+                    var catalog = new PathBasedAssemblyCatalog();
+
+                    foreach (var asmPath in config.Assemblies)
+                    {
+                        catalog.WithAssembly(asmPath);
+                    }
+                    AssemblyCatalog = catalog;
+                }
+
+                AssemblyLoader.NewAssemblyLoader(AssemblyCatalog);
 
                 PlacementStrategy.Initialize();
 
