@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Orleans.CodeGeneration;
 
 namespace Orleans.Runtime
 {
@@ -15,7 +14,7 @@ namespace Orleans.Runtime
         private AssemblyLoader(IAssemblyCatalog catalog)
         {
             AssemblyCatalog = catalog;
-            CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
+
             AssemblyProcessor.ProcessAssemblies(catalog.GetAssemblies());
         }
 
@@ -25,7 +24,7 @@ namespace Orleans.Runtime
 
             return new AssemblyLoader(catalog);
         }
-       
+
         public static T TryLoadAndCreateInstance<T>(string assemblyName, Logger logger) where T : class
         {
             try

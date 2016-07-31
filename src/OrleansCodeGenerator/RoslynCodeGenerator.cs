@@ -69,19 +69,50 @@ namespace Orleans.CodeGenerator
             CompiledAssemblies.TryAdd(targetAssemblyName, new GeneratedAssembly { RawBytes = generatedAssembly });
         }
 
-        /// <summary>
-        /// Generates code for all loaded assemblies and loads the output.
-        /// </summary>
-        public void GenerateAndLoadForAllAssemblies()
+        private Assembly GenerateAndCompileAssemblies(List<Assembly> input)
         {
-            this.GenerateAndLoadForAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+            var timer = Stopwatch.StartNew();
+            var generated = GenerateForAssemblies(input, true);
+
+            var compiled = default(byte[]);
+            if (generated.Syntax != null)
+            {
+                compiled = CompileAndLoad(generated);
+            }
+
+            foreach (var assembly in generated.SourceAssemblies)
+            {
+                var generatedAssembly = new GeneratedAssembly { Loaded = true, RawBytes = compiled };
+                CompiledAssemblies.AddOrUpdate(
+                    assembly.GetName().FullName,
+                    generatedAssembly,
+                    (_, __) => generatedAssembly);
+            }
+
+            if (Logger.IsVerbose2)
+            {
+                Logger.Verbose2(
+                    ErrorCode.CodeGenCompilationSucceeded,
+                    "Generated code for {0} assembly in {1}ms",
+                    input.Count,
+                    timer.ElapsedMilliseconds);
+            }
+
+            if (compiled == default(byte[]))
+            {
+                return null;
+            }
+            else
+            {
+                return Assembly.Load(compiled);
+            }
         }
 
         /// <summary>
         /// Generates and loads code for the specified inputs.
         /// </summary>
         /// <param name="inputs">The assemblies to generate code for.</param>
-        public void GenerateAndLoadForAssemblies(params Assembly[] inputs)
+        public Assembly GenerateAndLoadForAssemblies(params Assembly[] inputs)
         {
             if (inputs == null)
             {
@@ -99,37 +130,13 @@ namespace Orleans.CodeGenerator
             if (grainAssemblies.Count == 0)
             {
                 // Already up to date.
-                return;
+                return null;
             }
 
             try
             {
                 // Generate code for newly loaded assemblies.
-                var generatedSyntax = GenerateForAssemblies(grainAssemblies, true);
-
-                var compiled = default(byte[]);
-                if (generatedSyntax.Syntax != null)
-                {
-                    compiled = CompileAndLoad(generatedSyntax);
-                }
-
-                foreach (var assembly in generatedSyntax.SourceAssemblies)
-                {
-                    var generatedAssembly = new GeneratedAssembly { Loaded = true, RawBytes = compiled };
-                    CompiledAssemblies.AddOrUpdate(
-                        assembly.GetName().FullName,
-                        generatedAssembly,
-                        (_, __) => generatedAssembly);
-                }
-
-                if (Logger.IsVerbose2)
-                {
-                    Logger.Verbose2(
-                        ErrorCode.CodeGenCompilationSucceeded,
-                        "Generated code for {0} assemblies in {1}ms",
-                        generatedSyntax.SourceAssemblies.Count,
-                        timer.ElapsedMilliseconds);
-                }
+                return GenerateAndCompileAssemblies(grainAssemblies);
             }
             catch (Exception exception)
             {
@@ -147,7 +154,7 @@ namespace Orleans.CodeGenerator
         /// <param name="input">
         /// The assembly to generate code for.
         /// </param>
-        public void GenerateAndLoadForAssembly(Assembly input)
+        public Assembly GenerateAndLoadForAssembly(Assembly input)
         {
             try
             {
@@ -156,34 +163,10 @@ namespace Orleans.CodeGenerator
                 {
                     TryLoadGeneratedAssemblyFromCache(input);
 
-                    return;
+                    return null;
                 }
 
-                var timer = Stopwatch.StartNew();
-                var generated = GenerateForAssemblies(new List<Assembly> { input }, true);
-
-                var compiled = default(byte[]);
-                if (generated.Syntax != null)
-                {
-                    compiled = CompileAndLoad(generated);
-                }
-
-                foreach (var assembly in generated.SourceAssemblies)
-                {
-                    var generatedAssembly = new GeneratedAssembly { Loaded = true, RawBytes = compiled };
-                    CompiledAssemblies.AddOrUpdate(
-                        assembly.GetName().FullName,
-                        generatedAssembly,
-                        (_, __) => generatedAssembly);
-                }
-
-                if (Logger.IsVerbose2)
-                {
-                    Logger.Verbose2(
-                        ErrorCode.CodeGenCompilationSucceeded,
-                        "Generated code for 1 assembly in {0}ms",
-                        timer.ElapsedMilliseconds);
-                }
+                return GenerateAndCompileAssemblies(new List<Assembly> { input });                
             }
             catch (Exception exception)
             {
@@ -442,7 +425,7 @@ namespace Orleans.CodeGenerator
             {
                 RecordType(type, module, targetAssembly, includedTypes);
             }
-            
+
             ConsiderGenericBaseTypeArguments(typeInfo, module, targetAssembly, includedTypes);
             ConsiderGenericInterfacesArguments(typeInfo, module, targetAssembly, includedTypes);
 
@@ -450,7 +433,7 @@ namespace Orleans.CodeGenerator
             if (GrainInterfaceUtils.IsGrainInterface(type))
             {
                 if (Logger.IsVerbose2) Logger.Verbose2("Will generate code for: {0}", type.GetParseableName());
-                
+
                 includedTypes.Add(type);
             }
         }

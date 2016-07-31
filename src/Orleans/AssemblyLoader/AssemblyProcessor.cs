@@ -39,14 +39,7 @@ namespace Orleans.Runtime
         {
             Logger = LogManager.GetLogger("AssemblyProcessor");
         }
-
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        public static void Initialize()
-        {
-        }
-
+        
         /// <summary>
         /// Process a list of assemblies.
         /// </summary>
@@ -100,9 +93,22 @@ namespace Orleans.Runtime
             if (TypeUtils.IsOrleansOrReferencesOrleans(assembly))
             {
                 // Code generation occurs in a self-contained assembly, so invoke it separately.
-                CodeGeneratorManager.GenerateAndCacheCodeForAssembly(assembly);
+                var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssembly(assembly);
+                if (generated != null)
+                {
+                    lock (ProcessedAssemblies)
+                    {
+                        ProcessedAssemblies.Add(generated);
+                    }
+                    ProcessSerializers(generated);
+                }
             }
 
+            ProcessSerializers(assembly);
+        }
+
+        private static void ProcessSerializers(Assembly assembly)
+        {
             // Process each type in the assembly.
             var shouldProcessSerialization = SerializationManager.ShouldFindSerializationInfo(assembly);
             var assemblyTypes = TypeUtils.GetDefinedTypes(assembly, Logger).ToArray();

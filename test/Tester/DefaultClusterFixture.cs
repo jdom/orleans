@@ -16,10 +16,14 @@ namespace Tester
                     @".\TestGrainInterfaces.dll",
                     @".\TestInternalGrainInterfaces.dll",
                     @".\TestFSharpInterfaces.dll",
+                    @".\Orleans.dll",
+                    @".\OrleansRuntime.dll",
                     @".\TestFSharp.dll"};
             options.ClientConfiguration.Assemblies = new List<string> { 
                     @".\TestGrainInterfaces.dll",
                     @".\TestFSharpInterfaces.dll",
+                    @".\Orleans.dll",
+                    @".\OrleansRuntime.dll",
                     @".\TestInternalGrainInterfaces.dll"};
             return new TestCluster(options);
         }
