@@ -14,7 +14,9 @@ namespace Tester
             options.ClusterConfiguration.AddMemoryStorageProvider("MemoryStore");
             options.ClusterConfiguration.Defaults.Assemblies = new List<string> { 
                     @".\TestGrainInterfaces.dll",
+                    @".\TestGrains.dll",
                     @".\TestInternalGrainInterfaces.dll",
+                    @".\TestInternalGrains.dll",
                     @".\TestFSharpInterfaces.dll",
                     @".\Orleans.dll",
                     @".\OrleansRuntime.dll",
@@ -23,7 +25,6 @@ namespace Tester
                     @".\TestGrainInterfaces.dll",
                     @".\TestFSharpInterfaces.dll",
                     @".\Orleans.dll",
-                    @".\OrleansRuntime.dll",
                     @".\TestInternalGrainInterfaces.dll"};
             return new TestCluster(options);
         }

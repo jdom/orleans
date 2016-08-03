@@ -77,7 +77,7 @@ namespace Orleans.CodeGenerator
             var compiled = default(byte[]);
             if (generated.Syntax != null)
             {
-                compiled = CompileAndLoad(generated);
+                compiled = Compile(generated);
             }
 
             foreach (var assembly in generated.SourceAssemblies)
@@ -233,14 +233,14 @@ namespace Orleans.CodeGenerator
         }
 
         /// <summary>
-        /// Compiles the provided syntax tree, and loads and returns the result.
+        /// Compiles the provided syntax tree.
         /// </summary>
         /// <param name="generatedSyntax">The syntax tree.</param>
         /// <returns>The compilation output.</returns>
-        private static byte[] CompileAndLoad(GeneratedSyntax generatedSyntax)
+        private static byte[] Compile(GeneratedSyntax generatedSyntax)
         {
             var rawAssembly = CodeGeneratorCommon.CompileAssembly(generatedSyntax, "OrleansCodeGen");
-            Assembly.Load(rawAssembly);
+            // Assembly.Load(rawAssembly);
             return rawAssembly;
         }
 
