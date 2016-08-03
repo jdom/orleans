@@ -4,7 +4,7 @@
     "Orleans": { "target": "project" },
     "OrleansRuntime": { "target": "project" },
     "Bond.Runtime.CSharp": "3.0.7",
-    "Newtonsoft.Json": "7.0.1"
+    "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
      "net451": {

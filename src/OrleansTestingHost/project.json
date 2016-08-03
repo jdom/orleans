@@ -4,7 +4,7 @@
     "Orleans": { "target": "project" },
     "OrleansProviders": { "target": "project" },
     "OrleansRuntime": { "target": "project" },
-    "Newtonsoft.Json": "7.0.1"
+    "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
      "net451": {}
