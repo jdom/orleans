@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+#if !NETSTANDARD_TODO
 using System.Runtime.Remoting.Messaging;
+#endif
 using Orleans.Serialization;
+// TODO: fix or remove support entirely (potentially use AsyncLocal<T> instead)
 
 
 namespace Orleans.Runtime
@@ -108,7 +111,9 @@ namespace Orleans.Runtime
                 {
                     activityIdObj = Guid.Empty;
                 }
+#if !NETSTANDARD_TODO
                 Trace.CorrelationManager.ActivityId = (Guid) activityIdObj;
+#endif
             }
             if (contextData != null && contextData.Count > 0)
             {
@@ -128,6 +133,7 @@ namespace Orleans.Runtime
         {
             Dictionary<string, object> values = GetContextData();
 
+#if !NETSTANDARD_TODO
             if (PropagateActivityId)
             {
                 Guid activityId = Trace.CorrelationManager.ActivityId;
@@ -139,6 +145,7 @@ namespace Orleans.Runtime
                     SetContextData(values);
                 }
             }
+#endif
             if (values != null && values.Count != 0)
                 return values.ToDictionary(kvp => kvp.Key, kvp => SerializationManager.DeepCopy(kvp.Value));
             return null;
@@ -147,17 +154,25 @@ namespace Orleans.Runtime
         public static void Clear()
         {
             // Remove the key to prevent passing of its value from this point on
+#if !NETSTANDARD_TODO
             CallContext.FreeNamedDataSlot(ORLEANS_REQUEST_CONTEXT_KEY);
+#endif
         }
 
         private static void SetContextData(Dictionary<string, object> values)
         {
+#if !NETSTANDARD_TODO
             CallContext.LogicalSetData(ORLEANS_REQUEST_CONTEXT_KEY, values);
+#endif
         }
 
         private static Dictionary<string, object> GetContextData()
         {
+#if !NETSTANDARD_TODO
             return (Dictionary<string, object>) CallContext.LogicalGetData(ORLEANS_REQUEST_CONTEXT_KEY);
+#else
+            return null;
+#endif
         }
     }
 }

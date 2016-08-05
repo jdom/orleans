@@ -19,7 +19,9 @@ namespace Orleans.Providers
         static ProviderTypeLoader()
         {
             managers = new List<ProviderTypeLoader>();
+#if !NETSTANDARD_TODO
             AppDomain.CurrentDomain.AssemblyLoad += ProcessNewAssembly;
+#endif
         }
 
         public ProviderTypeLoader(Func<Type, bool> condition, Action<Type> action)
@@ -85,6 +87,7 @@ namespace Orleans.Providers
             }
         }
 
+#if !NETSTANDARD_TODO
         private static void ProcessNewAssembly(object sender, AssemblyLoadEventArgs args)
         {
             // We do this under the lock to avoid race conditions when an assembly is added 
@@ -106,5 +109,6 @@ namespace Orleans.Providers
                 }
             }
         }
+#endif
     }
 }

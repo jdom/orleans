@@ -360,12 +360,14 @@ namespace Orleans.Runtime.Configuration
             sb.Append("      ").Append("   Turn Warning Length Threshold: ").Append(TurnWarningLengthThreshold).AppendLine();
             sb.Append("      ").Append("   Inject More Worker Threads: ").Append(InjectMoreWorkerThreads).AppendLine();
             sb.Append("      ").Append("   MinDotNetThreadPoolSize: ").Append(MinDotNetThreadPoolSize).AppendLine();
+#if !NETSTANDARD_TODO
             int workerThreads;
             int completionPortThreads;
             ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
             sb.Append("      ").AppendFormat("   .NET thread pool sizes - Min: Worker Threads={0} Completion Port Threads={1}", workerThreads, completionPortThreads).AppendLine();
             ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
             sb.Append("      ").AppendFormat("   .NET thread pool sizes - Max: Worker Threads={0} Completion Port Threads={1}", workerThreads, completionPortThreads).AppendLine();
+#endif
             sb.Append("      ").AppendFormat("   .NET ServicePointManager - DefaultConnectionLimit={0} Expect100Continue={1} UseNagleAlgorithm={2}", DefaultConnectionLimit, Expect100Continue, UseNagleAlgorithm).AppendLine();
             sb.Append("   Load Shedding Enabled: ").Append(LoadSheddingEnabled).AppendLine();
             sb.Append("   Load Shedding Limit: ").Append(LoadSheddingLimit).AppendLine();
@@ -502,7 +504,12 @@ namespace Orleans.Runtime.Configuration
 
         private string GetDefaultWorkingStoreDirectory()
         {
+#if NETSTANDARD
+            // TODO: delete this after System.Environment.GetFolderPath() is available on CoreCLR. Not sure if it works anyway
+            string workingStoreLocation = Environment.GetEnvironmentVariable("APPDATA");
+#else
             string workingStoreLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.DoNotVerify);
+#endif
             string cacheDirBase = Path.Combine(workingStoreLocation, "OrleansData");
             return cacheDirBase;
         }

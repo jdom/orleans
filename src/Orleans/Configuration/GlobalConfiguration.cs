@@ -506,7 +506,11 @@ namespace Orleans.Runtime.Configuration
             BackgroundGossipInterval = DEFAULT_BACKGROUND_GOSSIP_INTERVAL;
             ExpectedClusterSizeConfigValue = new ConfigValue<int>(DEFAULT_LIVENESS_EXPECTED_CLUSTER_SIZE, true);
             ServiceId = Guid.Empty;
+#if NETSTANDARD_TODO
+            DeploymentId = "FIX ME";
+#else
             DeploymentId = Environment.UserName;
+#endif
             DataConnectionString = "";
 
             // Assume the ado invariant is for sql server storage if not explicitly specified
@@ -724,7 +728,7 @@ namespace Orleans.Runtime.Configuration
                         if (child.HasAttribute("SystemStoreType"))
                         {
                             var sst = child.GetAttribute("SystemStoreType");
-                            if (!"None".Equals(sst, StringComparison.InvariantCultureIgnoreCase))
+                            if (!"None".Equals(sst, StringComparison.OrdinalIgnoreCase))
                             {
                                 LivenessType = (LivenessProviderType)Enum.Parse(typeof(LivenessProviderType), sst);
                                 ReminderServiceProviderType reminderServiceProviderType;

@@ -9,7 +9,10 @@ namespace Orleans.Streams
 {
     [Serializable]
     [Immutable]
-    internal class StreamImpl<T> : IStreamIdentity, IAsyncStream<T>, IStreamControl, ISerializable
+    internal class StreamImpl<T> : IStreamIdentity, IAsyncStream<T>, IStreamControl
+#if !NETSTANDARD_TODO
+        , ISerializable
+#endif
     {
         private readonly StreamId                               streamId;
         private readonly bool                                   isRewindable;
@@ -191,8 +194,9 @@ namespace Orleans.Streams
         {
             return streamId.ToString();
         }
-                
+
         #region ISerializable Members
+#if !NETSTANDARD_TODO
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -209,7 +213,7 @@ namespace Orleans.Streams
             isRewindable = info.GetBoolean("IsRewindable");
             initLock = new object();
         }
-
-        #endregion
+#endif
+#endregion
     }
 }
