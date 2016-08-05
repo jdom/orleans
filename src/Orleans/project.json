@@ -26,7 +26,18 @@
         "System.Threading.ThreadPool": "4.0.10"
       },
       "buildOptions": {
-        "define": [ "NETSTANDARD" ]
+        "define": [ "NETSTANDARD" ],
+        "compile": {
+          "exclude": [ "AssemblyLoader/*.cs" ],
+          "includeFiles": [ "AssemblyLoader/AssemblyProcessor.cs" ],
+          "excludeFiles": [
+            "Core/GrainClient.cs",
+            "Runtime/OutsideRuntimeClient.cs",
+            "Serialization/BinaryFormatterSerializer.cs",
+            "Statistics/RuntimeStatisticsGroup.cs",
+            "Statistics/ClientTableStatistics.cs",
+            "Statistics/ClientStatisticsManager.cs" ]
+        }
       }
     },
     "net451": {

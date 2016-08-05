@@ -158,7 +158,17 @@ namespace Orleans.Serialization
                 BufferPool.InitGlobalBufferPool(new MessagingConfiguration(false));
                 RegisterSerializationProviders(serializationProviders);
                 AssemblyProcessor.Initialize();
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+#if NETSTANDARD
+                Assembly[] assemblies = new[] 
+                {
+                    typeof(Exception).GetTypeInfo().Assembly,
+                    typeof(AssemblyProcessor).GetTypeInfo().Assembly,
+                };
+#else
+
+                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+#endif
+                foreach (var assembly in assemblies)
                 {
                     AssemblyProcessor.ProcessAssembly(assembly);
                 }
@@ -234,7 +244,9 @@ namespace Orleans.Serialization
                 IsBuiltInSerializersRegistered = true;
             }
 
+#if !NETSTANDARD
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveEventHandler;
+#endif
             registeredTypes = new HashSet<Type>();
             externalSerializers = new List<IExternalSerializer>();
             typeToExternalSerializerDictionary = new ConcurrentDictionary<Type, IExternalSerializer>();
@@ -2017,6 +2029,7 @@ namespace Orleans.Serialization
             return serializer;
         }
 
+#if !NETSTANDARD
         private static Assembly OnResolveEventHandler(Object sender, ResolveEventArgs arg)
         {
             // types defined in assemblies loaded by path name (e.g. Assembly.LoadFrom) aren't resolved during deserialization without some help.
@@ -2027,6 +2040,7 @@ namespace Orleans.Serialization
 
             return null;
         }
+#endif
 
         private static object FallbackSerializationDeepCopy(object obj)
         {

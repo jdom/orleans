@@ -210,6 +210,7 @@ namespace Orleans.Runtime
 
         private void TrackContextSwitches()
         {
+#if !NETSTANDARD
             PerformanceCounterCategory allThreadsWithPerformanceCounters = new PerformanceCounterCategory("Thread");
             PerformanceCounter[] performanceCountersForThisThread = null;
 
@@ -239,6 +240,7 @@ namespace Orleans.Runtime
                     FloatValueStatistic.FindOrCreate(new StatisticName(StatisticNames.THREADS_CONTEXT_SWITCHES, Name), () => (float)performanceCounter.RawValue, CounterStorage.LogOnly);
                 }
             }
+#endif
         }
     }
 }

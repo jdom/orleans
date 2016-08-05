@@ -13,7 +13,10 @@ namespace Orleans.Runtime
     /// This is the base class for all typed grain references.
     /// </summary>
     [Serializable]
-    public class GrainReference : IAddressable, IEquatable<GrainReference>, ISerializable
+    public class GrainReference : IAddressable, IEquatable<GrainReference>
+#if !NETSTANDARD
+        , ISerializable
+#endif
     {
         private readonly string genericArguments;
         private readonly GuidId observerId;
@@ -54,7 +57,7 @@ namespace Orleans.Runtime
 
         internal bool IsUnordered { get { return isUnordered; } }
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Constructs a reference to the grain with the specified Id.
@@ -117,9 +120,9 @@ namespace Orleans.Runtime
         protected GrainReference(GrainReference other)
             : this(other.GrainId, other.genericArguments, other.SystemTargetSilo, other.ObserverId) { }
 
-        #endregion
+#endregion
 
-        #region Instance creator factory functions
+#region Instance creator factory functions
 
         /// <summary>
         /// Constructs a reference to the grain with the specified ID.
@@ -135,7 +138,7 @@ namespace Orleans.Runtime
             return new GrainReference(grainId, null, null, observerId);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Tests this reference for equality to another object.
@@ -222,7 +225,7 @@ namespace Orleans.Runtime
             return !reference1.Equals(reference2);
         }
 
-        #region Protected members
+#region Protected members
 
         /// <summary>
         /// Implemented by generated subclasses to return a constant
@@ -314,9 +317,9 @@ namespace Orleans.Runtime
             return resultTask.Unbox<T>();
         }
 
-        #endregion
+#endregion
 
-        #region Private members
+#region Private members
 
         private Task<object> InvokeMethod_Impl(InvokeMethodRequest request, string debugContext, InvokeMethodOptions options)
         {
@@ -349,6 +352,7 @@ namespace Orleans.Runtime
 
         private void CallClientInvokeCallback(InvokeMethodRequest request)
         {
+#if !NETSTANDARD
             // Make callback to any registered client callback function, allowing opportunity for an application to set any additional RequestContext info, etc.
             // Should we set some kind of callback-in-progress flag to detect and prevent any inappropriate callback loops on this GrainReference?
             try
@@ -369,6 +373,7 @@ namespace Orleans.Runtime
                     exc);
                 throw;
             }
+#endif
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -430,7 +435,7 @@ namespace Orleans.Runtime
             return RuntimeClient.Current.GrainTypeResolver != null && RuntimeClient.Current.GrainTypeResolver.IsUnordered(GrainId.GetTypeCode());
         }
         
-        #endregion
+#endregion
 
         /// <summary>
         /// Internal implementation of Cast operation for grain references
@@ -686,8 +691,9 @@ namespace Orleans.Runtime
         }
 
 
-        #region ISerializable Members
+#region ISerializable Members
 
+#if !NETSTANDARD
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             // Use the AddValue method to specify serialized values.
@@ -727,7 +733,7 @@ namespace Orleans.Runtime
                 genericArg = null;
             genericArguments = genericArg;
         }
-
-        #endregion
+#endif
+#endregion
     }
 }
