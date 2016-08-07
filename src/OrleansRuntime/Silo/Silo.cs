@@ -30,6 +30,7 @@ using Orleans.Serialization;
 using Orleans.Storage;
 using Orleans.Streams;
 using Orleans.Timers;
+using System.Reflection;
 
 namespace Orleans.Runtime
 {
@@ -128,7 +129,11 @@ namespace Orleans.Runtime
             get { return globalConfig.HasMultiClusterNetwork ? globalConfig.ClusterId : null; } 
         }
 
-     
+        /// <summary>
+        /// The assembly catalog
+        /// </summary>
+        public IAssemblyCatalog AssemblyCatalog { get; private set; }
+
         /// <summary> SiloAddress for this silo. </summary>
         public SiloAddress SiloAddress { get { return messageCenter.MyAddress; } }
 
@@ -149,7 +154,7 @@ namespace Orleans.Runtime
         /// <param name="siloType">Type of this silo.</param>
         /// <param name="config">Silo config data to be used for this silo.</param>
         public Silo(string name, SiloType siloType, ClusterConfiguration config)
-            : this(name, siloType, config, null)
+            : this(name, siloType, config, null, null)
         {
             
         }
@@ -163,7 +168,7 @@ namespace Orleans.Runtime
         /// <param name="keyStore">Local data store, mostly used for testing, shared between all silos running in same process.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Should not Dispose of messageCenter in this method because it continues to run / exist after this point.")]
-        internal Silo(string name, SiloType siloType, ClusterConfiguration config, ILocalDataStore keyStore)
+        internal Silo(string name, SiloType siloType, ClusterConfiguration config, ILocalDataStore keyStore, IAssemblyCatalog assemblyCatalog)
         {
             SystemStatus.Current = SystemStatus.Creating;
 
@@ -248,10 +253,28 @@ namespace Orleans.Runtime
                 throw;
             }
 
+
+            AssemblyCatalog = assemblyCatalog;
+
+            if (AssemblyCatalog == null)
+            {
+                var catalog = new AssemblyCatalog();
+
+                if (config.Defaults.Assemblies == null ||
+                    config.Defaults.Assemblies.Count == 0)
+                    catalog.WithAssembly(Assembly.GetEntryAssembly().FullName);
+
+                foreach (var asmPath in config.Defaults.Assemblies)
+                {
+                    catalog.WithAssembly(asmPath);
+                }
+                AssemblyCatalog = catalog;
+            }
+
             typeManager = new GrainTypeManager(
                 here.Address.Equals(IPAddress.Loopback),
-                grainFactory, 
-                new SiloAssemblyLoader(OrleansConfig.Defaults.AdditionalAssemblyDirectories));
+                grainFactory,
+                new SiloAssemblyLoader(AssemblyCatalog));
 
             // Performance metrics
             siloStatistics = new SiloStatisticsManager(globalConfig, nodeConfig);

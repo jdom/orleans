@@ -146,7 +146,7 @@ namespace Orleans.Serialization
                 RegisterBuiltInSerializers();
                 BufferPool.InitGlobalBufferPool(new MessagingConfiguration(false));
                 RegisterSerializationProviders(serializationProviders);
-                AssemblyProcessor.Initialize();
+                
                 fallbackSerializer = GetFallbackSerializer();
             }
             catch (ReflectionTypeLoadException ex)
@@ -197,7 +197,6 @@ namespace Orleans.Serialization
             }
 
             RegisterSerializationProviders(serializationProviders);
-            AssemblyProcessor.Initialize();
         }
 
         internal static void RegisterBuiltInSerializers()

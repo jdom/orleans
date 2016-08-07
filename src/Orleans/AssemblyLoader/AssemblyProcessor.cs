@@ -21,7 +21,7 @@ namespace Orleans.Runtime
         /// The logger.
         /// </summary>
         private static readonly Logger Logger;
-        
+
         /// <summary>
         /// The initialization lock.
         /// </summary>
@@ -39,40 +39,16 @@ namespace Orleans.Runtime
         {
             Logger = LogManager.GetLogger("AssemblyProcessor");
         }
-
+        
         /// <summary>
-        /// Initializes this instance.
+        /// Process a list of assemblies.
         /// </summary>
-        public static void Initialize()
+        /// <param name="assemblies">The assemblies to process.</param>
+        public static void ProcessAssemblies(IEnumerable<Assembly> assemblies)
         {
-            if (initialized)
+            foreach (var asm in assemblies)
             {
-                return;
-            }
-
-            lock (InitializationLock)
-            {
-                if (initialized)
-                {
-                    return;
-                }
-
-                // load the code generator before intercepting assembly loading
-                CodeGeneratorManager.Initialize(); 
-
-                // initialize serialization for all assemblies to be loaded.
-                AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
-
-                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-                // initialize serialization for already loaded assemblies.
-                CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
-                foreach (var assembly in assemblies)
-                {
-                    ProcessAssembly(assembly);
-                }
-
-                initialized = true;
+                ProcessAssembly(asm);
             }
         }
 
@@ -92,6 +68,17 @@ namespace Orleans.Runtime
         /// <param name="assembly">The assembly to process.</param>
         private static void ProcessAssembly(Assembly assembly)
         {
+            lock (InitializationLock)
+            {
+                if (!initialized)
+                {
+                    // load the code generator before intercepting assembly loading
+                    CodeGeneratorManager.Initialize();
+
+                    initialized = true;
+                }
+            }
+
             string assemblyName = assembly.GetName().Name;
             if (Logger.IsVerbose3)
             {
@@ -119,9 +106,22 @@ namespace Orleans.Runtime
             if (TypeUtils.IsOrleansOrReferencesOrleans(assembly))
             {
                 // Code generation occurs in a self-contained assembly, so invoke it separately.
-                CodeGeneratorManager.GenerateAndCacheCodeForAssembly(assembly);
+                var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssembly(assembly);
+                if (generated != null)
+                {
+                    lock (ProcessedAssemblies)
+                    {
+                        ProcessedAssemblies.Add(generated);
+                    }
+                    ProcessSerializers(generated);
+                }
             }
 
+            ProcessSerializers(assembly);
+        }
+
+        private static void ProcessSerializers(Assembly assembly)
+        {
             // Process each type in the assembly.
             var assemblyTypes = TypeUtils.GetDefinedTypes(assembly, Logger).ToArray();
 
@@ -138,7 +138,7 @@ namespace Orleans.Runtime
                     }
 
                     SerializationManager.FindSerializationInfo(type);
-    
+
                     GrainFactory.FindSupportClasses(type);
                 }
                 catch (Exception exception)
