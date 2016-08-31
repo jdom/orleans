@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "testRunner": "xunit",
   "buildOptions": {
@@ -29,16 +29,20 @@
     "TestInternalGrainInterfaces": { "target": "project" },
     "TestInternalGrains": { "target": "project" },
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
-    "Newtonsoft.Json": "7.0.1",
     "System.Threading.Tasks.Parallel": "4.0.1",
-    "WindowsAzure.Storage": "7.0.0",
     "xunit": "2.2.0-beta2-build3300",
     "Xunit.SkippableFact": "1.2.14"
   },
   "frameworks": {
-    "net451":{
-      "frameworkAssemblies": { 
-        "System.Web.Extensions": "4.0.0.0" }
+    "net451": {
+      "buildOptions": {
+        "compile": {
+          "exclude": [ "StorageTests/AWSUtils/**", "**/DynamoDb*", "**/SQS*" ]
+        }
+      },
+      "frameworkAssemblies": {
+        "System.Web.Extensions": "4.0.0.0"
+      }
     }
   }
 }

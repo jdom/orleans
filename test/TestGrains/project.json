@@ -7,8 +7,7 @@
     "OrleansSQLUtils": { "target": "project" },
     "TestFSharpInterfaces": { "target": "project" },
     "TestGrainInterfaces": { "target": "project" },
-    "TestInterfaces": { "target": "project" },
-    "Newtonsoft.Json": "7.0.1"
+    "TestInterfaces": { "target": "project" }
   },
   "frameworks": {
     "net451": {}

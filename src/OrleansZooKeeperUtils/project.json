@@ -2,8 +2,7 @@
   "version": "1.0.0-*",
   "dependencies": {
     "Orleans": { "target": "project" },
-    "ZooKeeperNetEx": "3.4.8.5",
-    "Newtonsoft.Json": "7.0.1"
+    "ZooKeeperNetEx": "3.4.8.5"
   },
   "frameworks": {
      "net451": {}

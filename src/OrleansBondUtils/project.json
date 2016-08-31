@@ -3,8 +3,7 @@
   "dependencies": {
     "Orleans": { "target": "project" },
     "OrleansRuntime": { "target": "project" },
-    "Bond.Runtime.CSharp": "3.0.7",
-    "Newtonsoft.Json": "7.0.1"
+    "Bond.Runtime.CSharp": "3.0.7"
   },
   "frameworks": {
      "net451": {

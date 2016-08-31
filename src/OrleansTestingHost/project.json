@@ -3,8 +3,7 @@
   "dependencies": {
     "Orleans": { "target": "project" },
     "OrleansProviders": { "target": "project" },
-    "OrleansRuntime": { "target": "project" },
-    "Newtonsoft.Json": "7.0.1"
+    "OrleansRuntime": { "target": "project" }
   },
   "frameworks": {
      "net451": {}

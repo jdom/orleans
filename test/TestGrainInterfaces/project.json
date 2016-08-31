@@ -5,8 +5,7 @@
     "OrleansRuntime": { "target": "project" },
     "TestFSharpInterfaces": { "target": "project" },
     "TestInterfaces": { "target": "project" },
-    "FSharp.Core": "4.0.0.1",
-    "Newtonsoft.Json": "7.0.1"
+    "FSharp.Core": "4.0.0.1"
   },
   "frameworks": {
     "net451": {}
