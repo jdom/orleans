@@ -3,7 +3,7 @@
     "Microsoft.ApplicationInsights": "1.2.3"
   },
   "frameworks": {
-    "net451": {}
+    "net462": {}
   },
   "runtimes": {
     "win-anycpu": {},

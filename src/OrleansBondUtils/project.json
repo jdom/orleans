@@ -3,7 +3,7 @@
     "Bond.Runtime.CSharp": "3.0.7"
   },
   "frameworks": {
-    "net451": {}
+    "net462": {}
   },
   "runtimes": {
     "win-anycpu": {},

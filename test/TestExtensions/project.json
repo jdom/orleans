@@ -6,7 +6,7 @@
     "xunit.extensibility.execution": "2.1.0"
   },
   "frameworks": {
-    "net451": {}
+    "net462": {}
   },
   "runtimes": {
     "win-anycpu": {},
