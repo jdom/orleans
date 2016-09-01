@@ -1,3 +1,4 @@
+#if !NETSTANDARD_TODO
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -571,7 +572,7 @@ namespace Orleans
             transport.Reconnect();
         }
 
-        #region Implementation of IRuntimeClient
+#region Implementation of IRuntimeClient
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "CallbackData is IDisposable but instances exist beyond lifetime of this method so cannot Dispose yet.")]
@@ -838,7 +839,7 @@ namespace Orleans
             throw new InvalidOperationException();
         }
 
-        #endregion
+#endregion
 
         private void CurrentDomain_DomainUnload(object sender, EventArgs e)
         {
@@ -916,3 +917,4 @@ namespace Orleans
         }
     }
 }
+#endif

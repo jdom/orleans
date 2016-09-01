@@ -1,4 +1,5 @@
-﻿#define LOG_MEMORY_PERF_COUNTERS
+﻿#if !NETSTANDARD_TODO
+#define LOG_MEMORY_PERF_COUNTERS
 using System;
 using System.Diagnostics;
 using System.Management;
@@ -234,3 +235,4 @@ namespace Orleans.Runtime
         }
     }
 }
+#endif

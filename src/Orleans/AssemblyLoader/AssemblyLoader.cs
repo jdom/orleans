@@ -1,3 +1,4 @@
+#if !NETSTANDARD_TODO
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,14 +38,6 @@ namespace Orleans.Runtime
             // Ensure that each assembly which is loaded is processed.
             AssemblyProcessor.Initialize();
 
-#if NETSTANDARD
-            Assembly[] assemblies = new[] 
-            {
-                typeof(Exception).GetTypeInfo().Assembly,
-                typeof(AssemblyProcessor).GetTypeInfo().Assembly,
-            };
-            // TODO: runtime codegen based on a catalog or something
-#else
             // initialize serialization for all assemblies to be loaded.
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
 
@@ -52,7 +45,6 @@ namespace Orleans.Runtime
 
             // initialize serialization for already loaded assemblies.
             CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
-#endif
             foreach (var assembly in assemblies)
             {
                 AssemblyProcessor.ProcessAssembly(assembly);
@@ -463,3 +455,4 @@ namespace Orleans.Runtime
         }
     }
 }
+#endif

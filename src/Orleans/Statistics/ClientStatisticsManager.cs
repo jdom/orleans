@@ -1,3 +1,4 @@
+#if !NETSTANDARD_TODO
 using System;
 using System.Threading.Tasks;
 using Orleans.Providers;
@@ -103,3 +104,4 @@ namespace Orleans.Runtime
         }
     }
 }
+#endif
