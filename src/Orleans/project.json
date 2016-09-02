@@ -16,6 +16,7 @@
     "System.Reflection.TypeExtensions": "4.1.0",
     "System.Net.NameResolution": "4.0.0",
     "System.Net.NetworkInformation": "4.1.0",
+    "System.Runtime.Serialization.Formatters": "4.0.0-rc3-24212-01",
     "System.Runtime.Serialization.Primitives": "4.1.1",
     "System.Reflection.Emit.Lightweight": "4.0.1",
     "System.Diagnostics.FileVersionInfo": "4.0.0",

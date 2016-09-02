@@ -6,9 +6,7 @@ namespace Orleans.CodeGenerator
     /// <summary>
     /// The code generation exception.
     /// </summary>
-#if !NETSTANDARD
     [Serializable]
-#endif
     public class CodeGenerationException : Exception
     {
         /// <summary>

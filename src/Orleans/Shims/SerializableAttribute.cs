@@ -1,19 +1,4 @@
 ﻿#if NETSTANDARD_TODO
-namespace Orleans
-{
-    using System;
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Delegate, Inherited = false)]
-    public sealed class SerializableAttribute : Attribute
-    {
-    }
-
-    [AttributeUsage(AttributeTargets.Field, Inherited=false)] 
-    public sealed class NonSerializedAttribute : Attribute
-    {
-    }
-}
-
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary> 
