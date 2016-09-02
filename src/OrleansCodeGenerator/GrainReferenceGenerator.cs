@@ -61,8 +61,10 @@ namespace Orleans.CodeGenerator
             var attributes = SF.AttributeList()
                 .AddAttributes(
                     CodeGeneratorCommon.GetGeneratedCodeAttributeSyntax(),
+#if !NETSTANDARD_TODO
                     SF.Attribute(typeof(SerializableAttribute).GetNameSyntax()),
                     SF.Attribute(typeof(ExcludeFromCodeCoverageAttribute).GetNameSyntax()),
+#endif
                     markerAttribute);
 
             var className = CodeGeneratorCommon.ClassPrefix + TypeUtils.GetSuitableClassName(grainType) + ClassSuffix;
