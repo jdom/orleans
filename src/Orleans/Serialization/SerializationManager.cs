@@ -90,7 +90,7 @@ namespace Orleans.Serialization
         private static ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary;
         private static Dictionary<string, Type> batchTypes;
         private static Dictionary<Type, SerializerMethods> batchRegisteredTypes;
-        
+
         private static IExternalSerializer fallbackSerializer;
         private static LoggerImpl logger;
         private static bool IsBuiltInSerializersRegistered;
@@ -348,11 +348,11 @@ namespace Orleans.Serialization
                 {
                     return;
                 }
-                
+
                 addingComplete = true;
             }
         }
-        
+
 #endregion
 
 #region Serialization info registration
@@ -392,7 +392,7 @@ namespace Orleans.Serialization
             lock (typeWriteLock)
             {
                 bool wasInDictionary = TryUpdateOrAddRegisteredType(t, cop, ser, deser, forceOverride);
-                if(!wasInDictionary)
+                if (!wasInDictionary)
                 {
                     string name = t.OrleansTypeKeyString();
                     AddToNameToTypeMap(name, t);
@@ -515,18 +515,18 @@ namespace Orleans.Serialization
 
         private static void AddToNameToTypeMap(string name, Type type)
         {
-            if(batchTypes != null)
+            if (batchTypes != null)
             {
-                if(batchTypes.ContainsKey(name))
+                if (batchTypes.ContainsKey(name))
                     return;
                 batchTypes.Add(name, type);
                 return;
             }
-            else if(types.ContainsKey(name))
+            else if (types.ContainsKey(name))
             {
                 return;
             }
-            
+
             if (addingComplete)
             {
                 var newDictionary = new Dictionary<string, Type>((Dictionary<string, Type>)types);
@@ -543,12 +543,12 @@ namespace Orleans.Serialization
         {
             SerializerMethods methods;
             bool wasInDictionary;
-            
-            if(batchRegisteredTypes != null) wasInDictionary = batchRegisteredTypes.TryGetValue(key, out methods);
+
+            if (batchRegisteredTypes != null) wasInDictionary = batchRegisteredTypes.TryGetValue(key, out methods);
             else wasInDictionary = registeredTypes.TryGetValue(key, out methods);
 
             bool needToUpdate = !wasInDictionary;
-            
+
             if (deepCopier != null && (methods.DeepCopy == null || forceOverride))
             {
                 methods = new SerializerMethods(deepCopier, methods.Serialize, methods.Deserialize);
@@ -562,7 +562,7 @@ namespace Orleans.Serialization
 
             if (needToUpdate)
             {
-                if(batchRegisteredTypes != null)
+                if (batchRegisteredTypes != null)
                 {
                     batchRegisteredTypes[key] = methods;
                 }
@@ -586,7 +586,7 @@ namespace Orleans.Serialization
         /// </summary>  
         internal static void FindSerializationInfo(List<Type> typesToProcess)
         {
-            lock(typeWriteLock)
+            lock (typeWriteLock)
             {
                 bool firstRun = batchRegisteredTypes == null;
                 if (firstRun)
@@ -594,7 +594,7 @@ namespace Orleans.Serialization
                     batchRegisteredTypes = new Dictionary<Type, SerializerMethods>((Dictionary<Type, SerializerMethods>)registeredTypes);
                     batchTypes = new Dictionary<string, Type>((Dictionary<string, Type>)types);
                 }
-                foreach(var t in typesToProcess)
+                foreach (var t in typesToProcess)
                 {
                     FindSerializationInfo(t);
                 }
@@ -897,7 +897,7 @@ namespace Orleans.Serialization
             var typeAlreadyRegistered = false;
             
             typeAlreadyRegistered = registeredTypes.ContainsKey(concreteSerializerType);
-            
+
             if (typeAlreadyRegistered)
             {
                 return new SerializerMethods(
@@ -1131,7 +1131,7 @@ namespace Orleans.Serialization
         internal static bool HasSerializer(Type t)
         {
             SerializerMethods methods;
-            
+
             if (registeredTypes.TryGetValue(t, out methods) && methods.Serialize != null) return true;
 
             var typeInfo = t.GetTypeInfo();
@@ -1881,8 +1881,7 @@ namespace Orleans.Serialization
             }
 
             return headers;
-            }
-
+        }
         private static bool TryLookupExternalSerializer(Type t, out IExternalSerializer serializer)
         {
             // essentially a no-op if there are no external serializers registered
@@ -2019,12 +2018,12 @@ namespace Orleans.Serialization
                 case TypeCode.Decimal:
                 case TypeCode.Char:
                 case TypeCode.DateTime:
-                return true;
+                    return true;
                 default:
-                if (t.IsArray)
-                    return HasOrleansSerialization(t.GetElementType());
-                SerializerMethods methods;
-                return t == typeof(string) || (registeredTypes.TryGetValue(t, out methods) && methods.Serialize != null) || typeToExternalSerializerDictionary.ContainsKey(t);
+                    if (t.IsArray)
+                        return HasOrleansSerialization(t.GetElementType());
+                    SerializerMethods methods;
+                    return t == typeof(string) || (registeredTypes.TryGetValue(t, out methods) && methods.Serialize != null) || typeToExternalSerializerDictionary.ContainsKey(t);
             }
         }
 
