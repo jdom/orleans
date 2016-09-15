@@ -11,7 +11,10 @@ namespace Orleans.Streams
     /// </summary>
     [Serializable]
     [Immutable]
-    internal class StreamId : IStreamIdentity, IRingIdentifier<StreamId>, IEquatable<StreamId>, IComparable<StreamId>, ISerializable
+    internal class StreamId : IStreamIdentity, IRingIdentifier<StreamId>, IEquatable<StreamId>, IComparable<StreamId>
+#if !NETSTANDARD_TODO
+        , ISerializable
+#endif
     {
         [NonSerialized]
         private static readonly Lazy<Interner<StreamIdInternerKey, StreamId>> streamIdInternCache = new Lazy<Interner<StreamIdInternerKey, StreamId>>(
@@ -45,23 +48,23 @@ namespace Orleans.Streams
             return streamIdInternCache.Value.FindOrCreate(key, () => new StreamId(key));
         }
 
-        #region IComparable<StreamId> Members
+#region IComparable<StreamId> Members
 
         public int CompareTo(StreamId other)
         {
             return key.CompareTo(other.key);
         }
 
-        #endregion
+#endregion
 
-        #region IEquatable<StreamId> Members
+#region IEquatable<StreamId> Members
 
         public bool Equals(StreamId other)
         {
             return other != null && key.Equals(other.key);
         }
 
-        #endregion
+#endregion
 
         public override bool Equals(object obj)
         {
@@ -108,6 +111,7 @@ namespace Orleans.Streams
         }
 
         #region ISerializable Members
+#if !NETSTANDARD
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -126,6 +130,7 @@ namespace Orleans.Streams
             var nameSpace = (string) info.GetValue("Namespace", typeof(string));
             key = new StreamIdInternerKey(guid, providerName, nameSpace);
         }
+#endif
         #endregion
     }
 

@@ -11,7 +11,10 @@ namespace Orleans.Runtime
     /// </summary>
     [Serializable]
     [Immutable]
-    public sealed class GuidId : IEquatable<GuidId>, IComparable<GuidId>, ISerializable
+    public sealed class GuidId : IEquatable<GuidId>, IComparable<GuidId>
+#if !NETSTANDARD_TODO
+        , ISerializable
+#endif
     {
         private static readonly Lazy<Interner<Guid, GuidId>> guidIdInternCache = new Lazy<Interner<Guid, GuidId>>(
                     () => new Interner<Guid, GuidId>(InternerConstants.SIZE_LARGE, InternerConstants.DefaultCacheCleanupFreq));
@@ -39,23 +42,23 @@ namespace Orleans.Runtime
             return guidIdInternCache.Value.FindOrCreate(guid, () => new GuidId(guid));
         }
 
-        #region IComparable<GuidId> Members
+#region IComparable<GuidId> Members
 
         public int CompareTo(GuidId other)
         {
             return this.Guid.CompareTo(other.Guid);
         }
 
-        #endregion
+#endregion
 
-        #region IEquatable<GuidId> Members
+#region IEquatable<GuidId> Members
 
         public bool Equals(GuidId other)
         {
             return other != null && this.Guid.Equals(other.Guid);
         }
 
-        #endregion
+#endregion
 
         public override bool Equals(object obj)
         {
@@ -99,7 +102,7 @@ namespace Orleans.Runtime
             return GuidId.GetGuidId(guid);
         }
 
-        #region Operators
+#region Operators
 
         public static bool operator ==(GuidId a, GuidId b)
         {
@@ -116,6 +119,7 @@ namespace Orleans.Runtime
 
         #endregion
 
+#if !NETSTANDARD_TODO
         #region ISerializable Members
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -130,5 +134,6 @@ namespace Orleans.Runtime
         }
 
         #endregion
+#endif
     }
 }
