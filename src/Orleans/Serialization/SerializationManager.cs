@@ -580,7 +580,10 @@ namespace Orleans.Serialization
 
             return wasInDictionary;
         }
-                        
+
+        /// <summary>
+        /// Looks for types with marked serializer and deserializer methods, and registers the ones found in a single batch.
+        /// </summary>  
         internal static void FindSerializationInfo(List<Type> typesToProcess)
         {
             lock(typeWriteLock)
@@ -1878,8 +1881,8 @@ namespace Orleans.Serialization
             }
 
             return headers;
-        }
-        
+            }
+
         private static bool TryLookupExternalSerializer(Type t, out IExternalSerializer serializer)
         {
             // essentially a no-op if there are no external serializers registered

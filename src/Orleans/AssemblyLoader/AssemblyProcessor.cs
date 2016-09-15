@@ -127,6 +127,7 @@ namespace Orleans.Runtime
 
             List<Type> typesToRegister = new List<Type>();
             // Process each type in the assembly.
+            List<Type> typesToFind = new List<Type>(assemblyTypes.Length);
             foreach (TypeInfo typeInfo in assemblyTypes)
             {
                 try
