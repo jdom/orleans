@@ -13,10 +13,7 @@ namespace Orleans.Runtime
     /// This is the base class for all typed grain references.
     /// </summary>
     [Serializable]
-    public class GrainReference : IAddressable, IEquatable<GrainReference>
-#if !NETSTANDARD_TODO
-        , ISerializable
-#endif
+    public class GrainReference : IAddressable, IEquatable<GrainReference>, ISerializable
     {
         private readonly string genericArguments;
         private readonly GuidId observerId;
@@ -691,7 +688,6 @@ namespace Orleans.Runtime
 
 #region ISerializable Members
 
-#if !NETSTANDARD
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             // Use the AddValue method to specify serialized values.
@@ -731,7 +727,7 @@ namespace Orleans.Runtime
                 genericArg = null;
             genericArguments = genericArg;
         }
-#endif
+
 #endregion
     }
 }
