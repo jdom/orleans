@@ -20,7 +20,6 @@ namespace Orleans.TestingHost
     using Orleans.CodeGeneration;
 
     /// <summary>
-    /// Important note: <see cref="TestingSiloHost"/> will be eventually deprectated. It is recommended that you use <see cref="TestCluster"/> instead.
     /// A host class for local testing with Orleans using in-process silos.
     /// 
     /// Runs a Primary and Secondary silo in seperate app domains, and client in the main app domain.
@@ -36,6 +35,7 @@ namespace Orleans.TestingHost
     /// Also make sure that your test project references your test grains and test grain interfaces 
     /// projects, and has CopyLocal=True set on those references [which should be the default].
     /// </remarks>
+    [Obsolete("Use TestCluster instead")]
     public class TestingSiloHost
     {
         /// <summary> Single instance of TestingSiloHost </summary>

@@ -7,6 +7,7 @@ namespace Orleans.TestingHost
 {
 
     /// <summary> Silo options to use in <see cref="TestingSiloHost"/> </summary>
+    [Obsolete("Use TestCluster and TestClusterOptions instead")]
     public class TestingSiloOptions
     {
         /// <summary> Default path for the silo config file </summary>
