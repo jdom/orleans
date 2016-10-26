@@ -24,6 +24,10 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+
+# Tool Runtime Dir
+*/Build/[Tt]ools/
+
 # Roslyn cache directories
 *.ide/
 
