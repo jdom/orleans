@@ -53,13 +53,13 @@ if EXIST "%VERSION_FILE%" (
 )
 @Echo PRODUCT_VERSION=%PRODUCT_VERSION%
 
-:: Restore the Tools directory to be able to restore .NET Core nuget packages
-call ..\Build\init-tools.cmd
-..\Build\tools\dotnetcli\dotnet.exe restore . ..\test
 
 if "%builduri%" == "" set builduri=Build.cmd
 
 set PROJ=%CMDHOME%\Orleans.vNext.sln
+
+:: Restore nuget packages before building the solution
+"%MSBUILDEXE%" %CMDHOME%\Before.Orleans.sln.targets /p:SolutionPath=%PROJ%
 
 @echo ===== Building %PROJ% =====
 
