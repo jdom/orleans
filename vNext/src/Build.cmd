@@ -55,8 +55,7 @@ if EXIST "%VERSION_FILE%" (
 
 :: Restore the Tools directory to be able to restore .NET Core nuget packages
 call ..\Build\init-tools.cmd
-..\Build\tools\dotnetcli\dotnet.exe restore .
-..\Build\tools\dotnetcli\dotnet.exe restore ..\test
+..\Build\tools\dotnetcli\dotnet.exe restore . ..\test
 
 if "%builduri%" == "" set builduri=Build.cmd
 
