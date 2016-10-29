@@ -84,7 +84,7 @@ namespace Orleans.CodeGenerator
                 GenerateDeserializerMethod(type, fields),
             };
 
-            if (typeInfo.IsConstructedGenericType || !typeInfo.IsGenericTypeDefinition)
+            if (typeInfo.IsConstructedGenericType() || !typeInfo.IsGenericTypeDefinition)
             {
                 members.Add(GenerateRegisterMethod(type));
                 members.Add(GenerateConstructor(className));
@@ -162,7 +162,7 @@ namespace Orleans.CodeGenerator
             var body = new List<StatementSyntax> { resultDeclaration };
 
             // Value types cannot be referenced, only copied, so there is no need to box & record instances of value types.
-            if (!type.IsValueType)
+            if (!type.GetTypeInfo().IsValueType)
             {
                 // Record the result for cyclic deserialization.
                 Expression<Action> recordObject = () => DeserializationContext.Current.RecordObject(default(object));
@@ -264,7 +264,7 @@ namespace Orleans.CodeGenerator
             var resultVariable = SF.IdentifierName("result");
 
             var body = new List<StatementSyntax>();
-            if (type.GetCustomAttribute<ImmutableAttribute>() != null)
+            if (type.GetTypeInfo().GetCustomAttribute<ImmutableAttribute>() != null)
             {
                 // Immutable types do not require copying.
                 body.Add(SF.ReturnStatement(originalVariable));
@@ -390,7 +390,7 @@ namespace Orleans.CodeGenerator
 
                 if (!field.IsSettableProperty)
                 {
-                    if (field.FieldInfo.DeclaringType != null && field.FieldInfo.DeclaringType.IsValueType)
+                    if (field.FieldInfo.DeclaringType != null && field.FieldInfo.DeclaringType.GetTypeInfo().IsValueType)
                     {
                         var setterType =
                             typeof(SerializationManager.ValueTypeSetter<,>).MakeGenericType(
@@ -453,12 +453,12 @@ namespace Orleans.CodeGenerator
             if (typeInfo.IsValueType)
             {
                 // Use the default value.
-                result = SF.DefaultExpression(typeInfo.GetTypeSyntax());
+                result = SF.DefaultExpression(typeInfo.AsType().GetTypeSyntax());
             }
             else if (type.GetConstructor(Type.EmptyTypes) != null)
             {
                 // Use the default constructor.
-                result = SF.ObjectCreationExpression(typeInfo.GetTypeSyntax()).AddArgumentListArguments();
+                result = SF.ObjectCreationExpression(typeInfo.AsType().GetTypeSyntax()).AddArgumentListArguments();
             }
             else
             {
@@ -473,7 +473,7 @@ namespace Orleans.CodeGenerator
                     type.GetTypeSyntax(),
                     getUninitializedObject.Invoke()
                         .AddArgumentListArguments(
-                            SF.Argument(SF.TypeOfExpression(typeInfo.GetTypeSyntax()))));
+                            SF.Argument(SF.TypeOfExpression(typeInfo.AsType().GetTypeSyntax()))));
             }
 
             return result;
@@ -731,7 +731,7 @@ namespace Orleans.CodeGenerator
                 }
 
                 var instanceArg = SF.Argument(instance);
-                if (this.FieldInfo.DeclaringType != null && this.FieldInfo.DeclaringType.IsValueType)
+                if (this.FieldInfo.DeclaringType != null && this.FieldInfo.DeclaringType.GetTypeInfo().IsValueType)
                 {
                     instanceArg = instanceArg.WithRefOrOutKeyword(SF.Token(SyntaxKind.RefKeyword));
                 }

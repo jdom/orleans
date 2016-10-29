@@ -347,8 +347,8 @@ namespace Orleans.CodeGenerator
                                           && knownAssemblyAttribute.TreatTypesAsSerializable;
                 foreach (var type in TypeUtils.GetDefinedTypes(assembly, Logger))
                 {
-                    var considerForSerialization = considerAllTypesForSerialization || type.GetTypeInfo().IsSerializable;
-                    ConsiderType(type, runtime, targetAssembly, includedTypes, considerForSerialization);
+                    var considerForSerialization = considerAllTypesForSerialization || type.IsSerializable;
+                    ConsiderType(type.AsType(), runtime, targetAssembly, includedTypes, considerForSerialization);
                 }
             }
 
@@ -405,7 +405,7 @@ namespace Orleans.CodeGenerator
 
                             ConsoleText.WriteStatus(
                                 "\ttype " + toGen.FullName + " in namespace " + toGen.Namespace
-                                + " defined in Assembly " + toGen.Assembly.GetName());
+                                + " defined in Assembly " + toGen.GetTypeInfo().Assembly.GetName());
                         }
 
                         if (Logger.IsVerbose2)
@@ -453,8 +453,8 @@ namespace Orleans.CodeGenerator
             bool considerForSerialization = false)
         {
             // The module containing the serializer.
-            var module = runtime || type.Assembly != targetAssembly ? null : type.Module;
             var typeInfo = type.GetTypeInfo();
+            var module = runtime || !Equals(typeInfo.Assembly, targetAssembly) ? null : typeInfo.Module;
 
             // If a type was encountered which can be accessed and is marked as [Serializable], process it for serialization.
             if (considerForSerialization)
