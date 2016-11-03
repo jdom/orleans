@@ -17,8 +17,8 @@ namespace UnitTests.CancellationTests
             protected override TestCluster CreateTestCluster()
             {
                 var options = new TestClusterOptions(2);
-                options.ClusterConfiguration.Defaults.Assemblies = TestUtils.GetTestSiloAssemblyList();
-                options.ClientConfiguration.Assemblies = TestUtils.GetTestClientAssemblyList();
+                //options.ClusterConfiguration.Defaults.Assemblies = TestUtils.GetTestSiloAssemblyList();
+                //options.ClientConfiguration.Assemblies = TestUtils.GetTestClientAssemblyList();
                 return new TestCluster(options);
             }
         }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using Orleans.Providers;
+﻿using System.Reflection;
 using Orleans.Runtime;
 using Orleans.Serialization;
 using Xunit;
@@ -21,12 +16,13 @@ namespace UnitTests
         }
 
         [Fact, TestCategory("AssemblyLoader"), TestCategory("BVT"), TestCategory("Functional")]
-        public void PathBasedAssemblyCatalogTest()
+        public void CatalogLoadsDependencies()
         {
             var catalog = NewCatalog()
                 .WithAssembly("TestInternalGrainInterfaces");
 
-            Assert.True(catalog.GetAssemblies().Count == 4);
+            Assert.Contains(Assembly.Load("TestInternalGrainInterfaces"), catalog.GetAssemblies());
+            Assert.Contains(Assembly.Load("TestGrainInterfaces"), catalog.GetAssemblies());
         }
 
         [Fact, TestCategory("AssemblyLoader"), TestCategory("BVT"), TestCategory("Functional")]

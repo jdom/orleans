@@ -40,9 +40,6 @@ namespace UnitTests.StreamingTests
             protected override TestCluster CreateTestCluster()
             {
                 var options = new TestClusterOptions(2);
-                options.ClusterConfiguration.Defaults.Assemblies = TestUtils.GetTestSiloAssemblyList();
-                options.ClientConfiguration.Assemblies = TestUtils.GetTestClientAssemblyList();
-
                 var settings = new Dictionary<string, string>();
                 // get initial settings from configs
                 AdapterConfig.WriteProperties(settings);
@@ -53,7 +50,7 @@ namespace UnitTests.StreamingTests
 
                 // add pub/sub settting
                 settings.Add(PersistentStreamProviderConfig.STREAM_PUBSUB_TYPE, StreamPubSubType.ImplicitOnly.ToString());
-                
+
                 // register stream provider
                 options.ClusterConfiguration.Globals.RegisterStreamProvider<GeneratorStreamProvider>(StreamProviderName, settings);
                 return new TestCluster(options);

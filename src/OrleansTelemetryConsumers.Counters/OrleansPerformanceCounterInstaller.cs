@@ -34,7 +34,7 @@ namespace OrleansTelemetryConsumers.Counters
 
             if (GrainTypeManager.Instance == null)
             {
-                var loader = new SiloAssemblyLoader(new Dictionary<string, SearchOption>());
+                var loader = new SiloAssemblyLoader(new AssemblyCatalog());
                 var typeManager = new GrainTypeManager(false, null, loader); // We shouldn't need GrainFactory in this case
                 GrainTypeManager.Instance.Start(false);
             }

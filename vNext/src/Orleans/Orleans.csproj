@@ -58,6 +58,9 @@
     <IntermediateOutputPath>$(BootstrapOutputPath)Intermediate\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\src\Orleans\AssemblyLoader\AssemblyCatalog.cs">
+      <Link>AssemblyLoader\AssemblyCatalog.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Orleans\AssemblyLoader\AssemblyLoader.cs">
       <Link>AssemblyLoader\AssemblyLoader.cs</Link>
     </Compile>
@@ -81,6 +84,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Orleans\AssemblyLoader\CachedTypeResolver.cs">
       <Link>AssemblyLoader\CachedTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\AssemblyLoader\IAssemblyCatalog.cs">
+      <Link>AssemblyLoader\IAssemblyCatalog.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Orleans\Async\AsyncBatchedContinuationQueue.cs">
       <Link>Async\AsyncBatchedContinuationQueue.cs</Link>

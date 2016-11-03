@@ -154,7 +154,7 @@ namespace Orleans.Runtime
         /// <param name="siloType">Type of this silo.</param>
         /// <param name="config">Silo config data to be used for this silo.</param>
         public Silo(string name, SiloType siloType, ClusterConfiguration config)
-            : this(name, siloType, config, null, null)
+            : this(name, siloType, config, null)
         {
             
         }
@@ -168,7 +168,7 @@ namespace Orleans.Runtime
         /// <param name="keyStore">Local data store, mostly used for testing, shared between all silos running in same process.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Should not Dispose of messageCenter in this method because it continues to run / exist after this point.")]
-        internal Silo(string name, SiloType siloType, ClusterConfiguration config, ILocalDataStore keyStore, IAssemblyCatalog assemblyCatalog)
+        internal Silo(string name, SiloType siloType, ClusterConfiguration config, ILocalDataStore keyStore)
         {
             SystemStatus.Current = SystemStatus.Creating;
 
@@ -253,22 +253,18 @@ namespace Orleans.Runtime
                 throw;
             }
 
-
-            AssemblyCatalog = assemblyCatalog;
-
             if (AssemblyCatalog == null)
             {
-                var catalog = new AssemblyCatalog();
+                var assemblyCatalog = new AssemblyCatalog();
 
-                if (config.Defaults.Assemblies == null ||
-                    config.Defaults.Assemblies.Count == 0)
-                    catalog.WithAssembly(Assembly.GetEntryAssembly().FullName);
-
-                foreach (var asmPath in config.Defaults.Assemblies)
+                if (nodeConfig.Assemblies != null)
                 {
-                    catalog.WithAssembly(asmPath);
+                    foreach (var asmPath in nodeConfig.Assemblies)
+                    {
+                        assemblyCatalog.WithAssembly(asmPath);
+                    }
                 }
-                AssemblyCatalog = catalog;
+                AssemblyCatalog = assemblyCatalog;
             }
 
             typeManager = new GrainTypeManager(

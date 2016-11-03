@@ -122,7 +122,7 @@ namespace Orleans
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "MessageCenter is IDisposable but cannot call Dispose yet as it lives past the end of this method call.")]
-        public OutsideRuntimeClient(ClientConfiguration cfg, GrainFactory grainFactory, bool secondary = false, IAssemblyCatalog assemblyCatalog = null)
+        public OutsideRuntimeClient(ClientConfiguration cfg, GrainFactory grainFactory, bool secondary = false)
         {
 
             this.grainFactory = grainFactory;
@@ -146,21 +146,18 @@ namespace Orleans
 
             try
             {
-                AssemblyCatalog = assemblyCatalog;
-
                 if (AssemblyCatalog == null)
                 {
-                    var catalog = new AssemblyCatalog();
+                    var assemblyCatalog = new AssemblyCatalog();
 
-                    if (config.Assemblies == null ||
-                        config.Assemblies.Count == 0)
-                        catalog.WithAssembly(Assembly.GetEntryAssembly().FullName);
-
-                    foreach (var asmName in config.Assemblies)
+                    if (config.Assemblies != null)
                     {
-                        catalog.WithAssembly(asmName);
+                        foreach (var asmPath in config.Assemblies)
+                        {
+                            assemblyCatalog.WithAssembly(asmPath);
+                        }
                     }
-                    AssemblyCatalog = catalog;
+                    AssemblyCatalog = assemblyCatalog;
                 }
 
                 AssemblyLoader.NewAssemblyLoader(AssemblyCatalog);

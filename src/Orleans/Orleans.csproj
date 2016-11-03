@@ -64,7 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyLoader\AssemblyCatalog.cs" />
     <Compile Include="AssemblyLoader\AssemblyProcessor.cs" />
+    <Compile Include="AssemblyLoader\IAssemblyCatalog.cs" />
     <Compile Include="Async\AsyncBatchedContinuationQueue.cs" />
     <Compile Include="Async\BatchWorker.cs" />
     <Compile Include="Async\MultiTaskCompletionSource.cs" />

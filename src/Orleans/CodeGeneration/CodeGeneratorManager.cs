@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace Orleans.CodeGeneration
 {
     using System;
@@ -54,23 +56,29 @@ namespace Orleans.CodeGeneration
         /// </param>
         public static Assembly GenerateAndCacheCodeForAssembly(Assembly input)
         {
-            Assembly generatedAsm = null;
-            if (CodeGeneratorInstance != null)
+            if (codeGeneratorInstance != null)
             {
-                generatedAsm = CodeGeneratorInstance.GenerateAndLoadForAssembly(input);
+                Assembly generatedAsm;
+                codeGeneratorInstance.TryGenerateAndLoadForAssembly(input, out generatedAsm);
             }
-            return generatedAsm;
+            return null;
         }
 
         /// <summary>
-        /// Ensures code for all currently loaded assemblies has been generated and loaded.
+        /// Ensures code for the specified loaded assemblies has been generated and loaded.
         /// </summary>
-        public static void GenerateAndCacheCodeForAllAssemblies()
+        public static ICollection<Assembly> GenerateAndCacheCodeForAssemblies(ICollection<Assembly> inputs)
         {
             if (codeGeneratorInstance != null)
             {
-                codeGeneratorInstance.GenerateAndLoadForAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+                ICollection<Assembly> result;
+                if (codeGeneratorInstance.TryGenerateAndLoadForAssemblies(inputs, out result))
+                {
+                    return result;
+                }
             }
+
+            return new List<Assembly>();
         }
 
         /// <summary>

@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <OrleansConfiguration xmlns="urn:orleans">
   <Globals>
     <SeedNode Address="localhost" Port="22222" />
-    <Messaging ResponseTimeout="30" MaxResendCount="0"/>
+    <Messaging ResponseTimeout="30s" MaxResendCount="0"/>
   </Globals>
   <Defaults>
     <Networking Address="localhost" Port="0" />
     <Scheduler MaxActiveThreads="0" />
-    <Tracing DefaultTraceLevel="Info" TraceToConsole="true" TraceToFile="" >
-      <LogConsumer>UnitTests.DummyLogConsumer,TesterInternal</LogConsumer>
+    <Tracing DefaultTraceLevel="Info" TraceToConsole="false" TraceToFile="{0}-{1}.log" PropagateActivityId="false" >
       <!--
       <TraceLevelOverride LogPrefix="Runtime.MembershipOracle" TraceLevel="Verbose" />
       <TraceLevelOverride LogPrefix="Runtime.Dispatcher" TraceLevel="Verbose2" />
@@ -16,12 +15,17 @@
       <TraceLevelOverride LogPrefix="Runtime.Catalog" TraceLevel="Verbose" />
       -->
     </Tracing>
-    <Limits>
-      <Limit Name="Limit1" SoftLimit="1" HardLimit="2" />
-      <Limit Name="Limit2" SoftLimit="2" HardLimit="4" />
-      <Limit Name="Limit3" SoftLimit="3" HardLimit="6" />
-      <Limit Name="NoHardLimit" SoftLimit="4" />
-    </Limits>
+    <Statistics MetricsTableWriteInterval="30s" PerfCounterWriteInterval="30s" LogWriteInterval="300s"/>
+    <AdditionalAssemblyProbingPath>
+      <!-- optionally support this or Attila's config. IMO opinion this feature should NOT be provided by Orleans -->
+      <Directory Path="..\Test" IncludeSubFolders="true" />
+      <Directory Path="c:\" IncludeSubFolders="false" />
+    </AdditionalAssemblyProbingPath>
+    <AssembliesToScanForRelevantTypes IncludeAssembliesInBasePath="true" IncludeDependenciesOfIncludedAssemblies="true">
+      <Include Name="MyGrainAssemblyThatIsNotReferences"/>
+      <Exclude Name="MyExcludedAssembly"/>
+      <Exclude Name="AssemblyThatWillNotFollowDependencies"/>
+    </AssembliesToScanForRelevantTypes>
   </Defaults>
   <Override Node="Primary">
     <Networking Port="22222" />

@@ -21,8 +21,6 @@ namespace UnitTests.StreamingTests
                 var options = new TestClusterOptions(2);
 
                 options.ClusterConfiguration.AddMemoryStorageProvider("PubSubStore");
-                options.ClusterConfiguration.Defaults.Assemblies = TestUtils.GetTestSiloAssemblyList();
-                options.ClientConfiguration.Assemblies = TestUtils.GetTestClientAssemblyList();
 
                 options.ClusterConfiguration.AddSimpleMessageStreamProvider(StreamProvider);
                 options.ClientConfiguration.AddSimpleMessageStreamProvider(StreamProvider);

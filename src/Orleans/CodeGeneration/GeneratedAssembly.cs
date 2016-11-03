@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Orleans.CodeGeneration
 {
     /// <summary>
@@ -5,6 +7,7 @@ namespace Orleans.CodeGeneration
     /// </summary>
     public class GeneratedAssembly
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GeneratedAssembly"/> class.
         /// </summary>

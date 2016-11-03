@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +8,6 @@ namespace Orleans.Runtime
     public class AssemblyLoader
     {
         public IAssemblyCatalog AssemblyCatalog { get; private set; }
-        private readonly Logger logger;
 
         private AssemblyLoader(IAssemblyCatalog catalog)
         {
@@ -26,7 +24,7 @@ namespace Orleans.Runtime
 
             return loader;
         }
-#endif
+
         public static T TryLoadAndCreateInstance<T>(string assemblyName, Logger logger) where T : class
         {
             try
@@ -72,32 +70,5 @@ namespace Orleans.Runtime
                 throw;
             }
         }
-
-        private static Assembly MatchWithLoadedAssembly(AssemblyName searchFor, IEnumerable<Assembly> assemblies)
-        {
-            foreach (var assembly in assemblies)
-            {
-                var searchForFullName = searchFor.FullName;
-                var candidateFullName = assembly.FullName;
-                if (String.Equals(candidateFullName, searchForFullName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return assembly;
-                }
-            }
-            return null;
-        }
-
-        private static Assembly MatchWithLoadedAssembly(AssemblyName searchFor, AppDomain appDomain)
-        {
-            return
-                MatchWithLoadedAssembly(searchFor, appDomain.GetAssemblies()) ??
-                MatchWithLoadedAssembly(searchFor, appDomain.ReflectionOnlyGetAssemblies());
-        }
-
-        private static Assembly MatchWithLoadedAssembly(AssemblyName searchFor)
-        {
-            return MatchWithLoadedAssembly(searchFor, AppDomain.CurrentDomain);
-        }
-#endif
     }
 }
