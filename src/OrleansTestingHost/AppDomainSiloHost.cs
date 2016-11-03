@@ -48,6 +48,7 @@ namespace Orleans.TestingHost
             /// <param name="cachedAssembly">The generated assembly.</param>
             public void AddCachedAssembly(string targetAssemblyName, GeneratedAssembly cachedAssembly)
             {
+                CodeGeneratorManager.Initialize();
                 CodeGeneratorManager.AddGeneratedAssembly(targetAssemblyName, cachedAssembly);
             }
         }

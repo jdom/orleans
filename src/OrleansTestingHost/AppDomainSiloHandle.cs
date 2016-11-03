@@ -57,7 +57,7 @@ namespace Orleans.TestingHost
                             new object[] { });
                 }
 
-                optimizer.AddCachedAssembly(assembly.Key, assembly.Value);
+                // optimizer.AddCachedAssembly(assembly.Key, assembly.Value);
             }
 
             var args = new object[] { siloName, type, config };

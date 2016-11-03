@@ -24,21 +24,14 @@ namespace Orleans.Runtime
             if (output == null)
             {
                 HashSet<Assembly> assemblies = new HashSet<Assembly>();
-                if (input.Count == 0)
+                foreach (var assemblyName in input)
                 {
-                    // input.Add(Assembly.GetExecutingAssembly().GetName());
+                    // should not fail, since this assembly is already loaded
+                    assemblies.Add(Assembly.Load(assemblyName));
+                }
 
-                    // optionally load all DLLs from executing directory, for back compat
-                    TryLoadFromExecutingFolder(assemblies);
-                }
-                else
-                {
-                    foreach (var assemblyName in input)
-                    {
-                        // should not fail, since this assembly is already loaded
-                        assemblies.Add(Assembly.Load(assemblyName));
-                    }
-                }
+                // optionally load all DLLs from executing directory, for back compat
+                TryLoadFromExecutingFolder(assemblies);
 
                 assemblies.Add(typeof(Exception).GetTypeInfo().Assembly);
                 assemblies.Add(typeof(AssemblyCatalog).GetTypeInfo().Assembly);
@@ -64,19 +57,18 @@ namespace Orleans.Runtime
             var assemblyNames = assemblyFiles.Select(Path.GetFileNameWithoutExtension).ToList();
             foreach (var assemblyName in assemblyNames.Select(x => new AssemblyName(x)))
             {
-                try
+                if (ShouldScanAssembly(assemblyName))
                 {
-                    if (!ShouldScanAssembly(assemblyName))
+                    try
                     {
-                        // Stop recursively loading dependencies
-                        return;
+
+                        assemblies.Add(Assembly.Load(assemblyName));
+                        logger.Info($"Loaded {assemblyName} from working directory.");
                     }
-                    assemblies.Add(Assembly.Load(assemblyName));
-                    logger.Info($"Loaded {assemblyName} from working directory.");
-                }
-                catch (Exception ex)
-                {
-                    logger.Warn(ErrorCode.Provider_AssemblyLoadError, $"Unable to load assembly {assemblyName} from working directory. This is harmless. Skipping.", ex);
+                    catch (Exception ex)
+                    {
+                        logger.Warn(ErrorCode.Provider_AssemblyLoadError, $"Unable to load assembly {assemblyName} from working directory. This is harmless. Skipping.", ex);
+                    }
                 }
             }
         }

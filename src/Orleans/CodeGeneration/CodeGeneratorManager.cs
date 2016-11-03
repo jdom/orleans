@@ -7,12 +7,16 @@ namespace Orleans.CodeGeneration
     using System.Collections.ObjectModel;
     using System.Reflection;
     using Orleans.Runtime;
+    using System.Linq;
 
     /// <summary>
     /// Methods for invoking code generation.
     /// </summary>
     internal static class CodeGeneratorManager
     {
+        private static readonly object initializationLock = new object();
+        private static bool initialized;
+
         /// <summary>
         /// The name of the code generator assembly.
         /// </summary>
@@ -44,8 +48,18 @@ namespace Orleans.CodeGeneration
         /// </summary>
         public static void Initialize()
         {
-            codeGeneratorInstance = LoadCodeGenerator();
-            codeGeneratorCacheInstance = codeGeneratorInstance as ICodeGeneratorCache;
+            if (!initialized)
+            {
+                lock (initializationLock)
+                {
+                    if (!initialized)
+                    {
+                        codeGeneratorInstance = LoadCodeGenerator();
+                        codeGeneratorCacheInstance = codeGeneratorInstance as ICodeGeneratorCache;
+                        initialized = true;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -89,7 +103,8 @@ namespace Orleans.CodeGeneration
         {
             if (codeGeneratorCacheInstance != null)
             {
-                return codeGeneratorCacheInstance.GetGeneratedAssemblies();
+                // do not return derived instances of GeneratedAssembly
+                return codeGeneratorCacheInstance.GetGeneratedAssemblies().ToDictionary(x => x.Key, x => new GeneratedAssembly(x.Value));
             }
 
             return EmptyGeneratedAssemblies;

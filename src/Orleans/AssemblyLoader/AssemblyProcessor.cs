@@ -28,11 +28,6 @@ namespace Orleans.Runtime
         private static readonly object InitializationLock = new object();
 
         /// <summary>
-        /// Whether or not this class has been initialized.
-        /// </summary>
-        private static bool initialized;
-
-        /// <summary>
         /// Initializes static members of the <see cref="AssemblyProcessor"/> class.
         /// </summary>
         static AssemblyProcessor()
@@ -48,13 +43,8 @@ namespace Orleans.Runtime
         {
             lock (InitializationLock)
             {
-                if (!initialized)
-                {
-                    // load the code generator before intercepting assembly loading
-                    CodeGeneratorManager.Initialize();
-
-                    initialized = true;
-                }
+                // load the code generator before intercepting assembly loading
+                CodeGeneratorManager.Initialize();
 
                 var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssemblies(assemblies);
                 foreach (var asm in assemblies.Union(generated))
