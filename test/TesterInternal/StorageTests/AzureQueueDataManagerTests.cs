@@ -6,7 +6,8 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using Orleans.AzureUtils;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
-using Orleans.TestingHost;
+using Tester;
+using TestExtensions;
 using Xunit;
 
 namespace UnitTests.StorageTests
@@ -34,7 +35,7 @@ namespace UnitTests.StorageTests
 
         private async Task<AzureQueueDataManager> GetTableManager(string qName)
         {
-            AzureQueueDataManager manager = new AzureQueueDataManager(qName, DeploymentId, StorageTestConstants.DataConnectionString);
+            AzureQueueDataManager manager = new AzureQueueDataManager(qName, DeploymentId, TestDefaultConfiguration.DataConnectionString);
             await manager.InitQueueAsync();
             return manager;
         }

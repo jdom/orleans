@@ -58,6 +58,9 @@
     <IntermediateOutputPath>$(BootstrapOutputPath)Intermediate\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\src\OrleansRuntime\Messaging\ObjectPool.cs">
+      <Link>Messaging\ObjectPool.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Orleans\AssemblyLoader\AssemblyCatalog.cs">
       <Link>AssemblyLoader\AssemblyCatalog.cs</Link>
     </Compile>
@@ -172,9 +175,6 @@
     <Compile Include="..\..\..\src\Orleans\CodeGeneration\KnownAssemblyAttribute.cs">
       <Link>CodeGeneration\KnownAssemblyAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Orleans\CodeGeneration\Language.cs">
-      <Link>CodeGeneration\Language.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Orleans\CodeGeneration\OrleansCodeGenerationTargetAttribute.cs">
       <Link>CodeGeneration\OrleansCodeGenerationTargetAttribute.cs</Link>
     </Compile>
@@ -237,6 +237,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Orleans\Core\GrainAttributes.cs">
       <Link>Core\GrainAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Core\GrainCasterFactory.cs">
+      <Link>Core\GrainCasterFactory.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Orleans\Core\GrainClient.cs">
       <Link>Core\GrainClient.cs</Link>
@@ -592,6 +595,24 @@
     <Compile Include="..\..\..\src\Orleans\Serialization\TypeUtilities.cs">
       <Link>Serialization\TypeUtilities.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Orleans\Serialization\ILDelegateBuilder.cs">
+      <Link>Serialization\ILDelegateBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Serialization\ILBasedSerializer.cs">
+      <Link>Serialization\ILBasedSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Serialization\ILFieldBuilder.cs">
+      <Link>Serialization\ILFieldBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Serialization\ILGenerationException.cs">
+      <Link>Serialization\ILGenerationException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Serialization\ILSerializerGenerator.cs">
+      <Link>Serialization\ILSerializerGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Serialization\ReflectedSerializationMethodInfo.cs">
+      <Link>Serialization\ReflectedSerializationMethodInfo.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Orleans\Statistics\ApplicationRequestsStatisticsGroup.cs">
       <Link>Statistics\ApplicationRequestsStatisticsGroup.cs</Link>
     </Compile>
@@ -603,6 +624,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Orleans\Statistics\ClientStatisticsManager.cs">
       <Link>Statistics\ClientStatisticsManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Orleans\Utils\ReferenceEqualsComparer.cs">
+      <Link>Utils\ReferenceEqualsComparer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Orleans\Statistics\ClientTableStatistics.cs">
       <Link>Statistics\ClientTableStatistics.cs</Link>
@@ -994,17 +1018,22 @@
     <Compile Include="Shims\RuntimeStatisticsGroup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\src\Orleans\Configuration\OrleansConfiguration.xsd">
+    <Content Include="..\..\..\src\Orleans\Configuration\OrleansConfiguration.xsd">
       <Link>Configuration\OrleansConfiguration.xsd</Link>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Build\Version.txt">
+      <Link>Version.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="..\Orleans.SDK.targets">
+      <Link>Orleans.SDK.targets</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="project.json" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <PropertyGroup>
-    <NuGetTargetMoniker>.NETStandard,Version=v1.5</NuGetTargetMoniker>
-  </PropertyGroup>
   <Target Name="GenerateVersionNumber" BeforeTargets="VersionInit" Condition="'$(BuildingInsideVisualStudio)' != 'true'" Outputs="$(SolutionDir)Build\Version.txt">
     <PropertyGroup Condition="'$(BuildNumber)' == ''">
       <BuildNumber>1</BuildNumber>

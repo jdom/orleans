@@ -10,9 +10,9 @@ using Orleans.Runtime.Configuration;
 using Orleans.Runtime.Storage;
 using Orleans.Serialization;
 using Orleans.Storage;
-using Orleans.TestingHost;
 using Samples.StorageProviders;
 using Tester;
+using TestExtensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -123,7 +123,7 @@ namespace UnitTests.StorageTests
             const string testName = nameof(PersistenceProvider_Azure_Read);
 
             IStorageProvider store = new AzureTableStorage();
-            providerCfgProps.Add("DataConnectionString", StorageTestConstants.DataConnectionString);
+            providerCfgProps.Add("DataConnectionString", TestDefaultConfiguration.DataConnectionString);
             var cfg = new ProviderConfiguration(providerCfgProps, null);
             await store.Init(testName, storageProviderManager, cfg);
 
@@ -327,7 +327,7 @@ namespace UnitTests.StorageTests
         private async Task<AzureTableStorage> InitAzureTableStorageProvider(string useJson, string testName)
         {
             var store = new AzureTableStorage();
-            providerCfgProps["DataConnectionString"] = StorageTestConstants.DataConnectionString;
+            providerCfgProps["DataConnectionString"] = TestDefaultConfiguration.DataConnectionString;
             providerCfgProps["UseJsonFormat"] = useJson;
             var cfg = new ProviderConfiguration(providerCfgProps, null);
             await store.Init(testName, storageProviderManager, cfg);

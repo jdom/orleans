@@ -59,6 +59,9 @@
     <Compile Include="Catalog\ActivationState.cs" />
     <Compile Include="Catalog\GrainCreator.cs" />
     <Compile Include="Counters\CounterConfigData.cs" />
+    <Compile Include="Messaging\ObjectPool.cs" />
+    <Compile Include="Silo\TestHooks\ITestHooksSystemTarget.cs" />
+    <Compile Include="Silo\TestHooks\TestHooksSystemTarget.cs" />
     <Compile Include="Startup\ConfigureServicesBuilder.cs" />
     <Compile Include="Startup\StartupBuilder.cs" />
     <Compile Include="MultiClusterNetwork\MultiClusterData.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="Silo\SiloControl.cs" />
     <Compile Include="Storage\MemoryStorageGrain.cs" />
     <Compile Include="Storage\StorageProviderManager.cs" />
+    <Compile Include="Streams\LoadShedQueueFlowController.cs" />
     <Compile Include="Streams\PersistentStream\PersistentStreamPullingManager.cs" />
     <Compile Include="Streams\PersistentStream\PersistentStreamPullingAgent.cs" />
     <Compile Include="Streams\PubSub\PubSubRendezvousGrain.cs" />
