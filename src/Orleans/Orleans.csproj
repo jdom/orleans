@@ -80,6 +80,8 @@
     <Compile Include="CodeGeneration\GeneratedAssembly.cs" />
     <Compile Include="Core\GrainCasterFactory.cs" />
     <Compile Include="Core\IInternalGrainFactory.cs" />
+    <Compile Include="Core\GrainInvokerFeature.cs" />
+    <Compile Include="Core\GrainReferenceFeature.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="Logging\LoggerImpl.cs" />
     <Compile Include="Logging\LogFormatter.cs" />
