@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Orleans.Serialization.Registration
 {
@@ -42,8 +41,7 @@ namespace Orleans.Serialization.Registration
     }
 
     /// <summary>
-    /// The collection of Orleans serializer types in an Orleans application. The <see cref="OrleansSerializationFeature"/> can be populated
-    /// using the <see cref="ApplicationPartManager"/>.
+    /// The collection of Orleans serializer types in an Orleans application.
     /// </summary>
     public class OrleansSerializationFeature
     {

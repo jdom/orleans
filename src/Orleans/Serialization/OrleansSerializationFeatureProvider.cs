@@ -8,7 +8,6 @@ using System.Net;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Orleans.CodeGeneration;
 using Orleans.Concurrency;
 using Orleans.Runtime;
@@ -16,9 +15,9 @@ using Orleans.Runtime;
 namespace Orleans.Serialization.Registration
 {
     /// <summary>
-    /// Discovers serializers from a list of <see cref="ApplicationPart"/> instances.
+    /// Discovers serializers from a list of types.
     /// </summary>
-    public class OrleansSerializationFeatureProvider : IApplicationFeatureProvider<OrleansSerializationFeature>
+    public class OrleansSerializationFeatureProvider //: IApplicationFeatureProvider<OrleansSerializationFeature>
     {
         private readonly Logger logger;
         private static readonly string[] safeFailSerializers = { "Orleans.FSharp" };
@@ -38,17 +37,24 @@ namespace Orleans.Serialization.Registration
             this.logger = LogManager.GetLogger(nameof(OrleansSerializationFeatureProvider));
         }
 
-        /// <inheritdoc />
-        public void PopulateFeature(IEnumerable<ApplicationPart> parts, OrleansSerializationFeature feature)
+        ///// <inheritdoc />
+        //public void PopulateFeature(IEnumerable<ApplicationPart> parts, OrleansSerializationFeature feature)
+        //{
+        //    PopulateFeature(parts.OfType<IApplicationPartTypeProvider>().SelectMany(part => part.Types), feature);
+        //}
+
+        /// <summary>
+        /// Updates the <paramref name="feature"/> instance.
+        /// </summary>
+        /// <param name="types">The list of types of the application</param>
+        /// <param name="feature">The feature instance to populate.</param>
+        public void PopulateFeature(IEnumerable<TypeInfo> types, OrleansSerializationFeature feature)
         {
             RegisterBuiltInSerializers();
 
-            foreach (var part in parts.OfType<IApplicationPartTypeProvider>())
+            foreach (var type in types)
             {
-                foreach (var type in part.Types)
-                {
-                    FindSerializationInfo(type);
-                }
+                FindSerializationInfo(type);
             }
         }
 
