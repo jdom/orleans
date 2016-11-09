@@ -50,18 +50,18 @@ namespace Orleans.Serialization.Registration
         /// <param name="feature">The feature instance to populate.</param>
         public void PopulateFeature(IEnumerable<TypeInfo> types, OrleansSerializationFeature feature)
         {
-            RegisterBuiltInSerializers();
+            RegisterBuiltInSerializers(feature);
 
             foreach (var type in types)
             {
-                FindSerializationInfo(type);
+                FindSerializationInfo(type, feature);
             }
         }
 
         /// <summary>
         /// Looks for types with marked serializer and deserializer methods, and registers them if necessary.
         /// </summary>
-        internal void FindSerializationInfo(Type type)
+        internal void FindSerializationInfo(Type type, OrleansSerializationFeature feature)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
             var assembly = typeInfo.Assembly;
@@ -76,7 +76,7 @@ namespace Orleans.Serialization.Registration
             {
                 if (typeInfo.IsEnum)
                 {
-                    Register(type);
+                    Register(type, feature);
                 }
                 else if (!systemAssembly)
                 {
@@ -133,7 +133,7 @@ namespace Orleans.Serialization.Registration
                         }
                         else if (IsGeneratedGrainReference(typeInfo))
                         {
-                            RegisterGrainReferenceSerializers(type);
+                            RegisterGrainReferenceSerializers(type, feature);
                         }
                         else
                         {
@@ -144,7 +144,7 @@ namespace Orleans.Serialization.Registration
                             if ((serializer != null) && (deserializer != null) && (copier != null))
                             {
                                 // Register type as a serializer for type.
-                                Register(type, type);
+                                Register(type, type, feature);
                                 if (logger.IsVerbose3)
                                     logger.Verbose3(
                                         "Loaded serialization info for type {0} from assembly {1}",
@@ -160,6 +160,7 @@ namespace Orleans.Serialization.Registration
                                         null,
                                         (Serializer)serializer.CreateDelegate(typeof(Serializer)),
                                         (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)),
+                                        feature,
                                         true);
                                 }
                                 catch (ArgumentException)
@@ -185,6 +186,7 @@ namespace Orleans.Serialization.Registration
                                         (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
                                         null,
                                         null,
+                                        feature,
                                         true);
                                 }
                                 catch (ArgumentException)
@@ -201,7 +203,7 @@ namespace Orleans.Serialization.Registration
                                         type.Name,
                                         assembly.GetName().Name);
                             }
-                            else if (TryLookupExternalSerializer(type, out externalSerializer))
+                            else if (TryLookupExternalSerializer(type, out externalSerializer, feature))
                             {
                                 // the lookup registers the serializer.
                             }
@@ -220,18 +222,18 @@ namespace Orleans.Serialization.Registration
                                         break;
                                     }
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) Register(type);
+                                if (comparer && (type.GetFields().Length == 0)) Register(type, feature);
                             }
                             else
                             {
-                                Register(type);
+                                Register(type, feature);
                             }
                         }
                     }
                     else
                     {
                         // type is abstract, an interface, system-defined, or its namespace is null
-                        Register(type);
+                        Register(type, feature);
                     }
                 }
             }
@@ -257,9 +259,9 @@ namespace Orleans.Serialization.Registration
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
-        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser)
+        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser, OrleansSerializationFeature feature)
         {
-            Register(type, cop, ser, deser, false);
+            Register(type, cop, ser, deser, feature, false);
         }
 
         /// <summary>
@@ -271,7 +273,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser, bool forceOverride)
+        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser, OrleansSerializationFeature feature, bool forceOverride)
         {
             if ((ser == null) && (deser != null))
             {
@@ -355,7 +357,7 @@ namespace Orleans.Serialization.Registration
             // but dynamically of this (implementation) type
             foreach (var iface in type.GetInterfaces())
             {
-                Register(iface);
+                Register(iface, feature);
             }
             // Do the same for abstract base classes
             var baseType = type.GetTypeInfo().BaseType;
@@ -363,7 +365,7 @@ namespace Orleans.Serialization.Registration
             {
                 var baseTypeInfo = baseType.GetTypeInfo();
                 if (baseTypeInfo.IsAbstract)
-                    Register(baseType);
+                    Register(baseType, feature);
 
                 baseType = baseTypeInfo.BaseType;
             }
@@ -374,7 +376,8 @@ namespace Orleans.Serialization.Registration
         /// For instance, abstract base types and interfaces need to be registered this way.
         /// </summary>
         /// <param name="type">Type to be registered.</param>
-        public void Register(Type type)
+        /// <param name="feature">The feature instance to populate.</param>
+        public void Register(Type type, OrleansSerializationFeature feature)
         {
             string name = type.OrleansTypeKeyString();
 
@@ -397,7 +400,7 @@ namespace Orleans.Serialization.Registration
             // but dynamically of this (implementation) type
             foreach (var iface in type.GetInterfaces())
             {
-                Register(iface);
+                Register(iface, feature);
             }
 
             // Do the same for abstract base classes
@@ -406,7 +409,7 @@ namespace Orleans.Serialization.Registration
             {
                 var baseTypeInfo = baseType.GetTypeInfo();
                 if (baseTypeInfo.IsAbstract)
-                    Register(baseType);
+                    Register(baseType, feature);
 
                 baseType = baseTypeInfo.BaseType;
             }
@@ -417,7 +420,7 @@ namespace Orleans.Serialization.Registration
         /// </summary>
         /// <param name="type">The type serialized by the provided serializer type.</param>
         /// <param name="serializerType">The type containing serialization methods for <paramref name="type"/>.</param>
-        public void Register(Type type, Type serializerType)
+        public void Register(Type type, Type serializerType, OrleansSerializationFeature feature)
         {
             try
             {
@@ -427,19 +430,20 @@ namespace Orleans.Serialization.Registration
                         type,
                         obj =>
                         {
-                            var concrete = RegisterConcreteSerializer(obj.GetType(), serializerType);
+                            var concrete = RegisterConcreteSerializer(obj.GetType(), serializerType, feature);
                             return concrete.DeepCopy(obj);
                         },
                         (obj, stream, exp) =>
                         {
-                            var concrete = RegisterConcreteSerializer(obj.GetType(), serializerType);
+                            var concrete = RegisterConcreteSerializer(obj.GetType(), serializerType, feature);
                             concrete.Serialize(obj, stream, exp);
                         },
                         (expected, stream) =>
                         {
-                            var concrete = RegisterConcreteSerializer(expected, serializerType);
+                            var concrete = RegisterConcreteSerializer(expected, serializerType, feature);
                             return concrete.Deserialize(expected, stream);
                         },
+                        feature,
                         true);
                 }
                 else
@@ -453,6 +457,7 @@ namespace Orleans.Serialization.Registration
                         (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
                         (Serializer)serializer.CreateDelegate(typeof(Serializer)),
                         (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)),
+                        feature,
                         true);
                 }
             }
@@ -466,7 +471,7 @@ namespace Orleans.Serialization.Registration
             }
         }
 
-        private SerializerMethods RegisterConcreteSerializer(Type concreteType, Type genericSerializerType)
+        private SerializerMethods RegisterConcreteSerializer(Type concreteType, Type genericSerializerType, OrleansSerializationFeature feature)
         {
             MethodInfo copier;
             MethodInfo serializer;
@@ -483,16 +488,16 @@ namespace Orleans.Serialization.Registration
             if (typeAlreadyRegistered)
             {
                 return new SerializerMethods(
-                    GetCopier(concreteSerializerType),
-                    GetSerializer(concreteSerializerType),
-                    GetDeserializer(concreteSerializerType));
+                    GetCopier(concreteSerializerType, feature),
+                    GetSerializer(concreteSerializerType, feature),
+                    GetDeserializer(concreteSerializerType, feature));
             }
 
             GetSerializationMethods(concreteSerializerType, out copier, out serializer, out deserializer);
             var concreteCopier = (DeepCopier)copier.CreateDelegate(typeof(DeepCopier));
             var concreteSerializer = (Serializer)serializer.CreateDelegate(typeof(Serializer));
             var concreteDeserializer = (Deserializer)deserializer.CreateDelegate(typeof(Deserializer));
-            Register(concreteType, concreteCopier, concreteSerializer, concreteDeserializer, true);
+            Register(concreteType, concreteCopier, concreteSerializer, concreteDeserializer, feature, true);
 
             return new SerializerMethods(concreteCopier, concreteSerializer, concreteDeserializer);
         }
@@ -519,7 +524,7 @@ namespace Orleans.Serialization.Registration
             }
         }
 
-        internal DeepCopier GetCopier(Type t)
+        internal DeepCopier GetCopier(Type t, OrleansSerializationFeature feature)
         {
             lock (copiers)
             {
@@ -535,7 +540,7 @@ namespace Orleans.Serialization.Registration
             return null;
         }
 
-        internal Deserializer GetDeserializer(Type t)
+        internal Deserializer GetDeserializer(Type t, OrleansSerializationFeature feature)
         {
             Deserializer deser;
 
@@ -557,7 +562,7 @@ namespace Orleans.Serialization.Registration
             return null;
         }
 
-        internal Serializer GetSerializer(Type t)
+        internal Serializer GetSerializer(Type t, OrleansSerializationFeature feature)
         {
             lock (serializers)
             {
@@ -597,7 +602,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="type">
         /// The type.
         /// </param>
-        private void RegisterGrainReferenceSerializers(Type type)
+        private void RegisterGrainReferenceSerializers(Type type, OrleansSerializationFeature feature)
         {
             var attr = type.GetTypeInfo().GetCustomAttribute<GrainReferenceAttribute>();
             if (attr?.TargetType == null)
@@ -628,7 +633,8 @@ namespace Orleans.Serialization.Registration
                     }
 
                     return ctorDelegate(deserialized);
-                });
+                },
+                feature);
         }
 
         private static Func<GrainReference, GrainReference> CreateGrainRefConstructorDelegate(Type type, Type[] genericArgs)
@@ -660,7 +666,7 @@ namespace Orleans.Serialization.Registration
                 method.CreateDelegate(typeof(Func<GrainReference, GrainReference>));
         }
 
-        private bool TryLookupExternalSerializer(Type t, out IExternalSerializer serializer)
+        private bool TryLookupExternalSerializer(Type t, out IExternalSerializer serializer, OrleansSerializationFeature feature)
         {
             // essentially a no-op if there are no external serializers registered
             if (externalSerializers.Count == 0)
@@ -682,13 +688,13 @@ namespace Orleans.Serialization.Registration
             if (typeToExternalSerializerDictionary.TryAdd(t, serializer) && serializer != null)
             {
                 // we need to register the type, otherwise exceptions are thrown about types not being found
-                Register(t, serializer.DeepCopy, serializer.Serialize, serializer.Deserialize, true);
+                Register(t, serializer.DeepCopy, serializer.Serialize, serializer.Deserialize, feature, true);
             }
 
             return serializer != null;
         }
 
-        internal void RegisterBuiltInSerializers()
+        private void RegisterBuiltInSerializers(OrleansSerializationFeature feature)
         {
             lock (registerBuiltInSerializerLockObj)
             {
@@ -701,111 +707,111 @@ namespace Orleans.Serialization.Registration
             }
 
             // Built-in handlers: Tuples
-            Register(typeof(Tuple<>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple);
-            Register(typeof(Tuple<,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple);
-            Register(typeof(Tuple<,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple);
-            Register(typeof(Tuple<,,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple);
-            Register(typeof(Tuple<,,,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple);
-            Register(typeof(Tuple<,,,,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple);
+            Register(typeof(Tuple<>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple, feature);
+            Register(typeof(Tuple<,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple, feature);
+            Register(typeof(Tuple<,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple, feature);
+            Register(typeof(Tuple<,,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple, feature);
+            Register(typeof(Tuple<,,,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple, feature);
+            Register(typeof(Tuple<,,,,,>), BuiltInTypes.DeepCopyTuple, BuiltInTypes.SerializeTuple, BuiltInTypes.DeserializeTuple, feature);
 
             // Built-in handlers: enumerables
-            Register(typeof(List<>), BuiltInTypes.CopyGenericList, BuiltInTypes.SerializeGenericList, BuiltInTypes.DeserializeGenericList);
-            Register(typeof(ReadOnlyCollection<>), BuiltInTypes.CopyGenericReadOnlyCollection, BuiltInTypes.SerializeGenericReadOnlyCollection, BuiltInTypes.DeserializeGenericReadOnlyCollection);
-            Register(typeof(LinkedList<>), BuiltInTypes.CopyGenericLinkedList, BuiltInTypes.SerializeGenericLinkedList, BuiltInTypes.DeserializeGenericLinkedList);
-            Register(typeof(HashSet<>), BuiltInTypes.CopyGenericHashSet, BuiltInTypes.SerializeGenericHashSet, BuiltInTypes.DeserializeGenericHashSet);
-            Register(typeof(SortedSet<>), BuiltInTypes.CopyGenericSortedSet, BuiltInTypes.SerializeGenericSortedSet, BuiltInTypes.DeserializeGenericSortedSet);
-            Register(typeof(Stack<>), BuiltInTypes.CopyGenericStack, BuiltInTypes.SerializeGenericStack, BuiltInTypes.DeserializeGenericStack);
-            Register(typeof(Queue<>), BuiltInTypes.CopyGenericQueue, BuiltInTypes.SerializeGenericQueue, BuiltInTypes.DeserializeGenericQueue);
+            Register(typeof(List<>), BuiltInTypes.CopyGenericList, BuiltInTypes.SerializeGenericList, BuiltInTypes.DeserializeGenericList, feature);
+            Register(typeof(ReadOnlyCollection<>), BuiltInTypes.CopyGenericReadOnlyCollection, BuiltInTypes.SerializeGenericReadOnlyCollection, BuiltInTypes.DeserializeGenericReadOnlyCollection, feature);
+            Register(typeof(LinkedList<>), BuiltInTypes.CopyGenericLinkedList, BuiltInTypes.SerializeGenericLinkedList, BuiltInTypes.DeserializeGenericLinkedList, feature);
+            Register(typeof(HashSet<>), BuiltInTypes.CopyGenericHashSet, BuiltInTypes.SerializeGenericHashSet, BuiltInTypes.DeserializeGenericHashSet, feature);
+            Register(typeof(SortedSet<>), BuiltInTypes.CopyGenericSortedSet, BuiltInTypes.SerializeGenericSortedSet, BuiltInTypes.DeserializeGenericSortedSet, feature);
+            Register(typeof(Stack<>), BuiltInTypes.CopyGenericStack, BuiltInTypes.SerializeGenericStack, BuiltInTypes.DeserializeGenericStack, feature);
+            Register(typeof(Queue<>), BuiltInTypes.CopyGenericQueue, BuiltInTypes.SerializeGenericQueue, BuiltInTypes.DeserializeGenericQueue, feature);
 
             // Built-in handlers: dictionaries
-            Register(typeof(ReadOnlyDictionary<,>), BuiltInTypes.CopyGenericReadOnlyDictionary, BuiltInTypes.SerializeGenericReadOnlyDictionary, BuiltInTypes.DeserializeGenericReadOnlyDictionary);
-            Register(typeof(Dictionary<,>), BuiltInTypes.CopyGenericDictionary, BuiltInTypes.SerializeGenericDictionary, BuiltInTypes.DeserializeGenericDictionary);
-            Register(typeof(Dictionary<string, object>), BuiltInTypes.CopyStringObjectDictionary, BuiltInTypes.SerializeStringObjectDictionary, BuiltInTypes.DeserializeStringObjectDictionary);
+            Register(typeof(ReadOnlyDictionary<,>), BuiltInTypes.CopyGenericReadOnlyDictionary, BuiltInTypes.SerializeGenericReadOnlyDictionary, BuiltInTypes.DeserializeGenericReadOnlyDictionary, feature);
+            Register(typeof(Dictionary<,>), BuiltInTypes.CopyGenericDictionary, BuiltInTypes.SerializeGenericDictionary, BuiltInTypes.DeserializeGenericDictionary, feature);
+            Register(typeof(Dictionary<string, object>), BuiltInTypes.CopyStringObjectDictionary, BuiltInTypes.SerializeStringObjectDictionary, BuiltInTypes.DeserializeStringObjectDictionary, feature);
             Register(typeof(SortedDictionary<,>), BuiltInTypes.CopyGenericSortedDictionary, BuiltInTypes.SerializeGenericSortedDictionary,
-                     BuiltInTypes.DeserializeGenericSortedDictionary);
-            Register(typeof(SortedList<,>), BuiltInTypes.CopyGenericSortedList, BuiltInTypes.SerializeGenericSortedList, BuiltInTypes.DeserializeGenericSortedList);
+                     BuiltInTypes.DeserializeGenericSortedDictionary, feature);
+            Register(typeof(SortedList<,>), BuiltInTypes.CopyGenericSortedList, BuiltInTypes.SerializeGenericSortedList, BuiltInTypes.DeserializeGenericSortedList, feature);
 
             // Built-in handlers: key-value pairs
-            Register(typeof(KeyValuePair<,>), BuiltInTypes.CopyGenericKeyValuePair, BuiltInTypes.SerializeGenericKeyValuePair, BuiltInTypes.DeserializeGenericKeyValuePair);
+            Register(typeof(KeyValuePair<,>), BuiltInTypes.CopyGenericKeyValuePair, BuiltInTypes.SerializeGenericKeyValuePair, BuiltInTypes.DeserializeGenericKeyValuePair, feature);
 
             // Built-in handlers: nullables
-            Register(typeof(Nullable<>), BuiltInTypes.CopyGenericNullable, BuiltInTypes.SerializeGenericNullable, BuiltInTypes.DeserializeGenericNullable);
+            Register(typeof(Nullable<>), BuiltInTypes.CopyGenericNullable, BuiltInTypes.SerializeGenericNullable, BuiltInTypes.DeserializeGenericNullable, feature);
 
             // Built-in handlers: Immutables
-            Register(typeof(Immutable<>), BuiltInTypes.CopyGenericImmutable, BuiltInTypes.SerializeGenericImmutable, BuiltInTypes.DeserializeGenericImmutable);
+            Register(typeof(Immutable<>), BuiltInTypes.CopyGenericImmutable, BuiltInTypes.SerializeGenericImmutable, BuiltInTypes.DeserializeGenericImmutable, feature);
 
             // Built-in handlers: Immutable collections
-            Register(typeof(ImmutableQueue<>), BuiltInTypes.CopyGenericImmutableQueue, BuiltInTypes.SerializeGenericImmutableQueue, BuiltInTypes.DeserializeGenericImmutableQueue);
-            Register(typeof(ImmutableArray<>), BuiltInTypes.CopyGenericImmutableArray, BuiltInTypes.SerializeGenericImmutableArray, BuiltInTypes.DeserializeGenericImmutableArray);
-            Register(typeof(ImmutableSortedDictionary<,>), BuiltInTypes.CopyGenericImmutableSortedDictionary, BuiltInTypes.SerializeGenericImmutableSortedDictionary, BuiltInTypes.DeserializeGenericImmutableSortedDictionary);
-            Register(typeof(ImmutableSortedSet<>), BuiltInTypes.CopyGenericImmutableSortedSet, BuiltInTypes.SerializeGenericImmutableSortedSet, BuiltInTypes.DeserializeGenericImmutableSortedSet);
-            Register(typeof(ImmutableHashSet<>), BuiltInTypes.CopyGenericImmutableHashSet, BuiltInTypes.SerializeGenericImmutableHashSet, BuiltInTypes.DeserializeGenericImmutableHashSet);
-            Register(typeof(ImmutableDictionary<,>), BuiltInTypes.CopyGenericImmutableDictionary, BuiltInTypes.SerializeGenericImmutableDictionary, BuiltInTypes.DeserializeGenericImmutableDictionary);
-            Register(typeof(ImmutableList<>), BuiltInTypes.CopyGenericImmutableList, BuiltInTypes.SerializeGenericImmutableList, BuiltInTypes.DeserializeGenericImmutableList);
+            Register(typeof(ImmutableQueue<>), BuiltInTypes.CopyGenericImmutableQueue, BuiltInTypes.SerializeGenericImmutableQueue, BuiltInTypes.DeserializeGenericImmutableQueue, feature);
+            Register(typeof(ImmutableArray<>), BuiltInTypes.CopyGenericImmutableArray, BuiltInTypes.SerializeGenericImmutableArray, BuiltInTypes.DeserializeGenericImmutableArray, feature);
+            Register(typeof(ImmutableSortedDictionary<,>), BuiltInTypes.CopyGenericImmutableSortedDictionary, BuiltInTypes.SerializeGenericImmutableSortedDictionary, BuiltInTypes.DeserializeGenericImmutableSortedDictionary, feature);
+            Register(typeof(ImmutableSortedSet<>), BuiltInTypes.CopyGenericImmutableSortedSet, BuiltInTypes.SerializeGenericImmutableSortedSet, BuiltInTypes.DeserializeGenericImmutableSortedSet, feature);
+            Register(typeof(ImmutableHashSet<>), BuiltInTypes.CopyGenericImmutableHashSet, BuiltInTypes.SerializeGenericImmutableHashSet, BuiltInTypes.DeserializeGenericImmutableHashSet, feature);
+            Register(typeof(ImmutableDictionary<,>), BuiltInTypes.CopyGenericImmutableDictionary, BuiltInTypes.SerializeGenericImmutableDictionary, BuiltInTypes.DeserializeGenericImmutableDictionary, feature);
+            Register(typeof(ImmutableList<>), BuiltInTypes.CopyGenericImmutableList, BuiltInTypes.SerializeGenericImmutableList, BuiltInTypes.DeserializeGenericImmutableList, feature);
 
             // Built-in handlers: random system types
-            Register(typeof(TimeSpan), BuiltInTypes.CopyTimeSpan, BuiltInTypes.SerializeTimeSpan, BuiltInTypes.DeserializeTimeSpan);
-            Register(typeof(DateTimeOffset), BuiltInTypes.CopyDateTimeOffset, BuiltInTypes.SerializeDateTimeOffset, BuiltInTypes.DeserializeDateTimeOffset);
-            Register(typeof(Type), BuiltInTypes.CopyType, BuiltInTypes.SerializeType, BuiltInTypes.DeserializeType);
+            Register(typeof(TimeSpan), BuiltInTypes.CopyTimeSpan, BuiltInTypes.SerializeTimeSpan, BuiltInTypes.DeserializeTimeSpan, feature);
+            Register(typeof(DateTimeOffset), BuiltInTypes.CopyDateTimeOffset, BuiltInTypes.SerializeDateTimeOffset, BuiltInTypes.DeserializeDateTimeOffset, feature);
+            Register(typeof(Type), BuiltInTypes.CopyType, BuiltInTypes.SerializeType, BuiltInTypes.DeserializeType, feature);
             // ReSharper disable PossibleMistakenCallToGetType.2
             // RuntimeType is internal but can be obtained indirectly by calling GetType().
-            Register(typeof(object).GetType(), BuiltInTypes.CopyType, BuiltInTypes.SerializeType, BuiltInTypes.DeserializeType);
+            Register(typeof(object).GetType(), BuiltInTypes.CopyType, BuiltInTypes.SerializeType, BuiltInTypes.DeserializeType, feature);
             // ReSharper restore PossibleMistakenCallToGetType.2
-            Register(typeof(Guid), BuiltInTypes.CopyGuid, BuiltInTypes.SerializeGuid, BuiltInTypes.DeserializeGuid);
-            Register(typeof(IPAddress), BuiltInTypes.CopyIPAddress, BuiltInTypes.SerializeIPAddress, BuiltInTypes.DeserializeIPAddress);
-            Register(typeof(IPEndPoint), BuiltInTypes.CopyIPEndPoint, BuiltInTypes.SerializeIPEndPoint, BuiltInTypes.DeserializeIPEndPoint);
-            Register(typeof(Uri), BuiltInTypes.CopyUri, BuiltInTypes.SerializeUri, BuiltInTypes.DeserializeUri);
+            Register(typeof(Guid), BuiltInTypes.CopyGuid, BuiltInTypes.SerializeGuid, BuiltInTypes.DeserializeGuid, feature);
+            Register(typeof(IPAddress), BuiltInTypes.CopyIPAddress, BuiltInTypes.SerializeIPAddress, BuiltInTypes.DeserializeIPAddress, feature);
+            Register(typeof(IPEndPoint), BuiltInTypes.CopyIPEndPoint, BuiltInTypes.SerializeIPEndPoint, BuiltInTypes.DeserializeIPEndPoint, feature);
+            Register(typeof(Uri), BuiltInTypes.CopyUri, BuiltInTypes.SerializeUri, BuiltInTypes.DeserializeUri, feature);
 
             // Built-in handlers: Orleans internal types
             Register(typeof(InvokeMethodRequest), BuiltInTypes.CopyInvokeMethodRequest, BuiltInTypes.SerializeInvokeMethodRequest,
-                     BuiltInTypes.DeserializeInvokeMethodRequest);
+                     BuiltInTypes.DeserializeInvokeMethodRequest, feature);
             Register(typeof(Response), BuiltInTypes.CopyOrleansResponse, BuiltInTypes.SerializeOrleansResponse,
-                     BuiltInTypes.DeserializeOrleansResponse);
-            Register(typeof(ActivationId), BuiltInTypes.CopyActivationId, BuiltInTypes.SerializeActivationId, BuiltInTypes.DeserializeActivationId);
-            Register(typeof(GrainId), BuiltInTypes.CopyGrainId, BuiltInTypes.SerializeGrainId, BuiltInTypes.DeserializeGrainId);
-            Register(typeof(ActivationAddress), BuiltInTypes.CopyActivationAddress, BuiltInTypes.SerializeActivationAddress, BuiltInTypes.DeserializeActivationAddress);
-            Register(typeof(CorrelationId), BuiltInTypes.CopyCorrelationId, BuiltInTypes.SerializeCorrelationId, BuiltInTypes.DeserializeCorrelationId);
-            Register(typeof(SiloAddress), BuiltInTypes.CopySiloAddress, BuiltInTypes.SerializeSiloAddress, BuiltInTypes.DeserializeSiloAddress);
+                     BuiltInTypes.DeserializeOrleansResponse, feature);
+            Register(typeof(ActivationId), BuiltInTypes.CopyActivationId, BuiltInTypes.SerializeActivationId, BuiltInTypes.DeserializeActivationId, feature);
+            Register(typeof(GrainId), BuiltInTypes.CopyGrainId, BuiltInTypes.SerializeGrainId, BuiltInTypes.DeserializeGrainId, feature);
+            Register(typeof(ActivationAddress), BuiltInTypes.CopyActivationAddress, BuiltInTypes.SerializeActivationAddress, BuiltInTypes.DeserializeActivationAddress, feature);
+            Register(typeof(CorrelationId), BuiltInTypes.CopyCorrelationId, BuiltInTypes.SerializeCorrelationId, BuiltInTypes.DeserializeCorrelationId, feature);
+            Register(typeof(SiloAddress), BuiltInTypes.CopySiloAddress, BuiltInTypes.SerializeSiloAddress, BuiltInTypes.DeserializeSiloAddress, feature);
 
             // Type names that we need to recognize for generic parameters
-            Register(typeof(bool));
-            Register(typeof(int));
-            Register(typeof(short));
-            Register(typeof(sbyte));
-            Register(typeof(long));
-            Register(typeof(uint));
-            Register(typeof(ushort));
-            Register(typeof(byte));
-            Register(typeof(ulong));
-            Register(typeof(float));
-            Register(typeof(double));
-            Register(typeof(decimal));
-            Register(typeof(string));
-            Register(typeof(char));
-            Register(typeof(DateTime));
-            Register(typeof(TimeSpan));
-            Register(typeof(object));
-            Register(typeof(IPAddress));
-            Register(typeof(IPEndPoint));
-            Register(typeof(Guid));
+            Register(typeof(bool), feature);
+            Register(typeof(int), feature);
+            Register(typeof(short), feature);
+            Register(typeof(sbyte), feature);
+            Register(typeof(long), feature);
+            Register(typeof(uint), feature);
+            Register(typeof(ushort), feature);
+            Register(typeof(byte), feature);
+            Register(typeof(ulong), feature);
+            Register(typeof(float), feature);
+            Register(typeof(double), feature);
+            Register(typeof(decimal), feature);
+            Register(typeof(string), feature);
+            Register(typeof(char), feature);
+            Register(typeof(DateTime), feature);
+            Register(typeof(TimeSpan), feature);
+            Register(typeof(object), feature);
+            Register(typeof(IPAddress), feature);
+            Register(typeof(IPEndPoint), feature);
+            Register(typeof(Guid), feature);
 
-            Register(typeof(GrainId));
-            Register(typeof(ActivationId));
-            Register(typeof(SiloAddress));
-            Register(typeof(ActivationAddress));
-            Register(typeof(CorrelationId));
-            Register(typeof(InvokeMethodRequest));
-            Register(typeof(Response));
+            Register(typeof(GrainId), feature);
+            Register(typeof(ActivationId), feature);
+            Register(typeof(SiloAddress), feature);
+            Register(typeof(ActivationAddress), feature);
+            Register(typeof(CorrelationId), feature);
+            Register(typeof(InvokeMethodRequest), feature);
+            Register(typeof(Response), feature);
 
-            Register(typeof(IList<>));
-            Register(typeof(IDictionary<,>));
-            Register(typeof(IEnumerable<>));
+            Register(typeof(IList<>), feature);
+            Register(typeof(IDictionary<,>), feature);
+            Register(typeof(IEnumerable<>), feature);
 
             // Enum names we need to recognize
-            Register(typeof(Message.Categories));
-            Register(typeof(Message.Directions));
-            Register(typeof(Message.RejectionTypes));
-            Register(typeof(Message.ResponseTypes));
+            Register(typeof(Message.Categories), feature);
+            Register(typeof(Message.Directions), feature);
+            Register(typeof(Message.RejectionTypes), feature);
+            Register(typeof(Message.ResponseTypes), feature);
         }
     }
 }
