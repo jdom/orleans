@@ -253,47 +253,47 @@ namespace Orleans.Serialization.Registration
         /// <summary>
         /// Register a Type with the serialization system to use the specified DeepCopier, Serializer and Deserializer functions.
         /// </summary>
-        /// <param name="t">Type to be registered.</param>
+        /// <param name="type">Type to be registered.</param>
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
-        public void Register(Type t, DeepCopier cop, Serializer ser, Deserializer deser)
+        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser)
         {
-            Register(t, cop, ser, deser, false);
+            Register(type, cop, ser, deser, false);
         }
 
         /// <summary>
         /// Register a Type with the serialization system to use the specified DeepCopier, Serializer and Deserializer functions.
         /// If <c>forcOverride == true</c> then this definition will replace any any previous functions registered for this Type.
         /// </summary>
-        /// <param name="t">Type to be registered.</param>
+        /// <param name="type">Type to be registered.</param>
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        public void Register(Type t, DeepCopier cop, Serializer ser, Deserializer deser, bool forceOverride)
+        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser, bool forceOverride)
         {
             if ((ser == null) && (deser != null))
             {
-                throw new OrleansException("Deserializer without serializer for class " + t.OrleansTypeName());
+                throw new OrleansException("Deserializer without serializer for class " + type.OrleansTypeName());
             }
             if ((ser != null) && (deser == null))
             {
-                throw new OrleansException("Serializer without deserializer for class " + t.OrleansTypeName());
+                throw new OrleansException("Serializer without deserializer for class " + type.OrleansTypeName());
             }
 
             lock (registeredTypes)
             {
-                if (registeredTypes.Contains(t))
+                if (registeredTypes.Contains(type))
                 {
                     if (cop != null)
                     {
                         lock (copiers)
                         {
                             DeepCopier current;
-                            if (forceOverride || !copiers.TryGetValue(t.TypeHandle, out current) || (current == null))
+                            if (forceOverride || !copiers.TryGetValue(type.TypeHandle, out current) || (current == null))
                             {
-                                copiers[t.TypeHandle] = cop;
+                                copiers[type.TypeHandle] = cop;
                             }
                         }
                     }
@@ -302,63 +302,63 @@ namespace Orleans.Serialization.Registration
                         lock (serializers)
                         {
                             Serializer currentSer;
-                            if (forceOverride || !serializers.TryGetValue(t.TypeHandle, out currentSer) || (currentSer == null))
+                            if (forceOverride || !serializers.TryGetValue(type.TypeHandle, out currentSer) || (currentSer == null))
                             {
-                                serializers[t.TypeHandle] = ser;
+                                serializers[type.TypeHandle] = ser;
                             }
                         }
                         lock (deserializers)
                         {
                             Deserializer currentDeser;
-                            if (forceOverride || !deserializers.TryGetValue(t.TypeHandle, out currentDeser) || (currentDeser == null))
+                            if (forceOverride || !deserializers.TryGetValue(type.TypeHandle, out currentDeser) || (currentDeser == null))
                             {
-                                deserializers[t.TypeHandle] = deser;
+                                deserializers[type.TypeHandle] = deser;
                             }
                         }
                     }
                 }
                 else
                 {
-                    registeredTypes.Add(t);
-                    string name = t.OrleansTypeKeyString();
+                    registeredTypes.Add(type);
+                    string name = type.OrleansTypeKeyString();
                     lock (types)
                     {
-                        types[name] = t;
+                        types[name] = type;
                     }
                     if (cop != null)
                     {
                         lock (copiers)
                         {
-                            copiers[t.TypeHandle] = cop;
+                            copiers[type.TypeHandle] = cop;
                         }
                     }
                     if (ser != null)
                     {
                         lock (serializers)
                         {
-                            serializers[t.TypeHandle] = ser;
+                            serializers[type.TypeHandle] = ser;
                         }
                     }
                     if (deser != null)
                     {
                         lock (deserializers)
                         {
-                            deserializers[t.TypeHandle] = deser;
+                            deserializers[type.TypeHandle] = deser;
                         }
                     }
 
-                    if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", t, name);
+                    if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, name);
                 }
             }
 
             // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
             // but dynamically of this (implementation) type
-            foreach (var iface in t.GetInterfaces())
+            foreach (var iface in type.GetInterfaces())
             {
                 Register(iface);
             }
             // Do the same for abstract base classes
-            var baseType = t.GetTypeInfo().BaseType;
+            var baseType = type.GetTypeInfo().BaseType;
             while (baseType != null)
             {
                 var baseTypeInfo = baseType.GetTypeInfo();
@@ -373,35 +373,35 @@ namespace Orleans.Serialization.Registration
         /// This method registers a type that has no specific serializer or deserializer.
         /// For instance, abstract base types and interfaces need to be registered this way.
         /// </summary>
-        /// <param name="t">Type to be registered.</param>
-        public void Register(Type t)
+        /// <param name="type">Type to be registered.</param>
+        public void Register(Type type)
         {
-            string name = t.OrleansTypeKeyString();
+            string name = type.OrleansTypeKeyString();
 
             lock (registeredTypes)
             {
-                if (registeredTypes.Contains(t))
+                if (registeredTypes.Contains(type))
                 {
                     return;
                 }
 
-                registeredTypes.Add(t);
+                registeredTypes.Add(type);
                 lock (types)
                 {
-                    types[name] = t;
+                    types[name] = type;
                 }
             }
-            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", t, name);
+            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, name);
 
             // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
             // but dynamically of this (implementation) type
-            foreach (var iface in t.GetInterfaces())
+            foreach (var iface in type.GetInterfaces())
             {
                 Register(iface);
             }
 
             // Do the same for abstract base classes
-            var baseType = t.GetTypeInfo().BaseType;
+            var baseType = type.GetTypeInfo().BaseType;
             while (baseType != null)
             {
                 var baseTypeInfo = baseType.GetTypeInfo();
