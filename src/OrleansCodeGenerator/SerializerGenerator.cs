@@ -87,7 +87,6 @@ namespace Orleans.CodeGenerator
             if (typeInfo.IsConstructedGenericType || !typeInfo.IsGenericTypeDefinition)
             {
                 members.Add(GenerateRegisterMethod(type));
-                members.Add(GenerateConstructor(className));
                 attributes.Add(SF.Attribute(typeof(RegisterSerializerAttribute).GetNameSyntax()));
             }
 
@@ -132,8 +131,7 @@ namespace Orleans.CodeGenerator
 #endif
                                     SF.Attribute(typeof(RegisterSerializerAttribute).GetNameSyntax())))
                         .AddMembers(
-                            GenerateMasterRegisterMethod(type, serializerType),
-                            GenerateConstructor(registererClassName)));
+                            GenerateMasterRegisterMethod(type, serializerType)));
             }
 
             return classes;
@@ -505,22 +503,6 @@ namespace Orleans.CodeGenerator
                                     SF.Argument(SF.IdentifierName("DeepCopier")),
                                     SF.Argument(SF.IdentifierName("Serializer")),
                                     SF.Argument(SF.IdentifierName("Deserializer")))));
-        }
-
-        /// <summary>
-        /// Returns syntax for the constructor.
-        /// </summary>
-        /// <param name="className">The name of the class.</param>
-        /// <returns>Syntax for the constructor.</returns>
-        private static ConstructorDeclarationSyntax GenerateConstructor(string className)
-        {
-            return
-                SF.ConstructorDeclaration(className)
-                    .AddModifiers(SF.Token(SyntaxKind.StaticKeyword))
-                    .AddParameterListParameters()
-                    .AddBodyStatements(
-                        SF.ExpressionStatement(
-                            SF.InvocationExpression(SF.IdentifierName("Register")).AddArgumentListArguments()));
         }
 
         /// <summary>
