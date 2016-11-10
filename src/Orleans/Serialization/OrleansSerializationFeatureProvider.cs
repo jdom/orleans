@@ -85,8 +85,40 @@ namespace Orleans.Serialization.Registration
                                     typeInfo.Name,
                                     assembly.GetName().Name);
 
-                            var register = typeInfo.GetMethod("Register", Type.EmptyTypes);
-                            if (register != null)
+                            var getSerializerRegistrations = typeInfo.GetMethod("GetSerializerRegistrations", Type.EmptyTypes);
+                            MethodInfo register; // temporary until codegen is fixed
+                            if (getSerializerRegistrations != null)
+                            {
+                                try
+                                {
+                                    if (getSerializerRegistrations.ContainsGenericParameters) throw new OrleansException($"Type serializer '{ getSerializerRegistrations.GetType().FullName}' contains generic parameters and can not be registered. Did you mean to provide a split your type serializer into a combination of nongeneric RegisterSerializerAttribute and generic SerializableAttribute classes?");
+                                    var registrations = (IEnumerable<KeyValuePair<Type, SerializerMethods>>)getSerializerRegistrations.Invoke(null, Type.EmptyTypes);
+                                    foreach (var registration in registrations)
+                                    {
+                                        Register(registration.Key, registration.Value, feature, false);
+                                    }
+                                }
+                                catch (OrleansException ex)
+                                {
+                                    logger.Error(
+                                        ErrorCode.SerMgr_TypeRegistrationFailure,
+                                        "Failure registering type " + type.OrleansTypeName() + " from assembly "
+                                        + assembly.GetLocationSafe(),
+                                        ex);
+                                    throw;
+                                }
+                                catch (Exception)
+                                {
+                                    // Ignore failures to load our own serializers, such as the F# ones in case F# isn't installed.
+                                    if (safeFailSerializers.Contains(assembly.GetName().Name))
+                                        logger.Warn(
+                                            ErrorCode.SerMgr_TypeRegistrationFailureIgnore,
+                                            "Failure registering type " + type.OrleansTypeName() + " from assembly "
+                                            + assembly.GetLocationSafe() + ". Ignoring it.");
+                                    else throw;
+                                }
+                            }
+                            else if ((register = typeInfo.GetMethod("Register", Type.EmptyTypes)) != null)
                             {
                                 try
                                 {
@@ -572,7 +604,7 @@ namespace Orleans.Serialization.Registration
     [RegisterSerializer]
     internal class BuiltInSerializers
     {
-        public static IEnumerable<KeyValuePair<Type, SerializerMethods>> GetRegistrations()
+        public static IEnumerable<KeyValuePair<Type, SerializerMethods>> GetSerializerRegistrations()
         {
             return new[]
             {
