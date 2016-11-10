@@ -1826,7 +1826,44 @@ namespace Orleans.Serialization
             if (typeToExternalSerializerDictionary.TryAdd(t, serializer) && serializer != null)
             {
                 // we need to register the type, otherwise exceptions are thrown about types not being found
-                Register(t, serializer.DeepCopy, serializer.Serialize, serializer.Deserialize, true);
+                //Register(t, serializer.DeepCopy, serializer.Serialize, serializer.Deserialize, true);
+                lock (registeredTypes)
+                {
+                    registeredTypes.Add(t);
+
+                    string name = t.OrleansTypeKeyString();
+                    lock (types)
+                    {
+                        types[name] = t;
+                    }
+                    // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
+                    // but dynamically of this (implementation) type
+                    foreach (var iface in t.GetInterfaces())
+                    {
+                        registeredTypes.Add(iface);
+                        name = iface.OrleansTypeKeyString();
+                        lock (types)
+                        {
+                            types[name] = iface;
+                        }
+                    }
+                    // Do the same for abstract base classes
+                    var baseType = t.GetTypeInfo().BaseType;
+                    while (baseType != null)
+                    {
+                        var baseTypeInfo = baseType.GetTypeInfo();
+                        if (baseTypeInfo.IsAbstract)
+                        {
+                            registeredTypes.Add(baseType);
+                            name = baseType.OrleansTypeKeyString();
+                            lock (types)
+                            {
+                                types[name] = baseType;
+                            }
+                        }
+                        baseType = baseTypeInfo.BaseType;
+                    }
+                }
             }
    
             return serializer != null;
