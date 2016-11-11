@@ -160,11 +160,8 @@ namespace Orleans.Serialization.Registration
                         }
                         else
                         {
-                            MethodInfo copier;
-                            MethodInfo serializer;
-                            MethodInfo deserializer;
-                            GetSerializationMethods(type, out copier, out serializer, out deserializer);
-                            if ((serializer != null) && (deserializer != null) && (copier != null))
+                            SerializerMethods serializerMethods = GetSerializerMethods(type);
+                            if ((serializerMethods.DeepCopy != null) && (serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
                             {
                                 // Register type as a serializer for type.
                                 Register(type, type, feature);
@@ -174,17 +171,11 @@ namespace Orleans.Serialization.Registration
                                         type.Name,
                                         assembly.GetName().Name);
                             }
-                            else if ((serializer != null) && (deserializer != null))
+                            else if ((serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
                             {
                                 try
                                 {
-                                    Register(
-                                        type,
-                                        null,
-                                        (Serializer)serializer.CreateDelegate(typeof(Serializer)),
-                                        (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)),
-                                        feature,
-                                        true);
+                                    Register(type, serializerMethods, feature, true);
                                 }
                                 catch (ArgumentException)
                                 {
@@ -200,15 +191,13 @@ namespace Orleans.Serialization.Registration
                                         type.Name,
                                         assembly.GetName().Name);
                             }
-                            else if (copier != null)
+                            else if ((serializerMethods.DeepCopy != null))
                             {
                                 try
                                 {
                                     Register(
                                         type,
-                                        (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
-                                        null,
-                                        null,
+                                        new SerializerMethods(serializerMethods.DeepCopy, null, null), // just in case either serializer or deserializer is set (but not both)
                                         feature,
                                         true);
                                 }
@@ -401,17 +390,8 @@ namespace Orleans.Serialization.Registration
                 }
                 else
                 {
-                    MethodInfo copier;
-                    MethodInfo serializer;
-                    MethodInfo deserializer;
-                    GetSerializationMethods(serializerType, out copier, out serializer, out deserializer);
-                    Register(
-                        type,
-                        (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
-                        (Serializer)serializer.CreateDelegate(typeof(Serializer)),
-                        (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)),
-                        feature,
-                        true);
+                    var serializerMethods = GetSerializerMethods(serializerType);
+                    Register(type, serializerMethods, feature, true);
                 }
             }
             catch (ArgumentException)
@@ -426,10 +406,6 @@ namespace Orleans.Serialization.Registration
 
         private SerializerMethods RegisterConcreteSerializer(Type concreteType, Type genericSerializerType, OrleansSerializationFeature feature)
         {
-            MethodInfo copier;
-            MethodInfo serializer;
-            MethodInfo deserializer;
-
             var concreteSerializerType = genericSerializerType.MakeGenericType(concreteType.GetGenericArguments());
             var typeAlreadyRegistered = feature.SerializerMethods.ContainsKey(concreteSerializerType);
 
@@ -438,21 +414,16 @@ namespace Orleans.Serialization.Registration
                 return FindExistingSerializerMethods(concreteSerializerType, feature);
             }
 
-            GetSerializationMethods(concreteSerializerType, out copier, out serializer, out deserializer);
-            var concreteSerializerMethods = new SerializerMethods(
-                (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
-                (Serializer)serializer.CreateDelegate(typeof(Serializer)),
-                (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)));
-
+            var concreteSerializerMethods = GetSerializerMethods(concreteSerializerType);
             Register(concreteType, concreteSerializerMethods, feature, true);
             return concreteSerializerMethods;
         }
 
-        private static void GetSerializationMethods(Type type, out MethodInfo copier, out MethodInfo serializer, out MethodInfo deserializer)
+        private static SerializerMethods GetSerializerMethods(Type type)
         {
-            copier = null;
-            serializer = null;
-            deserializer = null;
+            MethodInfo copier = null;
+            MethodInfo serializer = null;
+            MethodInfo deserializer = null;
             foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (method.GetCustomAttributes(typeof(CopierMethodAttribute), true).Any())
@@ -467,7 +438,14 @@ namespace Orleans.Serialization.Registration
                 {
                     deserializer = method;
                 }
+
+                if (copier != null && serializer != null && deserializer != null) break;
             }
+
+            return new SerializerMethods(
+                (DeepCopier)copier?.CreateDelegate(typeof(DeepCopier)),
+                (Serializer)serializer?.CreateDelegate(typeof(Serializer)),
+                (Deserializer)deserializer?.CreateDelegate(typeof(Deserializer)));
         }
 
         internal SerializerMethods FindExistingSerializerMethods(Type type, OrleansSerializationFeature feature)
