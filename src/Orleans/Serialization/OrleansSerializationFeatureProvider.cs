@@ -95,7 +95,7 @@ namespace Orleans.Serialization.Registration
                                     assembly.GetName().Name);
 
                             var getSerializerRegistrations = typeInfo.GetMethod("GetSerializerRegistrations", Type.EmptyTypes);
-                            MethodInfo register; // temporary until codegen is fixed
+                            //MethodInfo register; // temporary until codegen is fixed
                             if (getSerializerRegistrations != null)
                             {
                                 try
