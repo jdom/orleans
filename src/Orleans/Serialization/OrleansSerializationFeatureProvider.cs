@@ -21,8 +21,6 @@ namespace Orleans.Serialization.Registration
     {
         private readonly Logger logger;
         private static readonly string[] safeFailSerializers = { "Orleans.FSharp" };
-        private List<IExternalSerializer> externalSerializers = new List<IExternalSerializer>();
-        private ConcurrentDictionary<Type, IExternalSerializer> typeToExternalSerializerDictionary = new ConcurrentDictionary<Type, IExternalSerializer>();
         private ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
 
         public OrleansSerializationFeatureProvider()
@@ -59,7 +57,6 @@ namespace Orleans.Serialization.Registration
             bool systemAssembly = !assembly.IsDynamic
                                   && (assembly.FullName.StartsWith("mscorlib", StringComparison.OrdinalIgnoreCase)
                                       || assembly.FullName.StartsWith("System.", StringComparison.Ordinal));
-            IExternalSerializer externalSerializer;
 
             if (logger.IsVerbose2) logger.Verbose2("Scanning assembly {0} for serialization info", assembly.GetLocationSafe());
 
@@ -227,10 +224,6 @@ namespace Orleans.Serialization.Registration
                                         "Loaded serialization info for type {0} from assembly {1}",
                                         type.Name,
                                         assembly.GetName().Name);
-                            }
-                            else if (TryLookupExternalSerializer(type, out externalSerializer, feature))
-                            {
-                                // the lookup registers the serializer.
                             }
                             else if (!typeInfo.IsSerializable)
                             {
@@ -509,34 +502,6 @@ namespace Orleans.Serialization.Registration
             return
                 (Func<GrainReference, GrainReference>)
                 method.CreateDelegate(typeof(Func<GrainReference, GrainReference>));
-        }
-
-        private bool TryLookupExternalSerializer(Type t, out IExternalSerializer serializer, OrleansSerializationFeature feature)
-        {
-            // essentially a no-op if there are no external serializers registered
-            if (externalSerializers.Count == 0)
-            {
-                serializer = null;
-                return false;
-            }
-
-            // the associated serializer will be null if there are no external serializers that handle this type
-            if (typeToExternalSerializerDictionary.TryGetValue(t, out serializer))
-            {
-                return serializer != null;
-            }
-
-            serializer = externalSerializers.FirstOrDefault(s => s.IsSupportedType(t));
-
-            // add the serializer to the dictionary, even if it's null to signify that we already performed
-            // the search and found none
-            if (typeToExternalSerializerDictionary.TryAdd(t, serializer) && serializer != null)
-            {
-                // we need to register the type, otherwise exceptions are thrown about types not being found
-                Register(t, serializer.DeepCopy, serializer.Serialize, serializer.Deserialize, feature, true);
-            }
-
-            return serializer != null;
         }
     }
 

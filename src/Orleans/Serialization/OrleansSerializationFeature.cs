@@ -59,10 +59,5 @@ namespace Orleans.Serialization.Registration
         /// Gets a reverse lookup map from friendly name to serializable type in an Orleans application.
         /// </summary>
         public IDictionary<string, Type> FriendlyNameMap { get; } = new Dictionary<string, Type>();
-
-        /// <summary>
-        /// Gets a list of external serializer types in an Orleans application.
-        /// </summary>
-        public IList<TypeInfo> ExternalSerializers { get; } = new List<TypeInfo>();
     }
 }
