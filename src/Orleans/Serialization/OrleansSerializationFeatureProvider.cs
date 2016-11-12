@@ -21,7 +21,7 @@ namespace Orleans.Serialization.Registration
     {
         private readonly Logger logger;
         private static readonly string[] safeFailSerializers = { "Orleans.FSharp" };
-        private ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
+        private static readonly ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
 
         public OrleansSerializationFeatureProvider()
         {
