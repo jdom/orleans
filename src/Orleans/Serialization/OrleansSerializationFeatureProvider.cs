@@ -67,7 +67,7 @@ namespace Orleans.Serialization.Registration
             {
                 if (typeInfo.IsEnum)
                 {
-                    Register(type, feature);
+                    RegisterFriendlyNames(type, feature);
                 }
                 else if (!systemAssembly)
                 {
@@ -76,7 +76,19 @@ namespace Orleans.Serialization.Registration
                             || (!typeInfo.Namespace.Equals("System", StringComparison.Ordinal)
                                 && !typeInfo.Namespace.StartsWith("System.", StringComparison.Ordinal))))
                     {
-                        if (typeInfo.GetCustomAttributes(typeof(RegisterSerializerAttribute), false).Any())
+                        var serializerAttribute = typeInfo.GetCustomAttribute<SerializerAttribute>(false);
+                        if (serializerAttribute != null)
+                        {
+                            // Register as the serializer for the target type.
+                            Register(serializerAttribute.TargetType, typeInfo, feature);
+                            if (logger.IsVerbose3)
+                                logger.Verbose3(
+                                    "Loaded serialization info for type {0} using serializer {1} from assembly {2}",
+                                    serializerAttribute.TargetType.Name,
+                                    type.Name,
+                                    assembly.GetName().Name);
+                        }
+                        else if (typeInfo.GetCustomAttributes(typeof(RegisterSerializerAttribute), false).Any())
                         {
                             // Call the static Register method on the type
                             if (logger.IsVerbose3)
@@ -118,33 +130,34 @@ namespace Orleans.Serialization.Registration
                                     else throw;
                                 }
                             }
-                            else if ((register = typeInfo.GetMethod("Register", Type.EmptyTypes)) != null)
-                            {
-                                try
-                                {
-                                    if (register.ContainsGenericParameters) throw new OrleansException("Type serializer '" + register.GetType().FullName + "' contains generic parameters and can not be registered. Did you mean to provide a split your type serializer into a combination of nongeneric RegisterSerializerAttribute and generic SerializableAttribute classes?");
-                                    register.Invoke(null, Type.EmptyTypes);
-                                }
-                                catch (OrleansException ex)
-                                {
-                                    logger.Error(
-                                        ErrorCode.SerMgr_TypeRegistrationFailure,
-                                        "Failure registering type " + type.OrleansTypeName() + " from assembly "
-                                        + assembly.GetLocationSafe(),
-                                        ex);
-                                    throw;
-                                }
-                                catch (Exception)
-                                {
-                                    // Ignore failures to load our own serializers, such as the F# ones in case F# isn't installed.
-                                    if (safeFailSerializers.Contains(assembly.GetName().Name))
-                                        logger.Warn(
-                                            ErrorCode.SerMgr_TypeRegistrationFailureIgnore,
-                                            "Failure registering type " + type.OrleansTypeName() + " from assembly "
-                                            + assembly.GetLocationSafe() + ". Ignoring it.");
-                                    else throw;
-                                }
-                            }
+                            //else if ((register = typeInfo.GetMethod("Register", Type.EmptyTypes)) != null)
+                            //{
+                            //    // TODO: REMOVE THIS!
+                            //    try
+                            //    {
+                            //        if (register.ContainsGenericParameters) throw new OrleansException("Type serializer '" + register.GetType().FullName + "' contains generic parameters and can not be registered. Did you mean to provide a split your type serializer into a combination of nongeneric RegisterSerializerAttribute and generic SerializableAttribute classes?");
+                            //        register.Invoke(null, Type.EmptyTypes);
+                            //    }
+                            //    catch (OrleansException ex)
+                            //    {
+                            //        logger.Error(
+                            //            ErrorCode.SerMgr_TypeRegistrationFailure,
+                            //            "Failure registering type " + type.OrleansTypeName() + " from assembly "
+                            //            + assembly.GetLocationSafe(),
+                            //            ex);
+                            //        throw;
+                            //    }
+                            //    catch (Exception)
+                            //    {
+                            //        // Ignore failures to load our own serializers, such as the F# ones in case F# isn't installed.
+                            //        if (safeFailSerializers.Contains(assembly.GetName().Name))
+                            //            logger.Warn(
+                            //                ErrorCode.SerMgr_TypeRegistrationFailureIgnore,
+                            //                "Failure registering type " + type.OrleansTypeName() + " from assembly "
+                            //                + assembly.GetLocationSafe() + ". Ignoring it.");
+                            //        else throw;
+                            //    }
+                            //}
                             else
                             {
                                 logger.Warn(
@@ -164,7 +177,7 @@ namespace Orleans.Serialization.Registration
                             if ((serializerMethods.DeepCopy != null) && (serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
                             {
                                 // Register type as a serializer for type.
-                                Register(type, type, feature);
+                                Register(type, typeInfo, feature);
                                 if (logger.IsVerbose3)
                                     logger.Verbose3(
                                         "Loaded serialization info for type {0} from assembly {1}",
@@ -234,18 +247,18 @@ namespace Orleans.Serialization.Registration
                                         break;
                                     }
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) Register(type, feature);
+                                if (comparer && (type.GetFields().Length == 0)) RegisterFriendlyNames(type, feature);
                             }
                             else
                             {
-                                Register(type, feature);
+                                RegisterFriendlyNames(type, feature);
                             }
                         }
                     }
                     else
                     {
                         // type is abstract, an interface, system-defined, or its namespace is null
-                        Register(type, feature);
+                        RegisterFriendlyNames(type, feature);
                     }
                 }
             }
@@ -308,8 +321,6 @@ namespace Orleans.Serialization.Registration
                 throw new OrleansException("Serializer without deserializer for class " + type.OrleansTypeName());
             }
 
-            string name = type.OrleansTypeKeyString();
-
             SerializerMethods oldSerializerMethods;
             if (feature.SerializerMethods.TryGetValue(type, out oldSerializerMethods))
             {
@@ -325,36 +336,8 @@ namespace Orleans.Serialization.Registration
             }
 
             feature.SerializerMethods[type] = serializerMethods;
-            feature.FriendlyNameMap[name] = type;
-            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, name);
-
-            // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
-            // but dynamically of this (implementation) type
-            foreach (var iface in type.GetInterfaces())
-            {
-                Register(iface, feature);
-            }
-            // Do the same for abstract base classes
-            var baseType = type.GetTypeInfo().BaseType;
-            while (baseType != null)
-            {
-                var baseTypeInfo = baseType.GetTypeInfo();
-                if (baseTypeInfo.IsAbstract)
-                    Register(baseType, feature);
-
-                baseType = baseTypeInfo.BaseType;
-            }
-        }
-
-        /// <summary>
-        /// This method registers a type that has no specific serializer or deserializer.
-        /// For instance, abstract base types and interfaces need to be registered this way.
-        /// </summary>
-        /// <param name="type">Type to be registered.</param>
-        /// <param name="feature">The feature instance to populate.</param>
-        public void Register(Type type, OrleansSerializationFeature feature)
-        {
-            Register(type, default(SerializerMethods), feature, false);
+            RegisterFriendlyNames(type, feature);
+            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, type.OrleansTypeKeyString());
         }
 
         /// <summary>
@@ -362,61 +345,39 @@ namespace Orleans.Serialization.Registration
         /// </summary>
         /// <param name="type">The type serialized by the provided serializer type.</param>
         /// <param name="serializerType">The type containing serialization methods for <paramref name="type"/>.</param>
-        public void Register(Type type, Type serializerType, OrleansSerializationFeature feature)
+        /// <param name="feature">The feature instance to populate.</param>
+        public void Register(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
         {
-            try
-            {
-                if (type.GetTypeInfo().IsGenericTypeDefinition)
-                {
-                    Register(
-                        type,
-                        obj =>
-                        {
-                            var concrete = RegisterConcreteSerializer(obj.GetType(), serializerType, feature);
-                            return concrete.DeepCopy(obj);
-                        },
-                        (obj, stream, exp) =>
-                        {
-                            var concrete = RegisterConcreteSerializer(obj.GetType(), serializerType, feature);
-                            concrete.Serialize(obj, stream, exp);
-                        },
-                        (expected, stream) =>
-                        {
-                            var concrete = RegisterConcreteSerializer(expected, serializerType, feature);
-                            return concrete.Deserialize(expected, stream);
-                        },
-                        feature,
-                        true);
-                }
-                else
-                {
-                    var serializerMethods = GetSerializerMethods(serializerType);
-                    Register(type, serializerMethods, feature, true);
-                }
-            }
-            catch (ArgumentException)
-            {
-                logger.Warn(
-                    ErrorCode.SerMgr_ErrorBindingMethods,
-                    "Error binding serialization methods for type {0}",
-                    type.OrleansTypeName());
-                throw;
-            }
+            feature.SerializerTypes[type] = serializerType;
+            RegisterFriendlyNames(type, feature);
         }
 
-        private SerializerMethods RegisterConcreteSerializer(Type concreteType, Type genericSerializerType, OrleansSerializationFeature feature)
+        private static void RegisterFriendlyNames(Type type, OrleansSerializationFeature feature)
         {
-            var concreteSerializerType = genericSerializerType.MakeGenericType(concreteType.GetGenericArguments());
-            var typeAlreadyRegistered = feature.SerializerMethods.ContainsKey(concreteSerializerType);
-
-            if (typeAlreadyRegistered)
+            string name = type.OrleansTypeKeyString();
+            if (!feature.FriendlyNameMap.ContainsKey(name))
             {
-                return FindExistingSerializerMethods(concreteSerializerType, feature);
-            }
+                feature.FriendlyNameMap[name] = type;
 
-            var concreteSerializerMethods = GetSerializerMethods(concreteSerializerType);
-            Register(concreteType, concreteSerializerMethods, feature, true);
-            return concreteSerializerMethods;
+                // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
+                // but dynamically of this (implementation) type
+                foreach (var iface in type.GetInterfaces())
+                {
+                    RegisterFriendlyNames(iface, feature);
+                }
+                // Do the same for abstract base classes
+                var baseType = type.GetTypeInfo().BaseType;
+                while (baseType != null)
+                {
+                    var baseTypeInfo = baseType.GetTypeInfo();
+                    if (baseTypeInfo.IsAbstract)
+                    {
+                        RegisterFriendlyNames(baseType, feature);
+                    }
+
+                    baseType = baseTypeInfo.BaseType;
+                }
+            }
         }
 
         private static SerializerMethods GetSerializerMethods(Type type)

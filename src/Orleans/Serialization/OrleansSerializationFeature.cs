@@ -46,7 +46,12 @@ namespace Orleans.Serialization.Registration
     public class OrleansSerializationFeature
     {
         /// <summary>
-        /// Gets a map from type to serializer methods in an Orleans application.
+        /// Gets a map from type to serializer type in an Orleans application.
+        /// </summary>
+        public IDictionary<Type, TypeInfo> SerializerTypes { get; } = new Dictionary<Type, TypeInfo>();
+
+        /// <summary>
+        /// Gets a map from type to serializer methods in an Orleans application, when the type to serialize does not have a type that explicily serializes a single type.
         /// </summary>
         public IDictionary<Type, SerializerMethods> SerializerMethods { get; } = new Dictionary<Type, SerializerMethods>();
 
