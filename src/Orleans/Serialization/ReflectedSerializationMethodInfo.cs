@@ -1,3 +1,5 @@
+using Orleans.Serialization.Registration;
+
 namespace Orleans.Serialization
 {
     using System;
@@ -57,17 +59,17 @@ namespace Orleans.Serialization
         public readonly MethodInfo GetTypeFromHandle;
 
         /// <summary>
-        /// The <see cref="MethodInfo"/> for the <see cref="SerializationManager.Serializer"/> delegate.
+        /// The <see cref="MethodInfo"/> for the <see cref="SerializerMethods.Serializer"/> delegate.
         /// </summary>
         public readonly MethodInfo SerializerDelegate;
 
         /// <summary>
-        /// The <see cref="MethodInfo"/> for the <see cref="SerializationManager.Deserializer"/> delegate.
+        /// The <see cref="MethodInfo"/> for the <see cref="SerializerMethods.Deserializer"/> delegate.
         /// </summary>
         public readonly MethodInfo DeserializerDelegate;
 
         /// <summary>
-        /// The <see cref="MethodInfo"/> for the <see cref="SerializationManager.DeepCopier"/> delegate.
+        /// The <see cref="MethodInfo"/> for the <see cref="SerializerMethods.DeepCopier"/> delegate.
         /// </summary>
         public readonly MethodInfo DeepCopierDelegate;
 
@@ -89,9 +91,9 @@ namespace Orleans.Serialization
             this.GetCurrentDeserializationContext = TypeUtils.Property((object _) => DeserializationContext.Current).GetMethod;
             this.RecordObjectWhileDeserializing = TypeUtils.Method((DeserializationContext ctx) => ctx.RecordObject(default(object)));
             this.SerializerDelegate =
-                TypeUtils.Method((SerializationManager.Serializer del) => del.Invoke(default(object), default(BinaryTokenStreamWriter), default(Type)));
-            this.DeserializerDelegate = TypeUtils.Method((SerializationManager.Deserializer del) => del.Invoke(default(Type), default(BinaryTokenStreamReader)));
-            this.DeepCopierDelegate = TypeUtils.Method((SerializationManager.DeepCopier del) => del.Invoke(default(object)));
+                TypeUtils.Method((SerializerMethods.Serializer del) => del.Invoke(default(object), default(BinaryTokenStreamWriter), default(Type)));
+            this.DeserializerDelegate = TypeUtils.Method((SerializerMethods.Deserializer del) => del.Invoke(default(Type), default(BinaryTokenStreamReader)));
+            this.DeepCopierDelegate = TypeUtils.Method((SerializerMethods.DeepCopier del) => del.Invoke(default(object)));
         }
     }
 }

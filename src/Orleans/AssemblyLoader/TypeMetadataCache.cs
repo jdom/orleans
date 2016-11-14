@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 
 using Orleans.CodeGeneration;
+using Orleans.Core;
 
 namespace Orleans.Runtime
 {
@@ -34,6 +35,22 @@ namespace Orleans.Runtime
             if (grainReferenceAttr != null)
             {
                 this.grainToReferenceMapping.TryAdd(grainReferenceAttr.TargetType, type);
+            }
+        }
+
+        public void RegisterGrainInvokers(GrainInvokerFeature feature)
+        {
+            foreach (var mapping in feature.GrainToInvokerMap)
+            {
+                this.grainToInvokerMapping.TryAdd(mapping.Key, mapping.Value);
+            }
+        }
+
+        public void RegisterGrainReferences(GrainReferenceFeature feature)
+        {
+            foreach (var mapping in feature.GrainToReferenceMap)
+            {
+                this.grainToReferenceMapping.TryAdd(mapping.Key, mapping.Value);
             }
         }
 

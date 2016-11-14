@@ -5,7 +5,6 @@ using System.Net;
 using System.Reflection;
 using Orleans.CodeGeneration;
 using Orleans.GrainDirectory;
-using Orleans.Runtime.Providers;
 using Orleans.Serialization;
 
 namespace Orleans.Runtime
@@ -55,7 +54,7 @@ namespace Orleans.Runtime
             // 2. We load those assemblies into memory. In the official distribution of Orleans, this is usually 4 assemblies.
 
             // Generate code for newly loaded assemblies.
-            CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
+            // CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
 
             // (no more assemblies should be loaded into memory, so now is a good time to log all types registered with the serialization manager)
             SerializationManager.LogRegisteredTypes();

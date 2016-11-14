@@ -15,6 +15,7 @@ namespace Orleans.CodeGenerator
     using Orleans.Concurrency;
     using Orleans.Runtime;
     using Orleans.Serialization;
+    using Orleans.Serialization.Registration;
     using SF = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
     /// <summary>
@@ -488,9 +489,9 @@ namespace Orleans.CodeGenerator
                 () =>
                 SerializationManager.Register(
                     default(Type),
-                    default(SerializationManager.DeepCopier),
-                    default(SerializationManager.Serializer),
-                    default(SerializationManager.Deserializer));
+                    default(SerializerMethods.DeepCopier),
+                    default(SerializerMethods.Serializer),
+                    default(SerializerMethods.Deserializer));
             return
                 SF.MethodDeclaration(typeof(void).GetTypeSyntax(), "Register")
                     .AddModifiers(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.StaticKeyword))

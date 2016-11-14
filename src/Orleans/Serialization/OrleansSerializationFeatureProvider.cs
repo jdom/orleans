@@ -277,7 +277,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
-        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser, OrleansSerializationFeature feature)
+        public void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature)
         {
             Register(type, cop, ser, deser, feature, false);
         }
@@ -291,7 +291,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        public void Register(Type type, DeepCopier cop, Serializer ser, Deserializer deser, OrleansSerializationFeature feature, bool forceOverride)
+        public void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride)
         {
             Register(type, new SerializerMethods(cop, ser, deser), feature, forceOverride);
         }
@@ -397,9 +397,9 @@ namespace Orleans.Serialization.Registration
             }
 
             return new SerializerMethods(
-                (DeepCopier)copier?.CreateDelegate(typeof(DeepCopier)),
-                (Serializer)serializer?.CreateDelegate(typeof(Serializer)),
-                (Deserializer)deserializer?.CreateDelegate(typeof(Deserializer)));
+                (SerializerMethods.DeepCopier)copier?.CreateDelegate(typeof(SerializerMethods.DeepCopier)),
+                (SerializerMethods.Serializer)serializer?.CreateDelegate(typeof(SerializerMethods.Serializer)),
+                (SerializerMethods.Deserializer)deserializer?.CreateDelegate(typeof(SerializerMethods.Deserializer)));
         }
 
         internal SerializerMethods FindExistingSerializerMethods(Type type, OrleansSerializationFeature feature)

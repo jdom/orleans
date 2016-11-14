@@ -4,29 +4,29 @@ using System.Reflection;
 
 namespace Orleans.Serialization.Registration
 {
-    /// <summary>
-    /// Deep copier function.
-    /// </summary>
-    /// <param name="original">Original object to be deep copied.</param>
-    /// <returns>Deep copy of the original object.</returns>
-    public delegate object DeepCopier(object original);
-
-    /// <summary> Serializer function. </summary>
-    /// <param name="raw">Input object to be serialized.</param>
-    /// <param name="stream">Stream to write this data to.</param>
-    /// <param name="expected">Current Type active in this stream.</param>
-    public delegate void Serializer(object raw, BinaryTokenStreamWriter stream, Type expected);
-
-    /// <summary>
-    /// Deserializer function.
-    /// </summary>
-    /// <param name="expected">Expected Type to receive.</param>
-    /// <param name="stream">Input stream to be read from.</param>
-    /// <returns>Rehydrated object of the specified Type read from the current position in the input stream.</returns>
-    public delegate object Deserializer(Type expected, BinaryTokenStreamReader stream);
-
     public struct SerializerMethods
     {
+        /// <summary>
+        /// Deep copier function.
+        /// </summary>
+        /// <param name="original">Original object to be deep copied.</param>
+        /// <returns>Deep copy of the original object.</returns>
+        public delegate object DeepCopier(object original);
+
+        /// <summary> Serializer function. </summary>
+        /// <param name="raw">Input object to be serialized.</param>
+        /// <param name="stream">Stream to write this data to.</param>
+        /// <param name="expected">Current Type active in this stream.</param>
+        public delegate void Serializer(object raw, BinaryTokenStreamWriter stream, Type expected);
+
+        /// <summary>
+        /// Deserializer function.
+        /// </summary>
+        /// <param name="expected">Expected Type to receive.</param>
+        /// <param name="stream">Input stream to be read from.</param>
+        /// <returns>Rehydrated object of the specified Type read from the current position in the input stream.</returns>
+        public delegate object Deserializer(Type expected, BinaryTokenStreamReader stream);
+
         public SerializerMethods(DeepCopier deepCopy, Serializer serialize, Deserializer deserialize)
             : this()
         {

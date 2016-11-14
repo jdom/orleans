@@ -15,6 +15,7 @@ using Orleans.CodeGeneration;
 using Orleans.Concurrency;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
+using Orleans.Serialization.Registration;
 
 namespace Orleans.Serialization
 {
@@ -23,27 +24,6 @@ namespace Orleans.Serialization
     /// </summary>
     public static class SerializationManager
     {
-        /// <summary>
-        /// Deep copier function.
-        /// </summary>
-        /// <param name="original">Original object to be deep copied.</param>
-        /// <returns>Deep copy of the original object.</returns>
-        public delegate object DeepCopier(object original);
-
-        /// <summary> Serializer function. </summary>
-        /// <param name="raw">Input object to be serialized.</param>
-        /// <param name="stream">Stream to write this data to.</param>
-        /// <param name="expected">Current Type active in this stream.</param>
-        public delegate void Serializer(object raw, BinaryTokenStreamWriter stream, Type expected);
-
-        /// <summary>
-        /// Deserializer function.
-        /// </summary>
-        /// <param name="expected">Expected Type to receive.</param>
-        /// <param name="stream">Input stream to be read from.</param>
-        /// <returns>Rehydrated object of the specified Type read from the current position in the input stream.</returns>
-        public delegate object Deserializer(Type expected, BinaryTokenStreamReader stream);
-
         /// <summary>
         /// The delegate used to set fields in value types.
         /// </summary>
@@ -82,9 +62,9 @@ namespace Orleans.Serialization
         private static List<IExternalSerializer> externalSerializers;
         private static ConcurrentDictionary<Type, IExternalSerializer> typeToExternalSerializerDictionary;
         private static Dictionary<string, Type> types;
-        private static Dictionary<RuntimeTypeHandle, DeepCopier> copiers;
-        private static Dictionary<RuntimeTypeHandle, Serializer> serializers;
-        private static Dictionary<RuntimeTypeHandle, Deserializer> deserializers;
+        private static Dictionary<RuntimeTypeHandle, SerializerMethods.DeepCopier> copiers;
+        private static Dictionary<RuntimeTypeHandle, SerializerMethods.Serializer> serializers;
+        private static Dictionary<RuntimeTypeHandle, SerializerMethods.Deserializer> deserializers;
         private static ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary;
 
         private static IExternalSerializer fallbackSerializer;
@@ -210,9 +190,9 @@ namespace Orleans.Serialization
             externalSerializers = new List<IExternalSerializer>();
             typeToExternalSerializerDictionary = new ConcurrentDictionary<Type, IExternalSerializer>();
             types = new Dictionary<string, Type>();
-            copiers = new Dictionary<RuntimeTypeHandle, DeepCopier>();
-            serializers = new Dictionary<RuntimeTypeHandle, Serializer>();
-            deserializers = new Dictionary<RuntimeTypeHandle, Deserializer>();
+            copiers = new Dictionary<RuntimeTypeHandle, SerializerMethods.DeepCopier>();
+            serializers = new Dictionary<RuntimeTypeHandle, SerializerMethods.Serializer>();
+            deserializers = new Dictionary<RuntimeTypeHandle, SerializerMethods.Deserializer>();
             grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
             logger = LogManager.GetLogger("SerializationManager", LoggerType.Runtime);
 
@@ -335,7 +315,7 @@ namespace Orleans.Serialization
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
-        public static void Register(Type t, DeepCopier cop, Serializer ser, Deserializer deser)
+        public static void Register(Type t, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser)
         {
             Register(t, cop, ser, deser, false);
         }
@@ -349,7 +329,7 @@ namespace Orleans.Serialization
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        public static void Register(Type t, DeepCopier cop, Serializer ser, Deserializer deser, bool forceOverride)
+        public static void Register(Type t, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, bool forceOverride)
         {
             if ((ser == null) && (deser != null))
             {
@@ -368,7 +348,7 @@ namespace Orleans.Serialization
                     {
                         lock (copiers)
                         {
-                            DeepCopier current;
+                            SerializerMethods.DeepCopier current;
                             if (forceOverride || !copiers.TryGetValue(t.TypeHandle, out current) || (current == null))
                             {
                                 copiers[t.TypeHandle] = cop;
@@ -379,7 +359,7 @@ namespace Orleans.Serialization
                     {
                         lock (serializers)
                         {
-                            Serializer currentSer;
+                            SerializerMethods.Serializer currentSer;
                             if (forceOverride || !serializers.TryGetValue(t.TypeHandle, out currentSer) || (currentSer == null))
                             {
                                 serializers[t.TypeHandle] = ser;
@@ -387,7 +367,7 @@ namespace Orleans.Serialization
                         }
                         lock (deserializers)
                         {
-                            Deserializer currentDeser;
+                            SerializerMethods.Deserializer currentDeser;
                             if (forceOverride || !deserializers.TryGetValue(t.TypeHandle, out currentDeser) || (currentDeser == null))
                             {
                                 deserializers[t.TypeHandle] = deser;
@@ -528,9 +508,9 @@ namespace Orleans.Serialization
                     GetSerializationMethods(serializerType, out copier, out serializer, out deserializer);
                     Register(
                         type,
-                        (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
-                        (Serializer)serializer.CreateDelegate(typeof(Serializer)),
-                        (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)),
+                        (SerializerMethods.DeepCopier)copier.CreateDelegate(typeof(SerializerMethods.DeepCopier)),
+                        (SerializerMethods.Serializer)serializer.CreateDelegate(typeof(SerializerMethods.Serializer)),
+                        (SerializerMethods.Deserializer)deserializer.CreateDelegate(typeof(SerializerMethods.Deserializer)),
                         true);
                 }
             }
@@ -644,8 +624,8 @@ namespace Orleans.Serialization
                                     Register(
                                         type,
                                         null,
-                                        (Serializer)serializer.CreateDelegate(typeof(Serializer)),
-                                        (Deserializer)deserializer.CreateDelegate(typeof(Deserializer)),
+                                        (SerializerMethods.Serializer)serializer.CreateDelegate(typeof(SerializerMethods.Serializer)),
+                                        (SerializerMethods.Deserializer)deserializer.CreateDelegate(typeof(SerializerMethods.Deserializer)),
                                         true);
                                 }
                                 catch (ArgumentException)
@@ -668,7 +648,7 @@ namespace Orleans.Serialization
                                 {
                                     Register(
                                         type,
-                                        (DeepCopier)copier.CreateDelegate(typeof(DeepCopier)),
+                                        (SerializerMethods.DeepCopier)copier.CreateDelegate(typeof(SerializerMethods.DeepCopier)),
                                         null,
                                         null,
                                         true);
@@ -845,9 +825,9 @@ namespace Orleans.Serialization
             }
 
             GetSerializationMethods(concreteSerializerType, out copier, out serializer, out deserializer);
-            var concreteCopier = (DeepCopier)copier.CreateDelegate(typeof(DeepCopier));
-            var concreteSerializer = (Serializer)serializer.CreateDelegate(typeof(Serializer));
-            var concreteDeserializer = (Deserializer)deserializer.CreateDelegate(typeof(Deserializer));
+            var concreteCopier = (SerializerMethods.DeepCopier)copier.CreateDelegate(typeof(SerializerMethods.DeepCopier));
+            var concreteSerializer = (SerializerMethods.Serializer)serializer.CreateDelegate(typeof(SerializerMethods.Serializer));
+            var concreteDeserializer = (SerializerMethods.Deserializer)deserializer.CreateDelegate(typeof(SerializerMethods.Deserializer));
             Register(concreteType, concreteCopier, concreteSerializer, concreteDeserializer, true);
 
             return new SerializerMethods(concreteCopier, concreteSerializer, concreteDeserializer);
@@ -879,11 +859,11 @@ namespace Orleans.Serialization
 
 #region Deep copying
 
-        internal static DeepCopier GetCopier(Type t)
+        internal static SerializerMethods.DeepCopier GetCopier(Type t)
         {
             lock (copiers)
             {
-                DeepCopier copier;
+                SerializerMethods.DeepCopier copier;
                 if (copiers.TryGetValue(t.TypeHandle, out copier))
                     return copier;
 
@@ -1073,18 +1053,18 @@ namespace Orleans.Serialization
         {
             lock (serializers)
             {
-                Serializer ser;
+                SerializerMethods.Serializer ser;
                 if (serializers.TryGetValue(t.TypeHandle, out ser)) return true;
                 var typeInfo = t.GetTypeInfo();
                 return typeInfo.IsGenericType && serializers.TryGetValue(typeInfo.GetGenericTypeDefinition().TypeHandle, out ser);
             }
         }
 
-        internal static Serializer GetSerializer(Type t)
+        internal static SerializerMethods.Serializer GetSerializer(Type t)
         {
             lock (serializers)
             {
-                Serializer ser;
+                SerializerMethods.Serializer ser;
                 if (serializers.TryGetValue(t.TypeHandle, out ser))
                     return ser;
 
@@ -1193,7 +1173,7 @@ namespace Orleans.Serialization
                 return;
             }
 
-            Serializer ser = GetSerializer(t);
+            SerializerMethods.Serializer ser = GetSerializer(t);
             if (ser != null)
             {
                 stream.WriteTypeHeader(t, expected);
@@ -1721,9 +1701,9 @@ namespace Orleans.Serialization
             return result;
         }
 
-        internal static Deserializer GetDeserializer(Type t)
+        internal static SerializerMethods.Deserializer GetDeserializer(Type t)
         {
-            Deserializer deser;
+            SerializerMethods.Deserializer deser;
 
             lock (deserializers)
             {
@@ -2236,19 +2216,23 @@ namespace Orleans.Serialization
                 });
         }
 
-        public struct SerializerMethods
+        public static void Register(OrleansSerializationFeature orleansSerializationFeature)
         {
-            public SerializerMethods(DeepCopier deepCopy, Serializer serialize, Deserializer deserialize)
-                : this()
+            foreach (var serializerTypeMap in orleansSerializationFeature.SerializerTypes)
             {
-                this.DeepCopy = deepCopy;
-                this.Serialize = serialize;
-                this.Deserialize = deserialize;
+                Register(serializerTypeMap.Key, serializerTypeMap.Value.AsType());
             }
 
-            public DeepCopier DeepCopy { get; private set; }
-            public Serializer Serialize { get; private set; }
-            public Deserializer Deserialize { get; private set; }
+            foreach (var serializerMethodsMap in orleansSerializationFeature.SerializerMethods)
+            {
+                Register(serializerMethodsMap.Key, serializerMethodsMap.Value.DeepCopy, serializerMethodsMap.Value.Serialize, serializerMethodsMap.Value.Deserialize, true);
+            }
+
+            foreach (var friendlyNameMap in orleansSerializationFeature.FriendlyNameMap)
+            {
+                // TODO: avoid this
+                Register(friendlyNameMap.Value);
+            }
         }
     }
 }

@@ -70,24 +70,18 @@ namespace Orleans.CodeGenerator
         }
 
         /// <summary>
-        /// Generates code for all loaded assemblies and loads the output.
-        /// </summary>
-        public void GenerateAndLoadForAllAssemblies()
-        {
-            this.GenerateAndLoadForAssemblies(AppDomain.CurrentDomain.GetAssemblies());
-        }
-
-        /// <summary>
         /// Generates and loads code for the specified inputs.
         /// </summary>
         /// <param name="inputs">The assemblies to generate code for.</param>
-        public void GenerateAndLoadForAssemblies(params Assembly[] inputs)
+        /// <param name="loadedAssemblies">The loaded instances of the generated assemblies if the result is true</param>
+        public bool TryGenerateAndLoadForAssemblies(ICollection<Assembly> inputs, out ICollection<Assembly> loadedAssemblies)
         {
             if (inputs == null)
             {
                 throw new ArgumentNullException(nameof(inputs));
             }
 
+            List<Assembly> loadedAssembliesList = new List<Assembly>();
             var timer = Stopwatch.StartNew();
             var emitDebugSymbols = false;
             foreach (var input in inputs)
@@ -98,56 +92,71 @@ namespace Orleans.CodeGenerator
                 }
 
                 RegisterGeneratedCodeTargets(input);
-                TryLoadGeneratedAssemblyFromCache(input);
+                Assembly loadedAssembly;
+                if (TryLoadGeneratedAssemblyFromCache(input, out loadedAssembly))
+                {
+                    loadedAssembliesList.Add(loadedAssembly);
+                }
             }
 
             var grainAssemblies = inputs.Where(ShouldGenerateCodeForAssembly).ToList();
-            if (grainAssemblies.Count == 0)
+            if (grainAssemblies.Count != 0)
             {
-                // Already up to date.
-                return;
+                try
+                {
+                    // Generate code for newly loaded assemblies.
+                    var generatedSyntax = GenerateForAssemblies(grainAssemblies, true);
+
+                    CachedAssembly generatedAssembly;
+                    if (generatedSyntax.Syntax != null)
+                    {
+                        generatedAssembly = CompileAndLoad(generatedSyntax, emitDebugSymbols);
+                    }
+                    else
+                    {
+                        generatedAssembly = new CachedAssembly {Loaded = true};
+                    }
+
+                    foreach (var assembly in generatedSyntax.SourceAssemblies)
+                    {
+                        CompiledAssemblies.AddOrUpdate(
+                            assembly.GetName().FullName,
+                            generatedAssembly,
+                            (_, __) => generatedAssembly);
+                    }
+
+                    if (Logger.IsVerbose2)
+                    {
+                        Logger.Verbose2(
+                            ErrorCode.CodeGenCompilationSucceeded,
+                            "Generated code for {0} assemblies in {1}ms",
+                            generatedSyntax.SourceAssemblies.Count,
+                            timer.ElapsedMilliseconds);
+                    }
+
+                    if (generatedAssembly.LoadedAssembly != null)
+                    {
+                        loadedAssembliesList.Add(generatedAssembly.LoadedAssembly);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    var assemblyNames = string.Join("\n", grainAssemblies.Select(_ => _.GetName().FullName));
+                    var message =
+                        $"Exception generating code for input assemblies:\n{assemblyNames}\nException: {LogFormatter.PrintException(exception)}";
+                    Logger.Warn(ErrorCode.CodeGenCompilationFailed, message, exception);
+                    throw;
+                }
             }
 
-            try
+            if (loadedAssembliesList.Count > 0)
             {
-                // Generate code for newly loaded assemblies.
-                var generatedSyntax = GenerateForAssemblies(grainAssemblies, true);
-
-                CachedAssembly generatedAssembly;
-                if (generatedSyntax.Syntax != null)
-                {
-                    generatedAssembly = CompileAndLoad(generatedSyntax, emitDebugSymbols);
-                }
-                else
-                {
-                    generatedAssembly = new CachedAssembly { Loaded = true };
-                }
-
-                foreach (var assembly in generatedSyntax.SourceAssemblies)
-                {
-                    CompiledAssemblies.AddOrUpdate(
-                        assembly.GetName().FullName,
-                        generatedAssembly,
-                        (_, __) => generatedAssembly);
-                }
-
-                if (Logger.IsVerbose2)
-                {
-                    Logger.Verbose2(
-                        ErrorCode.CodeGenCompilationSucceeded,
-                        "Generated code for {0} assemblies in {1}ms",
-                        generatedSyntax.SourceAssemblies.Count,
-                        timer.ElapsedMilliseconds);
-                }
+                loadedAssemblies = loadedAssembliesList;
+                return true;
             }
-            catch (Exception exception)
-            {
-                var assemblyNames = string.Join("\n", grainAssemblies.Select(_ => _.GetName().FullName));
-                var message =
-                    $"Exception generating code for input assemblies:\n{assemblyNames}\nException: {LogFormatter.PrintException(exception)}";
-                Logger.Warn(ErrorCode.CodeGenCompilationFailed, message, exception);
-                throw;
-            }
+
+            loadedAssemblies = null;
+            return false;
         }
 
         /// <summary>
@@ -156,16 +165,16 @@ namespace Orleans.CodeGenerator
         /// <param name="input">
         /// The assembly to generate code for.
         /// </param>
-        public void GenerateAndLoadForAssembly(Assembly input)
+        /// <param name="loadedAssembly">The loaded instance of the generated assembly if the result is true</param>
+        public bool TryGenerateAndLoadForAssembly(Assembly input, out Assembly loadedAssembly)
         {
+            loadedAssembly = null;
             try
             {
                 RegisterGeneratedCodeTargets(input);
                 if (!ShouldGenerateCodeForAssembly(input))
                 {
-                    TryLoadGeneratedAssemblyFromCache(input);
-
-                    return;
+                    return TryLoadGeneratedAssemblyFromCache(input, out loadedAssembly);
                 }
 
                 var timer = Stopwatch.StartNew();
@@ -197,6 +206,9 @@ namespace Orleans.CodeGenerator
                         "Generated code for 1 assembly in {0}ms",
                         timer.ElapsedMilliseconds);
                 }
+
+                loadedAssembly = generatedAssembly.LoadedAssembly;
+                return loadedAssembly != null;
             }
             catch (Exception exception)
             {
@@ -245,21 +257,23 @@ namespace Orleans.CodeGenerator
         /// <summary>
         /// Attempts to load a generated assembly from the cache.
         /// </summary>
-        /// <param name="targetAssembly">
-        /// The target assembly which the cached counterpart is generated for.
-        /// </param>
-        private static void TryLoadGeneratedAssemblyFromCache(Assembly targetAssembly)
+        /// <param name="targetAssembly">The target assembly which the cached counterpart is generated for.</param>
+        /// <param name="loadedAssembly">The loaded instance of the generated assembly if the result is true</param>
+        private static bool TryLoadGeneratedAssemblyFromCache(Assembly targetAssembly, out Assembly loadedAssembly)
         {
             CachedAssembly cached;
             if (!CompiledAssemblies.TryGetValue(targetAssembly.GetName().FullName, out cached)
                 || cached.RawBytes == null || cached.Loaded)
             {
-                return;
+                loadedAssembly = null;
+                return false;
             }
 
             // Load the assembly and mark it as being loaded.
-            Assembly.Load(cached.RawBytes, cached.DebugSymbolRawBytes);
+            loadedAssembly = Assembly.Load(cached.RawBytes, cached.DebugSymbolRawBytes);
             cached.Loaded = true;
+            cached.LoadedAssembly = loadedAssembly;
+            return true;
         }
 
         /// <summary>
@@ -273,10 +287,11 @@ namespace Orleans.CodeGenerator
         private static CachedAssembly CompileAndLoad(GeneratedSyntax generatedSyntax, bool emitDebugSymbols)
         {
             var generated = CodeGeneratorCommon.CompileAssembly(generatedSyntax, "OrleansCodeGen", emitDebugSymbols: emitDebugSymbols);
-            Assembly.Load(generated.RawBytes, generated.DebugSymbolRawBytes);
+            var assembly = Assembly.Load(generated.RawBytes, generated.DebugSymbolRawBytes);
             return new CachedAssembly(generated)
             {
-                Loaded = true
+                Loaded = true,
+                LoadedAssembly = assembly,
             };
         }
 
@@ -580,6 +595,9 @@ namespace Orleans.CodeGenerator
             /// Gets or sets a value indicating whether or not the assembly has been loaded.
             /// </summary>
             public bool Loaded { get; set; }
+
+            /// <summary>Gets or sets the loaded instance of the generated assembly.</summary>
+            public Assembly LoadedAssembly { get; set; }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Orleans.Serialization
+﻿using Orleans.Serialization.Registration;
+
+namespace Orleans.Serialization
 {
     using System;
     using System.Collections.Concurrent;
@@ -32,7 +34,7 @@
         /// <summary>
         /// The serializer used when a concrete type is not known.
         /// </summary>
-        private readonly SerializationManager.SerializerMethods thisSerializer;
+        private readonly SerializerMethods thisSerializer;
 
         /// <summary>
         /// The serializer used for implementations of <see cref="Type"/>.
@@ -50,14 +52,14 @@
             // Configure the serializer to be used when a concrete type is not known.
             // The serializer will generate and register serializers for concrete types
             // as they are discovered.
-            this.thisSerializer = new SerializationManager.SerializerMethods(
+            this.thisSerializer = new SerializerMethods(
                 this.DeepCopy,
                 this.Serialize,
                 this.Deserialize);
 
             this.typeSerializer = new SerializerBundle(
                 typeof(Type),
-                new SerializationManager.SerializerMethods(
+                new SerializerMethods(
                     original => original,
                     (original, writer, expected) => { this.WriteNamedType((Type)original, writer); },
                     (expected, reader) => this.ReadNamedType(reader)));
@@ -256,11 +258,11 @@
 
         public class SerializerBundle
         {
-            public readonly SerializationManager.SerializerMethods Methods;
+            public readonly SerializerMethods Methods;
 
             public readonly Type Type;
 
-            public SerializerBundle(Type type, SerializationManager.SerializerMethods methods)
+            public SerializerBundle(Type type, SerializerMethods methods)
             {
                 this.Type = type;
                 this.Methods = methods;

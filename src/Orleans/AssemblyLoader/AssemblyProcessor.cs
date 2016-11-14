@@ -1,12 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Orleans.CodeGeneration;
+using Orleans.Core;
+using Orleans.Serialization;
+using Orleans.Serialization.Registration;
+
 namespace Orleans.Runtime
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Orleans.CodeGeneration;
-    using Orleans.Serialization;
-
     /// <summary>
     /// The assembly processor.
     /// </summary>
@@ -72,14 +74,32 @@ namespace Orleans.Runtime
                 // initialize serialization for all assemblies to be loaded.
                 AppDomain.CurrentDomain.AssemblyLoad += this.OnAssemblyLoad;
 
-                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                ICollection<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
                 // initialize serialization for already loaded assemblies.
-                CodeGeneratorManager.GenerateAndCacheCodeForAllAssemblies();
-                foreach (var assembly in assemblies)
-                {
-                    this.ProcessAssembly(assembly);
-                }
+                var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssemblies(assemblies);
+                assemblies = assemblies.Union(generated).ToList();
+
+                var serializerFeature = new OrleansSerializationFeature();
+                var grainInvokerFeature = new GrainInvokerFeature();
+                var grainReferenceFeature = new GrainReferenceFeature();
+
+                var serializerFeatureProvider = new OrleansSerializationFeatureProvider();
+                var grainInvokerFeatureProvider = new GrainInvokerFeatureProvider();
+                var grainReferenceFeatureProvider = new GrainReferenceFeatureProvider();
+
+                serializerFeatureProvider.PopulateFeature(assemblies.SelectMany(asm => asm.DefinedTypes), serializerFeature);
+                grainInvokerFeatureProvider.PopulateFeature(assemblies.SelectMany(asm => asm.DefinedTypes), grainInvokerFeature);
+                grainReferenceFeatureProvider.PopulateFeature(assemblies.SelectMany(asm => asm.DefinedTypes), grainReferenceFeature);
+
+                this.typeCache.RegisterGrainInvokers(grainInvokerFeature);
+                this.typeCache.RegisterGrainReferences(grainReferenceFeature);
+
+                SerializationManager.Register(serializerFeature);
+                //foreach (var asm in assemblies)
+                //{
+                //    ProcessAssembly(asm);
+                //}
 
                 this.initialized = true;
             }
@@ -114,7 +134,6 @@ namespace Orleans.Runtime
                 return;
             }
 #endif
-
             // Don't bother re-processing an assembly we've already scanned
             lock (this.processedAssemblies)
             {

@@ -19,7 +19,7 @@ namespace Orleans.Core
     /// <summary>
     /// Discovers grain references from a list of types.
     /// </summary>
-    public class GrainRereferenceFeatureProvider //: IApplicationFeatureProvider<GrainReferenceFeature>
+    public class GrainReferenceFeatureProvider //: IApplicationFeatureProvider<GrainReferenceFeature>
     {
         ///// <inheritdoc />
         //public void PopulateFeature(IEnumerable<ApplicationPart> parts, GrainReferenceFeature feature)
