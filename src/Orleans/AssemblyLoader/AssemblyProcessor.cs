@@ -88,9 +88,11 @@ namespace Orleans.Runtime
                 var grainInvokerFeatureProvider = new GrainInvokerFeatureProvider();
                 var grainReferenceFeatureProvider = new GrainReferenceFeatureProvider();
 
-                serializerFeatureProvider.PopulateFeature(assemblies.SelectMany(asm => asm.DefinedTypes), serializerFeature);
-                grainInvokerFeatureProvider.PopulateFeature(assemblies.SelectMany(asm => asm.DefinedTypes), grainInvokerFeature);
-                grainReferenceFeatureProvider.PopulateFeature(assemblies.SelectMany(asm => asm.DefinedTypes), grainReferenceFeature);
+                var types = assemblies.SelectMany(asm => TypeUtils.GetDefinedTypes(asm, logger)).ToList();
+
+                serializerFeatureProvider.PopulateFeature(types, serializerFeature);
+                grainInvokerFeatureProvider.PopulateFeature(types, grainInvokerFeature);
+                grainReferenceFeatureProvider.PopulateFeature(types, grainReferenceFeature);
 
                 this.typeCache.RegisterGrainInvokers(grainInvokerFeature);
                 this.typeCache.RegisterGrainReferences(grainReferenceFeature);

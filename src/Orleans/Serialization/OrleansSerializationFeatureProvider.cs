@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -68,10 +69,20 @@ namespace Orleans.Serialization.Registration
                 }
                 else if (!systemAssembly)
                 {
+                    string typeNamespace = null;
+                    try
+                    {
+                        typeNamespace = typeInfo.Namespace;
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // TODO: investigate why we are getting this now
+                        return;
+                    }
                     if (!typeInfo.IsInterface && !typeInfo.IsAbstract
-                        && (typeInfo.Namespace == null
-                            || (!typeInfo.Namespace.Equals("System", StringComparison.Ordinal)
-                                && !typeInfo.Namespace.StartsWith("System.", StringComparison.Ordinal))))
+                        && (typeNamespace == null
+                            || (!typeNamespace.Equals("System", StringComparison.Ordinal)
+                                && !typeNamespace.StartsWith("System.", StringComparison.Ordinal))))
                     {
                         var serializerAttribute = typeInfo.GetCustomAttribute<SerializerAttribute>(false);
                         if (serializerAttribute != null)
