@@ -34,14 +34,10 @@ namespace UnitTests.Serialization
             Assert.Equal(input.ToString(), output.ToString());
         }
 
-        [RegisterSerializerAttribute]
+        [Serializer(typeof(JObject))]
         public class JObjectSerializationExample1
         {
-            static JObjectSerializationExample1()
-            {
-                Register();
-            }
-
+            [CopierMethod]
             public static object DeepCopier(object original)
             {
                 // I assume JObject is immutable, so no need to deep copy.
@@ -49,6 +45,7 @@ namespace UnitTests.Serialization
                 return original;
             }
 
+            [SerializerMethod]
             public static void Serializer(object untypedInput, BinaryTokenStreamWriter stream, Type expected)
             {
                 var input = (JObject)(untypedInput);
@@ -56,15 +53,11 @@ namespace UnitTests.Serialization
                 SerializationManager.Serialize(str, stream);
             }
 
+            [DeserializerMethod]
             public static object Deserializer(Type expected, BinaryTokenStreamReader stream)
             {
                 var str = (string)(SerializationManager.Deserialize(typeof(string), stream));
                 return JObject.Parse(str);
-            }
-
-            public static void Register()
-            {
-                SerializationManager.Register(typeof(JObject), DeepCopier, Serializer, Deserializer);
             }
         }
         
