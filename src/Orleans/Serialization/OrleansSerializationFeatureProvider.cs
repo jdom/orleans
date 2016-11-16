@@ -84,17 +84,20 @@ namespace Orleans.Serialization.Registration
                             || (!typeNamespace.Equals("System", StringComparison.Ordinal)
                                 && !typeNamespace.StartsWith("System.", StringComparison.Ordinal))))
                     {
-                        var serializerAttribute = typeInfo.GetCustomAttribute<SerializerAttribute>(false);
-                        if (serializerAttribute != null)
+                        var serializerAttributes = typeInfo.GetCustomAttributes<SerializerAttribute>(false).ToList();
+                        if (serializerAttributes.Any())
                         {
-                            // Register as the serializer for the target type.
-                            Register(serializerAttribute.TargetType, typeInfo, feature);
-                            if (logger.IsVerbose3)
-                                logger.Verbose3(
-                                    "Loaded serialization info for type {0} using serializer {1} from assembly {2}",
-                                    serializerAttribute.TargetType.Name,
-                                    type.Name,
-                                    assembly.GetName().Name);
+                            foreach (var serializerAttribute in serializerAttributes)
+                            {
+                                // Register as the serializer for the target type.
+                                Register(serializerAttribute.TargetType, typeInfo, feature);
+                                if (logger.IsVerbose3)
+                                    logger.Verbose3(
+                                        "Loaded serialization info for type {0} using serializer {1} from assembly {2}",
+                                        serializerAttribute.TargetType.Name,
+                                        type.Name,
+                                        assembly.GetName().Name);
+                            }
                         }
                         else if (typeInfo.GetCustomAttributes(typeof(RegisterSerializerAttribute), false).Any())
                         {
