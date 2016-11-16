@@ -1799,30 +1799,20 @@ namespace Orleans.Serialization
 
         public static void Register(OrleansSerializationFeature orleansSerializationFeature)
         {
-            IExternalSerializer externalSerializer;
             foreach (var serializerTypeMap in orleansSerializationFeature.SerializerTypes)
             {
-                if (!TryLookupExternalSerializer(serializerTypeMap.Key, out externalSerializer))
-                {
-                    Register(serializerTypeMap.Key, serializerTypeMap.Value.AsType());
-                }
+                Register(serializerTypeMap.Key, serializerTypeMap.Value.AsType());
             }
 
             foreach (var serializerMethodsMap in orleansSerializationFeature.SerializerMethods)
             {
-                if (!TryLookupExternalSerializer(serializerMethodsMap.Key, out externalSerializer))
-                {
-                    Register(serializerMethodsMap.Key, serializerMethodsMap.Value.DeepCopy, serializerMethodsMap.Value.Serialize, serializerMethodsMap.Value.Deserialize, true);
-                }
+                Register(serializerMethodsMap.Key, serializerMethodsMap.Value.DeepCopy, serializerMethodsMap.Value.Serialize, serializerMethodsMap.Value.Deserialize, true);
             }
 
             foreach (var friendlyNameMap in orleansSerializationFeature.FriendlyNameMap)
             {
-                if (!TryLookupExternalSerializer(friendlyNameMap.Value, out externalSerializer))
-                {
-                    // TODO: avoid this
-                    Register(friendlyNameMap.Value);
-                }
+                // TODO: avoid this
+                Register(friendlyNameMap.Value);
             }
         }
     }
