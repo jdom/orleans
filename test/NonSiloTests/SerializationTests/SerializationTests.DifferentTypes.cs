@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Orleans.CodeGeneration;
 using Orleans.Serialization;
 using Xunit;
 
@@ -84,15 +85,11 @@ namespace UnitTests.Serialization
             public ICollection<TestTypeA> Collection { get; set; }
         }
 
-        [global::Orleans.CodeGeneration.RegisterSerializerAttribute()]
+        [Serializer(typeof(TestTypeA))]
         internal class TestTypeASerialization
         {
 
-            static TestTypeASerialization()
-            {
-                Register();
-            }
-
+            [CopierMethod]
             public static object DeepCopier(object original)
             {
                 TestTypeA input = ((TestTypeA)(original));
@@ -102,23 +99,20 @@ namespace UnitTests.Serialization
                 return result;
             }
 
+            [SerializerMethod]
             public static void Serializer(object untypedInput, Orleans.Serialization.BinaryTokenStreamWriter stream, System.Type expected)
             {
                 TestTypeA input = ((TestTypeA)(untypedInput));
                 Orleans.Serialization.SerializationManager.SerializeInner(input.Collection, stream, typeof(System.Collections.Generic.ICollection<TestTypeA>));
             }
 
+            [DeserializerMethod]
             public static object Deserializer(System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
             {
                 TestTypeA result = new TestTypeA();
                 DeserializationContext.Current.RecordObject(result);
                 result.Collection = ((System.Collections.Generic.ICollection<TestTypeA>)(Orleans.Serialization.SerializationManager.DeserializeInner(typeof(System.Collections.Generic.ICollection<TestTypeA>), stream)));
                 return result;
-            }
-
-            public static void Register()
-            {
-                global::Orleans.Serialization.SerializationManager.Register(typeof(TestTypeA), DeepCopier, Serializer, Deserializer);
             }
         }
 

@@ -125,7 +125,12 @@ namespace UnitTests.Serialization
         /// <summary>
         /// A different way to configure Json serializer.
         /// </summary>
-        [RegisterSerializer]
+        [Serializer(typeof(JToken))]
+        [Serializer(typeof(JObject))]
+        [Serializer(typeof(JArray))]
+        [Serializer(typeof(JValue))]
+        [Serializer(typeof(JProperty))]
+        [Serializer(typeof(JConstructor))]
         public class JsonSerializationExample2
         {
             internal static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
@@ -134,11 +139,7 @@ namespace UnitTests.Serialization
                 TypeNameHandling = TypeNameHandling.All
             };
 
-            static JsonSerializationExample2()
-            {
-                Register();
-            }
-
+            [CopierMethod]
             public static object DeepCopier(object original)
             {
                 // I assume JObject is immutable, so no need to deep copy.
@@ -146,28 +147,20 @@ namespace UnitTests.Serialization
                 return original;
             }
 
+            [SerializerMethod]
             public static void Serialize(object obj, BinaryTokenStreamWriter stream, Type expected)
             {
                 var str = JsonConvert.SerializeObject(obj, Settings);
                 SerializationManager.Serialize(str, stream);
             }
 
+            [DeserializerMethod]
             public static object Deserialize(Type expected, BinaryTokenStreamReader stream)
             {
                 var str = (string)SerializationManager.Deserialize(typeof(string), stream);
                 return JsonConvert.DeserializeObject(str, expected);
             }
 
-            public static void Register()
-            {
-                foreach (var type in new[]
-                    {
-                        typeof(JObject), typeof(JArray), typeof(JToken), typeof(JValue), typeof(JProperty), typeof(JConstructor), 
-                    })
-                {
-                    SerializationManager.Register(type, DeepCopier, Serialize, Deserialize);
-                }
-            }
         }
     }
 }
