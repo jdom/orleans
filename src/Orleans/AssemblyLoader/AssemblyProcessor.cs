@@ -167,7 +167,7 @@ namespace Orleans.Runtime
                         this.logger.Verbose3("Processing type {0}", typeName);
                     }
 
-                    SerializationManager.FindSerializationInfo(type);
+                    //SerializationManager.FindSerializationInfo(type);
     
                     this.typeCache.FindSupportClasses(type);
                 }
