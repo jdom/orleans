@@ -85,12 +85,6 @@ namespace Orleans.CodeGenerator
                 GenerateDeserializerMethod(type, fields),
             };
 
-            if (typeInfo.IsConstructedGenericType || !typeInfo.IsGenericTypeDefinition)
-            {
-                members.Add(GenerateRegisterMethod(type));
-                attributes.Add(SF.Attribute(typeof(RegisterSerializerAttribute).GetNameSyntax()));
-            }
-
             var classDeclaration =
                 SF.ClassDeclaration(className)
                     .AddModifiers(SF.Token(SyntaxKind.InternalKeyword))
@@ -126,13 +120,11 @@ namespace Orleans.CodeGenerator
                         .AddAttributeLists(
                             SF.AttributeList()
                                 .AddAttributes(
-                                    CodeGeneratorCommon.GetGeneratedCodeAttributeSyntax(),
+                                    CodeGeneratorCommon.GetGeneratedCodeAttributeSyntax()
 #if !NETSTANDARD
-                                    SF.Attribute(typeof(ExcludeFromCodeCoverageAttribute).GetNameSyntax()),
+                                    , SF.Attribute(typeof(ExcludeFromCodeCoverageAttribute).GetNameSyntax())
 #endif
-                                    SF.Attribute(typeof(RegisterSerializerAttribute).GetNameSyntax())))
-                        .AddMembers(
-                            GenerateMasterRegisterMethod(type, serializerType)));
+                                )));
             }
 
             return classes;
@@ -476,56 +468,6 @@ namespace Orleans.CodeGenerator
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Returns syntax for the serializer registration method.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>Syntax for the serializer registration method.</returns>
-        private static MemberDeclarationSyntax GenerateRegisterMethod(Type type)
-        {
-            Expression<Action> register =
-                () =>
-                SerializationManager.Register(
-                    default(Type),
-                    default(SerializerMethods.DeepCopier),
-                    default(SerializerMethods.Serializer),
-                    default(SerializerMethods.Deserializer));
-            return
-                SF.MethodDeclaration(typeof(void).GetTypeSyntax(), "Register")
-                    .AddModifiers(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.StaticKeyword))
-                    .AddParameterListParameters()
-                    .AddBodyStatements(
-                        SF.ExpressionStatement(
-                            register.Invoke()
-                                .AddArgumentListArguments(
-                                    SF.Argument(SF.TypeOfExpression(type.GetTypeSyntax())),
-                                    SF.Argument(SF.IdentifierName("DeepCopier")),
-                                    SF.Argument(SF.IdentifierName("Serializer")),
-                                    SF.Argument(SF.IdentifierName("Deserializer")))));
-        }
-
-        /// <summary>
-        /// Returns syntax for the generic serializer registration method for the provided type..
-        /// </summary>
-        /// <param name="type">The type which is supported by this serializer.</param>
-        /// <param name="serializerType">The type of the serializer.</param>
-        /// <returns>Syntax for the generic serializer registration method for the provided type..</returns>
-        private static MemberDeclarationSyntax GenerateMasterRegisterMethod(Type type, TypeSyntax serializerType)
-        {
-            Expression<Action> register = () => SerializationManager.Register(default(Type), default(Type));
-            return
-                SF.MethodDeclaration(typeof(void).GetTypeSyntax(), "Register")
-                    .AddModifiers(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.StaticKeyword))
-                    .AddParameterListParameters()
-                    .AddBodyStatements(
-                        SF.ExpressionStatement(
-                            register.Invoke()
-                                .AddArgumentListArguments(
-                                    SF.Argument(
-                                        SF.TypeOfExpression(type.GetTypeSyntax(includeGenericParameters: false))),
-                                    SF.Argument(SF.TypeOfExpression(serializerType)))));
         }
 
         /// <summary>
