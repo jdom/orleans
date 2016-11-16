@@ -58,14 +58,14 @@ namespace Orleans.Serialization
 
         #region Privates
 
-        private static HashSet<Type> registeredTypes;
-        private static List<IExternalSerializer> externalSerializers;
-        private static ConcurrentDictionary<Type, IExternalSerializer> typeToExternalSerializerDictionary;
-        private static Dictionary<string, Type> types;
-        private static Dictionary<RuntimeTypeHandle, SerializerMethods.DeepCopier> copiers;
-        private static Dictionary<RuntimeTypeHandle, SerializerMethods.Serializer> serializers;
-        private static Dictionary<RuntimeTypeHandle, SerializerMethods.Deserializer> deserializers;
-        private static ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary;
+        private static HashSet<Type> registeredTypes = new HashSet<Type>();
+        private static List<IExternalSerializer> externalSerializers = new List<IExternalSerializer>();
+        private static ConcurrentDictionary<Type, IExternalSerializer> typeToExternalSerializerDictionary = new ConcurrentDictionary<Type, IExternalSerializer>();
+        private static Dictionary<string, Type> types = new Dictionary<string, Type>();
+        private static Dictionary<RuntimeTypeHandle, SerializerMethods.DeepCopier> copiers = new Dictionary<RuntimeTypeHandle, SerializerMethods.DeepCopier>();
+        private static Dictionary<RuntimeTypeHandle, SerializerMethods.Serializer> serializers = new Dictionary<RuntimeTypeHandle, SerializerMethods.Serializer>();
+        private static Dictionary<RuntimeTypeHandle, SerializerMethods.Deserializer> deserializers = new Dictionary<RuntimeTypeHandle, SerializerMethods.Deserializer>();
+        private static ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
 
         private static IExternalSerializer fallbackSerializer;
         private static LoggerImpl logger;
@@ -118,6 +118,7 @@ namespace Orleans.Serialization
 
         public static void InitializeForTesting(List<TypeInfo> serializationProviders = null, TypeInfo fallbackType = null)
         {
+            logger = LogManager.GetLogger("SerializationManager", LoggerType.Runtime);
             try
             {
                 RegisterBuiltInSerializers();
@@ -133,7 +134,7 @@ namespace Orleans.Serialization
 
         internal static void Initialize(List<TypeInfo> serializationProviders, TypeInfo fallbackType = null)
         {
-            RegisterBuiltInSerializers();
+            logger = LogManager.GetLogger("SerializationManager", LoggerType.Runtime);
             fallbackSerializer = GetFallbackSerializer(fallbackType);
 
             if (StatisticsCollector.CollectSerializationStats)
@@ -183,18 +184,15 @@ namespace Orleans.Serialization
                 IsBuiltInSerializersRegistered = true;
             }
 
+            logger = LogManager.GetLogger("SerializationManager", LoggerType.Runtime);
 #if !NETSTANDARD_TODO
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveEventHandler;
 #endif
-            registeredTypes = new HashSet<Type>();
-            externalSerializers = new List<IExternalSerializer>();
-            typeToExternalSerializerDictionary = new ConcurrentDictionary<Type, IExternalSerializer>();
-            types = new Dictionary<string, Type>();
-            copiers = new Dictionary<RuntimeTypeHandle, SerializerMethods.DeepCopier>();
-            serializers = new Dictionary<RuntimeTypeHandle, SerializerMethods.Serializer>();
-            deserializers = new Dictionary<RuntimeTypeHandle, SerializerMethods.Deserializer>();
-            grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
-            logger = LogManager.GetLogger("SerializationManager", LoggerType.Runtime);
+
+            foreach (var serializerRegistration in BuiltInSerializers.GetSerializerRegistrations())
+            {
+                Register(serializerRegistration.Key, serializerRegistration.Value.DeepCopy, serializerRegistration.Value.Serialize, serializerRegistration.Value.Deserialize, true);
+            }
         }
 
 #endregion
