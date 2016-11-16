@@ -66,7 +66,7 @@ namespace Orleans.Serialization
         private static LoggerImpl logger;
         private static bool IsBuiltInSerializersRegistered;
         private static readonly object registerBuiltInSerializerLockObj = new object();
-        internal static int RegisteredTypesCount { get { return registeredTypes == null ? 0 : registeredTypes.Count; } }
+        internal static int RegisteredTypesCount => registeredTypes.Count;
 
         // Semi-constants: type handles for simple types
         private static readonly RuntimeTypeHandle shortTypeHandle = typeof(short).TypeHandle;
@@ -263,12 +263,7 @@ namespace Orleans.Serialization
                 }
                 else
                 {
-                    registeredTypes.Add(t);
-                    string name = t.OrleansTypeKeyString();
-                    lock (types)
-                    {
-                        types[name] = t;
-                    }
+                    RegisterTypeName(t);
                     if (cop != null)
                     {
                         lock (copiers)
@@ -290,26 +285,7 @@ namespace Orleans.Serialization
                             deserializers[t.TypeHandle] = deser;
                         }
                     }
-
-                    if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", t, name);
                 }
-            }
-
-            // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
-            // but dynamically of this (implementation) type
-            foreach (var iface in t.GetInterfaces())
-            {
-                Register(iface);
-            }
-            // Do the same for abstract base classes
-            var baseType = t.GetTypeInfo().BaseType;
-            while (baseType != null)
-            {
-                var baseTypeInfo = baseType.GetTypeInfo();
-                if (baseTypeInfo.IsAbstract)
-                    Register(baseType);
-
-                baseType = baseTypeInfo.BaseType;
             }
         }
 
@@ -317,42 +293,46 @@ namespace Orleans.Serialization
         /// This method registers a type that has no specific serializer or deserializer.
         /// For instance, abstract base types and interfaces need to be registered this way.
         /// </summary>
-        /// <param name="t">Type to be registered.</param>
-        public static void Register(Type t)
+        /// <param name="type">Type to be registered.</param>
+        /// <param name="registerAncestors">If true, also registers all the ancestors for this type.</param>
+        public static void RegisterTypeName(Type type, bool registerAncestors = true)
         {
-            string name = t.OrleansTypeKeyString();
+            string name = type.OrleansTypeKeyString();
 
             lock (registeredTypes)
             {
-                if (registeredTypes.Contains(t))
+                if (registeredTypes.Contains(type))
                 {
                     return;
                 }
 
-                registeredTypes.Add(t);
+                registeredTypes.Add(type);
                 lock (types)
                 {
-                    types[name] = t;
+                    types[name] = type;
                 }
             }
-            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", t, name);
+            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, name);
 
-            // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
-            // but dynamically of this (implementation) type
-            foreach (var iface in t.GetInterfaces())
+            if (registerAncestors)
             {
-                Register(iface);
-            }
+                // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
+                // but dynamically of this (implementation) type
+                foreach (var iface in type.GetInterfaces())
+                {
+                    RegisterTypeName(iface);
+                }
 
-            // Do the same for abstract base classes
-            var baseType = t.GetTypeInfo().BaseType;
-            while (baseType != null)
-            {
-                var baseTypeInfo = baseType.GetTypeInfo();
-                if (baseTypeInfo.IsAbstract)
-                    Register(baseType);
+                // Do the same for abstract base classes
+                var baseType = type.GetTypeInfo().BaseType;
+                while (baseType != null)
+                {
+                    var baseTypeInfo = baseType.GetTypeInfo();
+                    if (baseTypeInfo.IsAbstract)
+                        RegisterTypeName(baseType);
 
-                baseType = baseTypeInfo.BaseType;
+                    baseType = baseTypeInfo.BaseType;
+                }
             }
         }
 
@@ -1415,43 +1395,7 @@ namespace Orleans.Serialization
             {
                 // we need to register the type, otherwise exceptions are thrown about types not being found
                 //Register(t, serializer.DeepCopy, serializer.Serialize, serializer.Deserialize, true);
-                lock (registeredTypes)
-                {
-                    registeredTypes.Add(t);
-
-                    string name = t.OrleansTypeKeyString();
-                    lock (types)
-                    {
-                        types[name] = t;
-                    }
-                    // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
-                    // but dynamically of this (implementation) type
-                    foreach (var iface in t.GetInterfaces())
-                    {
-                        registeredTypes.Add(iface);
-                        name = iface.OrleansTypeKeyString();
-                        lock (types)
-                        {
-                            types[name] = iface;
-                        }
-                    }
-                    // Do the same for abstract base classes
-                    var baseType = t.GetTypeInfo().BaseType;
-                    while (baseType != null)
-                    {
-                        var baseTypeInfo = baseType.GetTypeInfo();
-                        if (baseTypeInfo.IsAbstract)
-                        {
-                            registeredTypes.Add(baseType);
-                            name = baseType.OrleansTypeKeyString();
-                            lock (types)
-                            {
-                                types[name] = baseType;
-                            }
-                        }
-                        baseType = baseTypeInfo.BaseType;
-                    }
-                }
+                RegisterTypeName(t);
             }
    
             return serializer != null;
@@ -1812,7 +1756,7 @@ namespace Orleans.Serialization
             foreach (var friendlyNameMap in orleansSerializationFeature.FriendlyNameMap)
             {
                 // TODO: avoid this
-                Register(friendlyNameMap.Value);
+                RegisterTypeName(friendlyNameMap.Value, false);
             }
         }
     }
