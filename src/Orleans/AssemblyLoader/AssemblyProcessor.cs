@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Orleans.CodeGeneration;
 using Orleans.Core;
 using Orleans.Serialization;
@@ -14,6 +16,8 @@ namespace Orleans.Runtime
     /// </summary>
     internal class AssemblyProcessor : IDisposable
     {
+        private readonly ConcurrentBag<Assembly> pendingAssemblies = new ConcurrentBag<Assembly>();
+
         /// <summary>
         /// The collection of assemblies which have already been processed.
         /// </summary>
@@ -69,42 +73,20 @@ namespace Orleans.Runtime
                 }
 
                 // load the code generator before intercepting assembly loading
-                CodeGeneratorManager.Initialize(); 
+                CodeGeneratorManager.Initialize();
 
-                // initialize serialization for all assemblies to be loaded.
                 AppDomain.CurrentDomain.AssemblyLoad += this.OnAssemblyLoad;
 
-                ICollection<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-                // initialize serialization for already loaded assemblies.
-                var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssemblies(assemblies);
-                assemblies = assemblies.Union(generated).ToList();
-
-                var serializerFeature = new OrleansSerializationFeature();
-                var grainInvokerFeature = new GrainInvokerFeature();
-                var grainReferenceFeature = new GrainReferenceFeature();
-
-                var serializerFeatureProvider = new OrleansSerializationFeatureProvider();
-                var grainInvokerFeatureProvider = new GrainInvokerFeatureProvider();
-                var grainReferenceFeatureProvider = new GrainReferenceFeatureProvider();
-
-                var types = assemblies.SelectMany(asm => TypeUtils.GetDefinedTypes(asm, logger)).ToList();
-
-                serializerFeatureProvider.PopulateFeature(types, serializerFeature);
-                grainInvokerFeatureProvider.PopulateFeature(types, grainInvokerFeature);
-                grainReferenceFeatureProvider.PopulateFeature(types, grainReferenceFeature);
-
-                this.typeCache.RegisterGrainInvokers(grainInvokerFeature);
-                this.typeCache.RegisterGrainReferences(grainReferenceFeature);
-
-                SerializationManager.Register(serializerFeature);
-                //foreach (var asm in assemblies)
-                //{
-                //    ProcessAssembly(asm);
-                //}
+                // initialize discovery for already loaded assemblies.
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    this.pendingAssemblies.Add(assembly);
+                }
 
                 this.initialized = true;
             }
+
+            TryProcessPendingAssemblies();
         }
 
         /// <summary>
@@ -114,67 +96,90 @@ namespace Orleans.Runtime
         /// <param name="args">The event arguments.</param>
         private void OnAssemblyLoad(object sender, AssemblyLoadEventArgs args)
         {
-            this.ProcessAssembly(args.LoadedAssembly);
-        }
-
-        /// <summary>
-        /// Processes the provided assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly to process.</param>
-        private void ProcessAssembly(Assembly assembly)
-        {
-            string assemblyName = assembly.GetName().Name;
-            if (this.logger.IsVerbose3)
-            {
-                this.logger.Verbose3("Processing assembly {0}", assemblyName);
-            }
-
 #if !NETSTANDARD
             // If the assembly is loaded for reflection only avoid processing it.
-            if (assembly.ReflectionOnly)
+            if (args.LoadedAssembly.ReflectionOnly)
             {
                 return;
             }
 #endif
-            // Don't bother re-processing an assembly we've already scanned
-            lock (this.processedAssemblies)
+            this.pendingAssemblies.Add(args.LoadedAssembly);
+            this.TryProcessPendingAssemblies();
+        }
+
+        private void TryProcessPendingAssemblies()
+        {
+            if (!Monitor.TryEnter(this.processedAssemblies))
+                return;
+
+            var serializerFeature = new OrleansSerializationFeature();
+            var grainInvokerFeature = new GrainInvokerFeature();
+            var grainReferenceFeature = new GrainReferenceFeature();
+
+            var serializerFeatureProvider = new OrleansSerializationFeatureProvider();
+            var grainInvokerFeatureProvider = new GrainInvokerFeatureProvider();
+            var grainReferenceFeatureProvider = new GrainReferenceFeatureProvider();
+
+            try
             {
-                if (!this.processedAssemblies.Add(assembly))
+                List<Assembly> scannedAssembliesThisBatch = new List<Assembly>();
+
+                while (!this.pendingAssemblies.IsEmpty)
                 {
-                    return;
-                }
-            }
-
-            // If the assembly does not reference Orleans, avoid generating code for it.
-            if (TypeUtils.IsOrleansOrReferencesOrleans(assembly))
-            {
-                // Code generation occurs in a self-contained assembly, so invoke it separately.
-                CodeGeneratorManager.GenerateAndCacheCodeForAssembly(assembly);
-            }
-
-            // Process each type in the assembly.
-            var assemblyTypes = TypeUtils.GetDefinedTypes(assembly, this.logger).ToArray();
-
-            // Process each type in the assembly.
-            foreach (TypeInfo typeInfo in assemblyTypes)
-            {
-                try
-                {
-                    var type = typeInfo.AsType();
-                    string typeName = typeInfo.FullName;
-                    if (this.logger.IsVerbose3)
+                    List<Assembly> assembliesToScan = new List<Assembly>();
+                    Assembly assembly;
+                    while (pendingAssemblies.TryTake(out assembly))
                     {
-                        this.logger.Verbose3("Processing type {0}", typeName);
+                        if (!this.processedAssemblies.Contains(assembly) && !scannedAssembliesThisBatch.Contains(assembly))
+                        {
+                            assembliesToScan.Add(assembly);
+                        }
                     }
 
-                    //SerializationManager.FindSerializationInfo(type);
-    
-                    this.typeCache.FindSupportClasses(type);
+                    if (assembliesToScan.Count > 0)
+                    {
+                        var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssemblies(assembliesToScan);
+                        assembliesToScan = assembliesToScan.Union(generated).ToList();
+
+                        var types = assembliesToScan.SelectMany(asm => TypeUtils.GetDefinedTypes(asm, logger)).ToList();
+
+                        serializerFeatureProvider.PopulateFeature(types, serializerFeature);
+                        grainInvokerFeatureProvider.PopulateFeature(types, grainInvokerFeature);
+                        grainReferenceFeatureProvider.PopulateFeature(types, grainReferenceFeature);
+
+                        scannedAssembliesThisBatch.AddRange(assembliesToScan);
+
+                        // since the act of discovering could trigger more assembly loading, continue discovering
+                    }
                 }
-                catch (Exception exception)
+
+                if (scannedAssembliesThisBatch.Count > 0)
                 {
-                    this.logger.Error(ErrorCode.SerMgr_TypeRegistrationFailure, "Failed to load type " + typeInfo.FullName + " in assembly " + assembly.FullName + ".", exception);
+
+                    this.typeCache.RegisterGrainInvokers(grainInvokerFeature);
+                    this.typeCache.RegisterGrainReferences(grainReferenceFeature);
+
+                    SerializationManager.Register(serializerFeature);
+
+                    foreach (var assembly in scannedAssembliesThisBatch)
+                    {
+                        this.processedAssemblies.Add(assembly);
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                this.logger.Error(ErrorCode.Loader_AssemblyInspectError, "Failed to inspect assembly types. Exception: {0}.", exception);
+            }
+            finally
+            {
+                Monitor.Exit(this.processedAssemblies);
+            }
+
+            // re-check one last time after the lock was released, since there could have been a race condition
+            if (!this.pendingAssemblies.IsEmpty)
+            {
+                TryProcessPendingAssemblies();
             }
         }
 
