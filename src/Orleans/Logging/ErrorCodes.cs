@@ -1074,6 +1074,7 @@ namespace Orleans
         CodeGenIgnoringTypes                = CodeGenBase + 5,
         CodeGenDllMissing                   = CodeGenBase + 6,
         CodeGenSystemTypeRequiresSerializer = CodeGenBase + 7,
+        CodeGenRuntimeCompilationFailed     = CodeGenBase + 8,
 
         MultiClusterNetworkBase = Runtime + 3900,
         MultiClusterNetwork_Starting = MultiClusterNetworkBase + 1,

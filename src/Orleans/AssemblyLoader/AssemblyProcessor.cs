@@ -26,7 +26,7 @@ namespace Orleans.Runtime
         /// The logger.
         /// </summary>
         private readonly Logger logger;
-        
+
         /// <summary>
         /// The initialization lock.
         /// </summary>
@@ -103,7 +103,10 @@ namespace Orleans.Runtime
             }
 #endif
             this.pendingAssemblies.Add(args.LoadedAssembly);
-            this.ProcessPendingAssemblies();
+            if (Volatile.Read(ref this.initialized))
+            {
+                this.ProcessPendingAssemblies();
+            }
         }
 
         private void ProcessPendingAssemblies()
@@ -111,16 +114,16 @@ namespace Orleans.Runtime
             if (!Monitor.TryEnter(this.processedAssemblies))
                 return;
 
-            var serializerFeature = new OrleansSerializationFeature();
-            var grainInvokerFeature = new GrainInvokerFeature();
-            var grainReferenceFeature = new GrainReferenceFeature();
-
-            var serializerFeatureProvider = new OrleansSerializationFeatureProvider();
-            var grainInvokerFeatureProvider = new GrainInvokerFeatureProvider();
-            var grainReferenceFeatureProvider = new GrainReferenceFeatureProvider();
-
             try
             {
+                var serializerFeature = new OrleansSerializationFeature();
+                var grainInvokerFeature = new GrainInvokerFeature();
+                var grainReferenceFeature = new GrainReferenceFeature();
+
+                var serializerFeatureProvider = new OrleansSerializationFeatureProvider();
+                var grainInvokerFeatureProvider = new GrainInvokerFeatureProvider();
+                var grainReferenceFeatureProvider = new GrainReferenceFeatureProvider();
+
                 List<Assembly> scannedAssembliesThisBatch = new List<Assembly>();
 
                 while (!this.pendingAssemblies.IsEmpty)
@@ -129,7 +132,8 @@ namespace Orleans.Runtime
                     Assembly assembly;
                     while (pendingAssemblies.TryTake(out assembly))
                     {
-                        if (!this.processedAssemblies.Contains(assembly) && !scannedAssembliesThisBatch.Contains(assembly))
+                        if (!this.processedAssemblies.Contains(assembly) &&
+                            !scannedAssembliesThisBatch.Contains(assembly))
                         {
                             assembliesToScan.Add(assembly);
                         }
@@ -137,8 +141,15 @@ namespace Orleans.Runtime
 
                     if (assembliesToScan.Count > 0)
                     {
-                        var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssemblies(assembliesToScan);
-                        assembliesToScan = assembliesToScan.Union(generated).ToList();
+                        try
+                        {
+                            var generated = CodeGeneratorManager.GenerateAndCacheCodeForAssemblies(assembliesToScan);
+                            assembliesToScan = assembliesToScan.Union(generated).ToList();
+                        }
+                        catch (Exception exception)
+                        {
+                            this.logger.Error(ErrorCode.CodeGenRuntimeCompilationFailed, $"Failed to do runtime code generation for assemblies {string.Join(", ", assembliesToScan.Select(a => a.GetName().Name))}", exception);
+                        }
 
                         var types = assembliesToScan.SelectMany(asm => TypeUtils.GetDefinedTypes(asm, logger)).ToList();
 
@@ -168,7 +179,7 @@ namespace Orleans.Runtime
             }
             catch (Exception exception)
             {
-                this.logger.Error(ErrorCode.Loader_AssemblyInspectError, "Failed to inspect assembly types. Exception: {0}.", exception);
+                this.logger.Error(ErrorCode.Loader_AssemblyInspectError, "Failed to inspect assembly types.", exception);
             }
             finally
             {

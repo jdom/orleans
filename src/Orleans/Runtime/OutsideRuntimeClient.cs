@@ -138,7 +138,6 @@ namespace Orleans
             if (!LogManager.IsInitialized) LogManager.Initialize(config);
             StatisticsCollector.Initialize(config);
             SerializationManager.Initialize(cfg.SerializationProviders, cfg.FallbackSerializationProvider);
-            this.assemblyProcessor.Initialize();
 
             logger = LogManager.GetLogger("OutsideRuntimeClient", LoggerType.Runtime);
             appLogger = LogManager.GetLogger("Application", LoggerType.Application);
@@ -149,6 +148,7 @@ namespace Orleans
             try
             {
                 LoadAdditionalAssemblies();
+                this.assemblyProcessor.Initialize();
 
                 callbacks = new ConcurrentDictionary<CorrelationId, CallbackData>();
                 localObjects = new ConcurrentDictionary<GuidId, LocalObjectData>();
