@@ -184,7 +184,7 @@ namespace Orleans.Serialization
 #endif
 
             var feature = new OrleansSerializationFeature();
-            new OrleansSerializationFeatureProvider().PopulateFeature(new[] { typeof(BuiltInSerializers).GetTypeInfo() }, feature);
+            new OrleansSerializationFeatureProvider().PopulateFeature(new[] { typeof(BuiltInTypes).GetTypeInfo() }, feature);
             Register(feature);
         }
 
