@@ -86,7 +86,7 @@ namespace Orleans.Runtime
                 this.initialized = true;
             }
 
-            TryProcessPendingAssemblies();
+            ProcessPendingAssemblies();
         }
 
         /// <summary>
@@ -104,10 +104,10 @@ namespace Orleans.Runtime
             }
 #endif
             this.pendingAssemblies.Add(args.LoadedAssembly);
-            this.TryProcessPendingAssemblies();
+            this.ProcessPendingAssemblies();
         }
 
-        private void TryProcessPendingAssemblies()
+        private void ProcessPendingAssemblies()
         {
             if (!Monitor.TryEnter(this.processedAssemblies))
                 return;
@@ -179,7 +179,7 @@ namespace Orleans.Runtime
             // re-check one last time after the lock was released, since there could have been a race condition
             if (!this.pendingAssemblies.IsEmpty)
             {
-                TryProcessPendingAssemblies();
+                ProcessPendingAssemblies();
             }
         }
 

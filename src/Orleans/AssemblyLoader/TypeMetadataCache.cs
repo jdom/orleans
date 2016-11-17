@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
-
 using Orleans.CodeGeneration;
 using Orleans.Core;
 
@@ -21,22 +20,6 @@ namespace Orleans.Runtime
         /// The mapping between grain types and the corresponding type for the <see cref="GrainReference"/> implementation.
         /// </summary>
         private readonly ConcurrentDictionary<Type, Type> grainToReferenceMapping = new ConcurrentDictionary<Type, Type>();
-
-        public void FindSupportClasses(Type type)
-        {
-            var typeInfo = type.GetTypeInfo();
-            var invokerAttr = typeInfo.GetCustomAttribute<MethodInvokerAttribute>(false);
-            if (invokerAttr != null)
-            {
-                this.grainToInvokerMapping.TryAdd(invokerAttr.TargetType, type);
-            }
-
-            var grainReferenceAttr = typeInfo.GetCustomAttribute<GrainReferenceAttribute>(false);
-            if (grainReferenceAttr != null)
-            {
-                this.grainToReferenceMapping.TryAdd(grainReferenceAttr.TargetType, type);
-            }
-        }
 
         public void RegisterGrainInvokers(GrainInvokerFeature feature)
         {
