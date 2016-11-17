@@ -1155,12 +1155,6 @@ namespace Orleans.Runtime
                 return headers;
             }
 
-            static HeadersContainer()
-            {
-                Register();
-            }
-
-
             [Orleans.CodeGeneration.CopierMethodAttribute]
             public static System.Object DeepCopier(System.Object original)
             {
@@ -1399,11 +1393,6 @@ namespace Orleans.Runtime
             {
                 var des = SerializationManager.GetDeserializer(t);
                 return des.Invoke(t, stream);
-            }
-
-            public static void Register()
-            {
-                 SerializationManager.Register(typeof(HeadersContainer), DeepCopier, Serializer, Deserializer);
             }
         }
     }

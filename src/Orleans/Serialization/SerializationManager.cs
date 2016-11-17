@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Text;
-using Orleans.CodeGeneration;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Serialization.Registration;
@@ -184,15 +183,36 @@ namespace Orleans.Serialization
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveEventHandler;
 #endif
 
-            foreach (var serializerRegistration in BuiltInSerializers.GetSerializerRegistrations())
-            {
-                Register(serializerRegistration.Key, serializerRegistration.Value.DeepCopy, serializerRegistration.Value.Serialize, serializerRegistration.Value.Deserialize, true);
-            }
+            var feature = new OrleansSerializationFeature();
+            new OrleansSerializationFeatureProvider().PopulateFeature(new[] { typeof(BuiltInSerializers).GetTypeInfo() }, feature);
+            Register(feature);
         }
 
-#endregion
+        #endregion
 
-#region Serialization info registration
+        #region Serialization info registration
+
+        /// <summary>
+        /// Register a set of types with a serialization system.
+        /// </summary>
+        /// <param name="orleansSerializationFeature">The serialization feature to register in the serializer</param>
+        public static void Register(OrleansSerializationFeature orleansSerializationFeature)
+        {
+            foreach (var serializerTypeMap in orleansSerializationFeature.SerializerTypes)
+            {
+                Register(serializerTypeMap.Key, serializerTypeMap.Value.AsType());
+            }
+
+            foreach (var serializerMethodsMap in orleansSerializationFeature.SerializerMethods)
+            {
+                Register(serializerMethodsMap.Key, serializerMethodsMap.Value, true);
+            }
+
+            foreach (var friendlyNameMap in orleansSerializationFeature.FriendlyNameMap)
+            {
+                RegisterTypeName(friendlyNameMap.Value, friendlyNameMap.Key);
+            }
+        }
 
         /// <summary>
         /// Register a Type with the serialization system to use the specified DeepCopier, Serializer and Deserializer functions.
@@ -204,6 +224,18 @@ namespace Orleans.Serialization
         public static void Register(Type t, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser)
         {
             Register(t, cop, ser, deser, false);
+        }
+
+        /// <summary>
+        /// Register a Type with the serialization system to use the specified DeepCopier, Serializer and Deserializer functions.
+        /// If <c>forcOverride == true</c> then this definition will replace any any previous functions registered for this Type.
+        /// </summary>
+        /// <param name="t">Type to be registered.</param>
+        /// <param name="serializerMethods">The serializer methods for this type.</param>
+        /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
+        public static void Register(Type t, SerializerMethods serializerMethods, bool forceOverride)
+        {
+            Register(t, serializerMethods.DeepCopy, serializerMethods.Serialize, serializerMethods.Deserialize, forceOverride);
         }
 
         /// <summary>
@@ -290,12 +322,10 @@ namespace Orleans.Serialization
         }
 
         /// <summary>
-        /// This method registers a type that has no specific serializer or deserializer.
-        /// For instance, abstract base types and interfaces need to be registered this way.
+        /// This method registers a type  with the paresable type name.
         /// </summary>
         /// <param name="type">Type to be registered.</param>
-        /// <param name="registerAncestors">If true, also registers all the ancestors for this type.</param>
-        public static void RegisterTypeName(Type type, bool registerAncestors = true)
+        private static void RegisterTypeName(Type type)
         {
             string name = type.OrleansTypeKeyString();
 
@@ -307,32 +337,34 @@ namespace Orleans.Serialization
                 }
 
                 registeredTypes.Add(type);
-                lock (types)
-                {
-                    types[name] = type;
-                }
+                RegisterTypeName(type, name);
             }
             if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, name);
 
-            if (registerAncestors)
+            // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
+            // but dynamically of this (implementation) type
+            foreach (var iface in type.GetInterfaces())
             {
-                // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
-                // but dynamically of this (implementation) type
-                foreach (var iface in type.GetInterfaces())
-                {
-                    RegisterTypeName(iface);
-                }
+                RegisterTypeName(iface);
+            }
 
-                // Do the same for abstract base classes
-                var baseType = type.GetTypeInfo().BaseType;
-                while (baseType != null)
-                {
-                    var baseTypeInfo = baseType.GetTypeInfo();
-                    if (baseTypeInfo.IsAbstract)
-                        RegisterTypeName(baseType);
+            // Do the same for abstract base classes
+            var baseType = type.GetTypeInfo().BaseType;
+            while (baseType != null)
+            {
+                var baseTypeInfo = baseType.GetTypeInfo();
+                if (baseTypeInfo.IsAbstract)
+                    RegisterTypeName(baseType);
 
-                    baseType = baseTypeInfo.BaseType;
-                }
+                baseType = baseTypeInfo.BaseType;
+            }
+        }
+
+        private static void RegisterTypeName(Type type, string name)
+        {
+            lock (types)
+            {
+                types[name] = type;
             }
         }
 
@@ -341,7 +373,7 @@ namespace Orleans.Serialization
         /// </summary>
         /// <param name="type">The type serialized by the provided serializer type.</param>
         /// <param name="serializerType">The type containing serialization methods for <paramref name="type"/>.</param>
-        public static void Register(Type type, Type serializerType)
+        private static void Register(Type type, Type serializerType)
         {
             try
             {
@@ -368,16 +400,8 @@ namespace Orleans.Serialization
                 }
                 else
                 {
-                    MethodInfo copier;
-                    MethodInfo serializer;
-                    MethodInfo deserializer;
-                    GetSerializationMethods(serializerType, out copier, out serializer, out deserializer);
-                    Register(
-                        type,
-                        (SerializerMethods.DeepCopier)copier.CreateDelegate(typeof(SerializerMethods.DeepCopier)),
-                        (SerializerMethods.Serializer)serializer.CreateDelegate(typeof(SerializerMethods.Serializer)),
-                        (SerializerMethods.Deserializer)deserializer.CreateDelegate(typeof(SerializerMethods.Deserializer)),
-                        true);
+                    var serializerMethods = OrleansSerializationFeatureProvider.GetSerializerMethods(serializerType);
+                    Register(type, serializerMethods, true);
                 }
             }
             catch (ArgumentException)
@@ -392,10 +416,6 @@ namespace Orleans.Serialization
 
         private static SerializerMethods RegisterConcreteSerializer(Type concreteType, Type genericSerializerType)
         {
-            MethodInfo copier;
-            MethodInfo serializer;
-            MethodInfo deserializer;
-
             var concreteSerializerType = genericSerializerType.MakeGenericType(concreteType.GetGenericArguments());
             var typeAlreadyRegistered = false;
             
@@ -412,35 +432,9 @@ namespace Orleans.Serialization
                     GetDeserializer(concreteSerializerType));
             }
 
-            GetSerializationMethods(concreteSerializerType, out copier, out serializer, out deserializer);
-            var concreteCopier = (SerializerMethods.DeepCopier)copier.CreateDelegate(typeof(SerializerMethods.DeepCopier));
-            var concreteSerializer = (SerializerMethods.Serializer)serializer.CreateDelegate(typeof(SerializerMethods.Serializer));
-            var concreteDeserializer = (SerializerMethods.Deserializer)deserializer.CreateDelegate(typeof(SerializerMethods.Deserializer));
-            Register(concreteType, concreteCopier, concreteSerializer, concreteDeserializer, true);
-
-            return new SerializerMethods(concreteCopier, concreteSerializer, concreteDeserializer);
-        }
-
-        private static void GetSerializationMethods(Type type, out MethodInfo copier, out MethodInfo serializer, out MethodInfo deserializer)
-        {
-            copier = null;
-            serializer = null;
-            deserializer = null;
-            foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                if (method.GetCustomAttributes(typeof(CopierMethodAttribute), true).Any())
-                {
-                    copier = method;
-                }
-                else if (method.GetCustomAttributes(typeof(SerializerMethodAttribute), true).Any())
-                {
-                    serializer = method;
-                }
-                else if (method.GetCustomAttributes(typeof(DeserializerMethodAttribute), true).Any())
-                {
-                    deserializer = method;
-                }
-            }
+            var serializerMethods = OrleansSerializationFeatureProvider.GetSerializerMethods(concreteSerializerType);
+            Register(concreteType, serializerMethods, true);
+            return serializerMethods;
         }
 
 #endregion
@@ -1739,25 +1733,6 @@ namespace Orleans.Serialization
                         logger.Error(ErrorCode.SerMgr_ErrorLoadingAssemblyTypes, "Failed to create instance of type: " + typeInfo.FullName, exception);
                     }
                 });
-        }
-
-        public static void Register(OrleansSerializationFeature orleansSerializationFeature)
-        {
-            foreach (var serializerTypeMap in orleansSerializationFeature.SerializerTypes)
-            {
-                Register(serializerTypeMap.Key, serializerTypeMap.Value.AsType());
-            }
-
-            foreach (var serializerMethodsMap in orleansSerializationFeature.SerializerMethods)
-            {
-                Register(serializerMethodsMap.Key, serializerMethodsMap.Value.DeepCopy, serializerMethodsMap.Value.Serialize, serializerMethodsMap.Value.Deserialize, true);
-            }
-
-            foreach (var friendlyNameMap in orleansSerializationFeature.FriendlyNameMap)
-            {
-                // TODO: avoid this
-                RegisterTypeName(friendlyNameMap.Value, false);
-            }
         }
     }
 }

@@ -1,3 +1,5 @@
+using Orleans.Serialization.Registration;
+
 namespace UnitTests.Serialization
 {
     using System;
@@ -17,7 +19,13 @@ namespace UnitTests.Serialization
             FakeSerializer2.Reset();
             SerializationTestEnvironment.Initialize(new List<TypeInfo> { typeof(FakeSerializer1).GetTypeInfo(), typeof(FakeSerializer2).GetTypeInfo() }, null);
 
-            SerializationManager.Register(typeof(FakeTypeToSerialize), typeof(FakeTypeToSerialize));
+            SerializationManager.Register(new OrleansSerializationFeature
+            {
+                SerializerTypes =
+                {
+                    { typeof(FakeTypeToSerialize), typeof(FakeTypeToSerialize).GetTypeInfo() }
+                }
+            });
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional"), TestCategory("Serialization")]

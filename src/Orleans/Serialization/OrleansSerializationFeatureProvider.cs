@@ -51,7 +51,7 @@ namespace Orleans.Serialization.Registration
         /// <summary>
         /// Looks for types with marked serializer and deserializer methods, and registers them if necessary.
         /// </summary>
-        internal void FindSerializationInfo(Type type, OrleansSerializationFeature feature)
+        private void FindSerializationInfo(Type type, OrleansSerializationFeature feature)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
             var assembly = typeInfo.Assembly;
@@ -291,7 +291,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
-        public void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature)
+        private void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature)
         {
             Register(type, cop, ser, deser, feature, false);
         }
@@ -305,7 +305,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        public void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride)
+        private void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride)
         {
             Register(type, new SerializerMethods(cop, ser, deser), feature, forceOverride);
         }
@@ -317,7 +317,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="type">Type to be registered.</param>
         /// <param name="serializerMethods">Serializer and copier methods for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        public void Register(Type type, SerializerMethods serializerMethods, OrleansSerializationFeature feature, bool forceOverride)
+        private void Register(Type type, SerializerMethods serializerMethods, OrleansSerializationFeature feature, bool forceOverride)
         {
             if ((serializerMethods.Serialize == null) && (serializerMethods.Deserialize != null))
             {
@@ -353,7 +353,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="type">The type serialized by the provided serializer type.</param>
         /// <param name="serializerType">The type containing serialization methods for <paramref name="type"/>.</param>
         /// <param name="feature">The feature instance to populate.</param>
-        public void Register(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
+        private void Register(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
         {
             feature.SerializerTypes[type] = serializerType;
             RegisterFriendlyNames(type, feature);
@@ -387,7 +387,7 @@ namespace Orleans.Serialization.Registration
             }
         }
 
-        private static SerializerMethods GetSerializerMethods(Type type)
+        internal static SerializerMethods GetSerializerMethods(Type type)
         {
             MethodInfo copier = null;
             MethodInfo serializer = null;
@@ -414,21 +414,6 @@ namespace Orleans.Serialization.Registration
                 (SerializerMethods.DeepCopier)copier?.CreateDelegate(typeof(SerializerMethods.DeepCopier)),
                 (SerializerMethods.Serializer)serializer?.CreateDelegate(typeof(SerializerMethods.Serializer)),
                 (SerializerMethods.Deserializer)deserializer?.CreateDelegate(typeof(SerializerMethods.Deserializer)));
-        }
-
-        internal SerializerMethods FindExistingSerializerMethods(Type type, OrleansSerializationFeature feature)
-        {
-            // TODO: this was using RuntimeTypeHandle, is it equivalent?
-            SerializerMethods serializerMethods;
-            if (feature.SerializerMethods.TryGetValue(type, out serializerMethods))
-                return serializerMethods;
-
-            var typeInfo = type.GetTypeInfo();
-            if (typeInfo.IsGenericType)
-                if (feature.SerializerMethods.TryGetValue(typeInfo.GetGenericTypeDefinition(), out serializerMethods))
-                    return serializerMethods;
-
-            return default(SerializerMethods);
         }
 
         /// <summary>
