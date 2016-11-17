@@ -14,7 +14,7 @@ using Orleans.Serialization.Registration;
 namespace Orleans.Serialization
 {
     [RegisterSerializer]
-    internal static class BuiltInTypes
+    internal class BuiltInTypes
     {
         #region Constants
 
@@ -1946,115 +1946,95 @@ namespace Orleans.Serialization
 
         #endregion
 
-        public static IEnumerable<KeyValuePair<Type, SerializerMethods>> GetSerializerRegistrations()
+        public static void AddSerializerRegistrations(OrleansSerializationFeature feature)
         {
-            return new[]
-            {
-                // Built-in handlers: Tuples
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<,,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<,,,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Tuple<,,,,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple)),
+            // Built-in handlers: Tuples
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<,,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<,,,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Tuple<,,,,,,>), new SerializerMethods(DeepCopyTuple, SerializeTuple, DeserializeTuple), feature, true);
 
-                // Built-in handlers: enumerables
-                new KeyValuePair<Type, SerializerMethods>(typeof(List<>), new SerializerMethods(CopyGenericList, SerializeGenericList, DeserializeGenericList)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ReadOnlyCollection<>), new SerializerMethods(CopyGenericReadOnlyCollection, SerializeGenericReadOnlyCollection, DeserializeGenericReadOnlyCollection)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(LinkedList<>), new SerializerMethods(CopyGenericLinkedList, SerializeGenericLinkedList, DeserializeGenericLinkedList)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(HashSet<>), new SerializerMethods(CopyGenericHashSet, SerializeGenericHashSet, DeserializeGenericHashSet)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(SortedSet<>), new SerializerMethods(CopyGenericSortedSet, SerializeGenericSortedSet, DeserializeGenericSortedSet)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Stack<>), new SerializerMethods(CopyGenericStack, SerializeGenericStack, DeserializeGenericStack)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Queue<>), new SerializerMethods(CopyGenericQueue, SerializeGenericQueue, DeserializeGenericQueue)),
+            // Built-in handlers: enumerables
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(List<>), new SerializerMethods(CopyGenericList, SerializeGenericList, DeserializeGenericList), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ReadOnlyCollection<>), new SerializerMethods(CopyGenericReadOnlyCollection, SerializeGenericReadOnlyCollection, DeserializeGenericReadOnlyCollection), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(LinkedList<>), new SerializerMethods(CopyGenericLinkedList, SerializeGenericLinkedList, DeserializeGenericLinkedList), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(HashSet<>), new SerializerMethods(CopyGenericHashSet, SerializeGenericHashSet, DeserializeGenericHashSet), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(SortedSet<>), new SerializerMethods(CopyGenericSortedSet, SerializeGenericSortedSet, DeserializeGenericSortedSet), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Stack<>), new SerializerMethods(CopyGenericStack, SerializeGenericStack, DeserializeGenericStack), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Queue<>), new SerializerMethods(CopyGenericQueue, SerializeGenericQueue, DeserializeGenericQueue), feature, true);
 
-                // Built-in handlers: dictionaries
-                new KeyValuePair<Type, SerializerMethods>(typeof(ReadOnlyDictionary<,>), new SerializerMethods(CopyGenericReadOnlyDictionary, SerializeGenericReadOnlyDictionary, DeserializeGenericReadOnlyDictionary)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Dictionary<,>), new SerializerMethods(CopyGenericDictionary, SerializeGenericDictionary, DeserializeGenericDictionary)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Dictionary<string, object>), new SerializerMethods(CopyStringObjectDictionary, SerializeStringObjectDictionary, DeserializeStringObjectDictionary)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(SortedDictionary<,>), new SerializerMethods(CopyGenericSortedDictionary, SerializeGenericSortedDictionary, DeserializeGenericSortedDictionary)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(SortedList<,>), new SerializerMethods(CopyGenericSortedList, SerializeGenericSortedList, DeserializeGenericSortedList)),
+            // Built-in handlers: dictionaries
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ReadOnlyDictionary<,>), new SerializerMethods(CopyGenericReadOnlyDictionary, SerializeGenericReadOnlyDictionary, DeserializeGenericReadOnlyDictionary), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Dictionary<,>), new SerializerMethods(CopyGenericDictionary, SerializeGenericDictionary, DeserializeGenericDictionary), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Dictionary<string, object>), new SerializerMethods(CopyStringObjectDictionary, SerializeStringObjectDictionary, DeserializeStringObjectDictionary), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(SortedDictionary<,>), new SerializerMethods(CopyGenericSortedDictionary, SerializeGenericSortedDictionary, DeserializeGenericSortedDictionary), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(SortedList<,>), new SerializerMethods(CopyGenericSortedList, SerializeGenericSortedList, DeserializeGenericSortedList), feature, true);
 
-                // Built-in handlers: key-value pairs
-                new KeyValuePair<Type, SerializerMethods>(typeof(KeyValuePair<,>), new SerializerMethods(CopyGenericKeyValuePair, SerializeGenericKeyValuePair, DeserializeGenericKeyValuePair)),
+            // Built-in handlers: key-value pairs
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(KeyValuePair<,>), new SerializerMethods(CopyGenericKeyValuePair, SerializeGenericKeyValuePair, DeserializeGenericKeyValuePair), feature, true);
 
-                // Built-in handlers: nullables
-                new KeyValuePair<Type, SerializerMethods>(typeof(Nullable<>), new SerializerMethods(CopyGenericNullable, SerializeGenericNullable, DeserializeGenericNullable)),
+            // Built-in handlers: nullables
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Nullable<>), new SerializerMethods(CopyGenericNullable, SerializeGenericNullable, DeserializeGenericNullable), feature, true);
 
-                // Built-in handlers: Immutables
-                new KeyValuePair<Type, SerializerMethods>(typeof(Immutable<>), new SerializerMethods(CopyGenericImmutable, SerializeGenericImmutable, DeserializeGenericImmutable)),
+            // Built-in handlers: Immutables
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Immutable<>), new SerializerMethods(CopyGenericImmutable, SerializeGenericImmutable, DeserializeGenericImmutable), feature, true);
 
-                // Built-in handlers: Immutable collections
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableQueue<>), new SerializerMethods(CopyGenericImmutableQueue, SerializeGenericImmutableQueue, DeserializeGenericImmutableQueue)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableArray<>), new SerializerMethods(CopyGenericImmutableArray, SerializeGenericImmutableArray, DeserializeGenericImmutableArray)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableSortedDictionary<,>), new SerializerMethods(CopyGenericImmutableSortedDictionary, SerializeGenericImmutableSortedDictionary, DeserializeGenericImmutableSortedDictionary)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableSortedSet<>), new SerializerMethods(CopyGenericImmutableSortedSet, SerializeGenericImmutableSortedSet, DeserializeGenericImmutableSortedSet)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableHashSet<>), new SerializerMethods(CopyGenericImmutableHashSet, SerializeGenericImmutableHashSet, DeserializeGenericImmutableHashSet)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableDictionary<,>), new SerializerMethods(CopyGenericImmutableDictionary, SerializeGenericImmutableDictionary, DeserializeGenericImmutableDictionary)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ImmutableList<>), new SerializerMethods(CopyGenericImmutableList, SerializeGenericImmutableList, DeserializeGenericImmutableList)),
+            // Built-in handlers: Immutable collections
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableQueue<>), new SerializerMethods(CopyGenericImmutableQueue, SerializeGenericImmutableQueue, DeserializeGenericImmutableQueue), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableArray<>), new SerializerMethods(CopyGenericImmutableArray, SerializeGenericImmutableArray, DeserializeGenericImmutableArray), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableSortedDictionary<,>), new SerializerMethods(CopyGenericImmutableSortedDictionary, SerializeGenericImmutableSortedDictionary, DeserializeGenericImmutableSortedDictionary), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableSortedSet<>), new SerializerMethods(CopyGenericImmutableSortedSet, SerializeGenericImmutableSortedSet, DeserializeGenericImmutableSortedSet), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableHashSet<>), new SerializerMethods(CopyGenericImmutableHashSet, SerializeGenericImmutableHashSet, DeserializeGenericImmutableHashSet), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableDictionary<,>), new SerializerMethods(CopyGenericImmutableDictionary, SerializeGenericImmutableDictionary, DeserializeGenericImmutableDictionary), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ImmutableList<>), new SerializerMethods(CopyGenericImmutableList, SerializeGenericImmutableList, DeserializeGenericImmutableList), feature, true);
 
-                // Built-in handlers: random system types
-                new KeyValuePair<Type, SerializerMethods>(typeof(TimeSpan), new SerializerMethods(CopyTimeSpan, SerializeTimeSpan, DeserializeTimeSpan)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(DateTimeOffset), new SerializerMethods(CopyDateTimeOffset, SerializeDateTimeOffset, DeserializeDateTimeOffset)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Type), new SerializerMethods(CopyType, SerializeType, DeserializeType)),
-                // ReSharper disable PossibleMistakenCallToGetType.2
-                // RuntimeType is internal but can be obtained indirectly by calling GetType().
-                new KeyValuePair<Type, SerializerMethods>(typeof(object).GetType(), new SerializerMethods(CopyType, SerializeType, DeserializeType)),
-                // ReSharper restore PossibleMistakenCallToGetType.2
-                new KeyValuePair<Type, SerializerMethods>(typeof(Guid), new SerializerMethods(CopyGuid, SerializeGuid, DeserializeGuid)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(IPAddress), new SerializerMethods(CopyIPAddress, SerializeIPAddress, DeserializeIPAddress)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(IPEndPoint), new SerializerMethods(CopyIPEndPoint, SerializeIPEndPoint, DeserializeIPEndPoint)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Uri), new SerializerMethods(CopyUri, SerializeUri, DeserializeUri)),
+            // Built-in handlers: random system types
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(TimeSpan), new SerializerMethods(CopyTimeSpan, SerializeTimeSpan, DeserializeTimeSpan), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(DateTimeOffset), new SerializerMethods(CopyDateTimeOffset, SerializeDateTimeOffset, DeserializeDateTimeOffset), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Type), new SerializerMethods(CopyType, SerializeType, DeserializeType), feature, true);
+            // ReSharper disable PossibleMistakenCallToGetType.2
+            // RuntimeType is internal but can be obtained indirectly by calling GetType().
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(object).GetType(), new SerializerMethods(CopyType, SerializeType, DeserializeType), feature, true);
+            // ReSharper restore PossibleMistakenCallToGetType.2
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Guid), new SerializerMethods(CopyGuid, SerializeGuid, DeserializeGuid), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(IPAddress), new SerializerMethods(CopyIPAddress, SerializeIPAddress, DeserializeIPAddress), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(IPEndPoint), new SerializerMethods(CopyIPEndPoint, SerializeIPEndPoint, DeserializeIPEndPoint), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Uri), new SerializerMethods(CopyUri, SerializeUri, DeserializeUri), feature, true);
 
-                // Built-in handlers: Orleans internal types
-                new KeyValuePair<Type, SerializerMethods>(typeof(InvokeMethodRequest), new SerializerMethods(CopyInvokeMethodRequest, SerializeInvokeMethodRequest, DeserializeInvokeMethodRequest)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Response), new SerializerMethods(CopyOrleansResponse, SerializeOrleansResponse, DeserializeOrleansResponse)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ActivationId), new SerializerMethods(CopyActivationId, SerializeActivationId, DeserializeActivationId)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(GrainId), new SerializerMethods(CopyGrainId, SerializeGrainId, DeserializeGrainId)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ActivationAddress), new SerializerMethods(CopyActivationAddress, SerializeActivationAddress, DeserializeActivationAddress)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(CorrelationId), new SerializerMethods(CopyCorrelationId, SerializeCorrelationId, DeserializeCorrelationId)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(SiloAddress), new SerializerMethods(CopySiloAddress, SerializeSiloAddress, DeserializeSiloAddress)),
+            // Built-in handlers: Orleans internal types
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(InvokeMethodRequest), new SerializerMethods(CopyInvokeMethodRequest, SerializeInvokeMethodRequest, DeserializeInvokeMethodRequest), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(Response), new SerializerMethods(CopyOrleansResponse, SerializeOrleansResponse, DeserializeOrleansResponse), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ActivationId), new SerializerMethods(CopyActivationId, SerializeActivationId, DeserializeActivationId), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(GrainId), new SerializerMethods(CopyGrainId, SerializeGrainId, DeserializeGrainId), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(ActivationAddress), new SerializerMethods(CopyActivationAddress, SerializeActivationAddress, DeserializeActivationAddress), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(CorrelationId), new SerializerMethods(CopyCorrelationId, SerializeCorrelationId, DeserializeCorrelationId), feature, true);
+            OrleansSerializationFeatureProvider.AddRegistration(typeof(SiloAddress), new SerializerMethods(CopySiloAddress, SerializeSiloAddress, DeserializeSiloAddress), feature, true);
 
-                // Type names that we need to recognize for generic parameters
-                new KeyValuePair<Type, SerializerMethods>(typeof(bool), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(int), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(short), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(sbyte), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(long), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(uint), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ushort), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(byte), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ulong), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(float), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(double), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(decimal), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(string), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(char), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(DateTime), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(TimeSpan), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(object), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(IPAddress), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(IPEndPoint), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Guid), default(SerializerMethods)),
 
-                new KeyValuePair<Type, SerializerMethods>(typeof(GrainId), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ActivationId), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(SiloAddress), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(ActivationAddress), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(CorrelationId), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(InvokeMethodRequest), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Response), default(SerializerMethods)),
+            // Type names that we need to recognize for generic parameters
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(bool), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(int), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(short), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(sbyte), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(long), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(uint), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(ushort), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(byte), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(ulong), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(float), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(double), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(decimal), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(string), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(char), feature);
 
-                new KeyValuePair<Type, SerializerMethods>(typeof(IList<>), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(IDictionary<,>), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(IEnumerable<>), default(SerializerMethods)),
-
-                // Enum names we need to recognize
-                new KeyValuePair<Type, SerializerMethods>(typeof(Message.Categories), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Message.Directions), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Message.RejectionTypes), default(SerializerMethods)),
-                new KeyValuePair<Type, SerializerMethods>(typeof(Message.ResponseTypes), default(SerializerMethods)),
-            };
+            // Enum names we need to recognize
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.Categories), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.Directions), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.RejectionTypes), feature);
+            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.ResponseTypes), feature);
         }
     }
 }

@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using Orleans.CodeGeneration;
-using Orleans.Concurrency;
 using Orleans.Runtime;
 
 namespace Orleans.Serialization.Registration
@@ -65,7 +61,7 @@ namespace Orleans.Serialization.Registration
             {
                 if (typeInfo.IsEnum)
                 {
-                    RegisterFriendlyNames(type, feature);
+                    AddFriendlyNames(type, feature);
                 }
                 else if (!systemAssembly)
                 {
@@ -108,18 +104,14 @@ namespace Orleans.Serialization.Registration
                                     typeInfo.Name,
                                     assembly.GetName().Name);
 
-                            var getSerializerRegistrations = typeInfo.GetMethod("GetSerializerRegistrations", Type.EmptyTypes);
+                            var addSerializerRegistrations = typeInfo.GetMethod("AddSerializerRegistrations", new[] { typeof(OrleansSerializationFeature) });
                             //MethodInfo register; // temporary until codegen is fixed
-                            if (getSerializerRegistrations != null)
+                            if (addSerializerRegistrations != null)
                             {
                                 try
                                 {
-                                    if (getSerializerRegistrations.ContainsGenericParameters) throw new OrleansException($"Type serializer '{ getSerializerRegistrations.GetType().FullName}' contains generic parameters and can not be registered. Did you mean to provide a split your type serializer into a combination of nongeneric RegisterSerializerAttribute and generic SerializableAttribute classes?");
-                                    var registrations = (IEnumerable<KeyValuePair<Type, SerializerMethods>>)getSerializerRegistrations.Invoke(null, Type.EmptyTypes);
-                                    foreach (var registration in registrations)
-                                    {
-                                        AddRegistration(registration.Key, registration.Value, feature, false);
-                                    }
+                                    if (addSerializerRegistrations.ContainsGenericParameters) throw new OrleansException($"Type serializer '{ addSerializerRegistrations.GetType().FullName}' contains generic parameters and can not be registered. Did you mean to provide a split your type serializer into a combination of nongeneric RegisterSerializerAttribute and generic SerializableAttribute classes?");
+                                    addSerializerRegistrations.Invoke(null, new object[] { feature });
                                 }
                                 catch (OrleansException ex)
                                 {
@@ -254,18 +246,18 @@ namespace Orleans.Serialization.Registration
                                         break;
                                     }
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) RegisterFriendlyNames(type, feature);
+                                if (comparer && (type.GetFields().Length == 0)) AddFriendlyNames(type, feature);
                             }
                             else
                             {
-                                RegisterFriendlyNames(type, feature);
+                                AddFriendlyNames(type, feature);
                             }
                         }
                     }
                     else
                     {
                         // type is abstract, an interface, system-defined, or its namespace is null
-                        RegisterFriendlyNames(type, feature);
+                        AddFriendlyNames(type, feature);
                     }
                 }
             }
@@ -294,7 +286,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
         /// <param name="feature">The feature to populate</param>
-        private void AddRegistration(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride = false)
+        private static void AddRegistration(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride = false)
         {
             AddRegistration(type, new SerializerMethods(cop, ser, deser), feature, forceOverride);
         }
@@ -307,7 +299,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="serializerMethods">Serializer and copier methods for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
         /// <param name="feature">The feature to populate</param>
-        private void AddRegistration(Type type, SerializerMethods serializerMethods, OrleansSerializationFeature feature, bool forceOverride)
+        public static void AddRegistration(Type type, SerializerMethods serializerMethods, OrleansSerializationFeature feature, bool forceOverride = false)
         {
             if ((serializerMethods.Serialize == null) && (serializerMethods.Deserialize != null))
             {
@@ -336,8 +328,7 @@ namespace Orleans.Serialization.Registration
             {
                 feature.SerializerMethods[type] = serializerMethods;
             }
-            RegisterFriendlyNames(type, feature);
-            if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, type.OrleansTypeKeyString());
+            AddFriendlyNames(type, feature);
         }
 
         /// <summary>
@@ -346,13 +337,18 @@ namespace Orleans.Serialization.Registration
         /// <param name="type">The type serialized by the provided serializer type.</param>
         /// <param name="serializerType">The type containing serialization methods for <paramref name="type"/>.</param>
         /// <param name="feature">The feature instance to populate.</param>
-        private void AddRegistration(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
+        public static void AddRegistration(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
         {
             feature.SerializerTypes[type] = serializerType;
-            RegisterFriendlyNames(type, feature);
+            AddFriendlyNames(type, feature);
         }
 
-        private static void RegisterFriendlyNames(Type type, OrleansSerializationFeature feature)
+        /// <summary>
+        /// Adds friendly names to be recognized by the serialization system.
+        /// </summary>
+        /// <param name="type">The type to register</param>
+        /// <param name="feature">The feature instance to populate.</param>
+        public static void AddFriendlyNames(Type type, OrleansSerializationFeature feature)
         {
             string name = type.OrleansTypeKeyString();
             if (!feature.FriendlyNameMap.ContainsKey(name))
@@ -363,7 +359,7 @@ namespace Orleans.Serialization.Registration
                 // but dynamically of this (implementation) type
                 foreach (var iface in type.GetInterfaces())
                 {
-                    RegisterFriendlyNames(iface, feature);
+                    AddFriendlyNames(iface, feature);
                 }
                 // Do the same for abstract base classes
                 var baseType = type.GetTypeInfo().BaseType;
@@ -372,7 +368,7 @@ namespace Orleans.Serialization.Registration
                     var baseTypeInfo = baseType.GetTypeInfo();
                     if (baseTypeInfo.IsAbstract)
                     {
-                        RegisterFriendlyNames(baseType, feature);
+                        AddFriendlyNames(baseType, feature);
                     }
 
                     baseType = baseTypeInfo.BaseType;
