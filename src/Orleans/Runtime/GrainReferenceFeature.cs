@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Reflection;
 using Orleans.CodeGeneration;
 
-namespace Orleans.Core
+namespace Orleans.Runtime
 {
     /// <summary>
-    /// The collection of grain invoker types in an Orleans application.
+    /// The collection of grain references types in an Orleans application.
     /// </summary>
-    public class GrainInvokerFeature
+    public class GrainReferenceFeature
     {
         /// <summary>
-        /// Gets a map from grain to grain invoker types in an Orleans application.
+        /// Gets a map from grain to grain reference types in an Orleans application.
         /// </summary>
-        public IDictionary<Type, TypeInfo> GrainToInvokerMap { get; } = new Dictionary<Type, TypeInfo>();
+        public IDictionary<Type, TypeInfo> GrainToReferenceMap { get; } = new Dictionary<Type, TypeInfo>();
     }
 
     /// <summary>
-    /// Discovers grain invokers from a list of types.
+    /// Discovers grain references from a list of types.
     /// </summary>
-    public class GrainInvokerFeatureProvider // : IApplicationFeatureProvider<GrainInvokerFeature>
+    public class GrainReferenceFeatureProvider //: IApplicationFeatureProvider<GrainReferenceFeature>
     {
         ///// <inheritdoc />
         //public void PopulateFeature(IEnumerable<ApplicationPart> parts, GrainReferenceFeature feature)
@@ -32,14 +32,14 @@ namespace Orleans.Core
         /// </summary>
         /// <param name="types">The list of types of the application</param>
         /// <param name="feature">The feature instance to populate.</param>
-        public void PopulateFeature(IEnumerable<TypeInfo> types, GrainInvokerFeature feature)
+        public void PopulateFeature(IEnumerable<TypeInfo> types, GrainReferenceFeature feature)
         {
             foreach (var type in types)
             {
-                var grainInvokerAttr = type.GetCustomAttribute<MethodInvokerAttribute>(false);
-                if (grainInvokerAttr != null && !feature.GrainToInvokerMap.ContainsKey(grainInvokerAttr.TargetType))
+                var grainReferenceAttr = type.GetCustomAttribute<GrainReferenceAttribute>(false);
+                if (grainReferenceAttr != null && !feature.GrainToReferenceMap.ContainsKey(grainReferenceAttr.TargetType))
                 {
-                    feature.GrainToInvokerMap.Add(grainInvokerAttr.TargetType, type);
+                    feature.GrainToReferenceMap.Add(grainReferenceAttr.TargetType, type);
                 }
             }
         }

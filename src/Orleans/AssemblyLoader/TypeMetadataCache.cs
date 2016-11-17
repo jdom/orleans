@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using Orleans.CodeGeneration;
-using Orleans.Core;
 
 namespace Orleans.Runtime
 {

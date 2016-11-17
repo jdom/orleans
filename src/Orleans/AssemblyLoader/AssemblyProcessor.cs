@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Orleans.CodeGeneration;
-using Orleans.Core;
 using Orleans.Serialization;
 using Orleans.Serialization.Registration;
 
