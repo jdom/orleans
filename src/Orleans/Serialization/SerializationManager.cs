@@ -208,9 +208,9 @@ namespace Orleans.Serialization
                 Register(serializerMethodsMap.Key, serializerMethodsMap.Value, true);
             }
 
-            foreach (var friendlyNameMap in orleansSerializationFeature.FriendlyNameMap)
+            foreach (var type in orleansSerializationFeature.OtherKnownTypes)
             {
-                RegisterTypeName(friendlyNameMap.Value, friendlyNameMap.Key);
+                RegisterTypeName(type, false);
             }
         }
 
@@ -325,7 +325,8 @@ namespace Orleans.Serialization
         /// This method registers a type  with the paresable type name.
         /// </summary>
         /// <param name="type">Type to be registered.</param>
-        private static void RegisterTypeName(Type type)
+        /// <param name="registerAncestors">Also recurses through base clases and interfaces</param>
+        private static void RegisterTypeName(Type type, bool registerAncestors = true)
         {
             string name = type.OrleansTypeKeyString();
 
@@ -337,34 +338,32 @@ namespace Orleans.Serialization
                 }
 
                 registeredTypes.Add(type);
-                RegisterTypeName(type, name);
+                lock (types)
+                {
+                    types[name] = type;
+                }
             }
             if (logger.IsVerbose3) logger.Verbose3("Registered type {0} as {1}", type, name);
 
-            // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
-            // but dynamically of this (implementation) type
-            foreach (var iface in type.GetInterfaces())
+            if (registerAncestors)
             {
-                RegisterTypeName(iface);
-            }
+                // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
+                // but dynamically of this (implementation) type
+                foreach (var iface in type.GetInterfaces())
+                {
+                    RegisterTypeName(iface);
+                }
 
-            // Do the same for abstract base classes
-            var baseType = type.GetTypeInfo().BaseType;
-            while (baseType != null)
-            {
-                var baseTypeInfo = baseType.GetTypeInfo();
-                if (baseTypeInfo.IsAbstract)
-                    RegisterTypeName(baseType);
+                // Do the same for abstract base classes
+                var baseType = type.GetTypeInfo().BaseType;
+                while (baseType != null)
+                {
+                    var baseTypeInfo = baseType.GetTypeInfo();
+                    if (baseTypeInfo.IsAbstract)
+                        RegisterTypeName(baseType);
 
-                baseType = baseTypeInfo.BaseType;
-            }
-        }
-
-        private static void RegisterTypeName(Type type, string name)
-        {
-            lock (types)
-            {
-                types[name] = type;
+                    baseType = baseTypeInfo.BaseType;
+                }
             }
         }
 

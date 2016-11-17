@@ -2015,26 +2015,26 @@ namespace Orleans.Serialization
 
 
             // Type names that we need to recognize for generic parameters
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(bool), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(int), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(short), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(sbyte), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(long), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(uint), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(ushort), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(byte), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(ulong), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(float), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(double), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(decimal), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(string), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(char), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(bool), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(int), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(short), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(sbyte), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(long), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(uint), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(ushort), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(byte), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(ulong), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(float), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(double), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(decimal), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(string), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(char), feature);
 
             // Enum names we need to recognize
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.Categories), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.Directions), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.RejectionTypes), feature);
-            OrleansSerializationFeatureProvider.AddFriendlyNames(typeof(Message.ResponseTypes), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(Message.Categories), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(Message.Directions), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(Message.RejectionTypes), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(Message.ResponseTypes), feature);
         }
     }
 }

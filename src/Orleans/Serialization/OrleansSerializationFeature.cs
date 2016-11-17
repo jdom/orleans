@@ -58,6 +58,6 @@ namespace Orleans.Serialization.Registration
         /// <summary>
         /// Gets a reverse lookup map from friendly name to serializable type in an Orleans application.
         /// </summary>
-        public IDictionary<string, Type> FriendlyNameMap { get; } = new Dictionary<string, Type>();
+        public HashSet<Type> OtherKnownTypes { get; } = new HashSet<Type>();
     }
 }

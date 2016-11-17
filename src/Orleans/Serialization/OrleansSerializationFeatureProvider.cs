@@ -61,7 +61,7 @@ namespace Orleans.Serialization.Registration
             {
                 if (typeInfo.IsEnum)
                 {
-                    AddFriendlyNames(type, feature);
+                    AddKnownTypes(type, feature);
                 }
                 else if (!systemAssembly)
                 {
@@ -246,18 +246,18 @@ namespace Orleans.Serialization.Registration
                                         break;
                                     }
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) AddFriendlyNames(type, feature);
+                                if (comparer && (type.GetFields().Length == 0)) AddKnownTypes(type, feature);
                             }
                             else
                             {
-                                AddFriendlyNames(type, feature);
+                                AddKnownTypes(type, feature);
                             }
                         }
                     }
                     else
                     {
                         // type is abstract, an interface, system-defined, or its namespace is null
-                        AddFriendlyNames(type, feature);
+                        AddKnownTypes(type, feature);
                     }
                 }
             }
@@ -328,7 +328,7 @@ namespace Orleans.Serialization.Registration
             {
                 feature.SerializerMethods[type] = serializerMethods;
             }
-            AddFriendlyNames(type, feature);
+            AddKnownTypes(type, feature);
         }
 
         /// <summary>
@@ -340,26 +340,23 @@ namespace Orleans.Serialization.Registration
         public static void AddRegistration(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
         {
             feature.SerializerTypes[type] = serializerType;
-            AddFriendlyNames(type, feature);
+            AddKnownTypes(type, feature);
         }
 
         /// <summary>
-        /// Adds friendly names to be recognized by the serialization system.
+        /// Adds other known types to be recognized by the serialization system.
         /// </summary>
         /// <param name="type">The type to register</param>
         /// <param name="feature">The feature instance to populate.</param>
-        public static void AddFriendlyNames(Type type, OrleansSerializationFeature feature)
+        public static void AddKnownTypes(Type type, OrleansSerializationFeature feature)
         {
-            string name = type.OrleansTypeKeyString();
-            if (!feature.FriendlyNameMap.ContainsKey(name))
+            if (feature.OtherKnownTypes.Add(type))
             {
-                feature.FriendlyNameMap[name] = type;
-
                 // Register any interfaces this type implements, in order to support passing values that are statically of the interface type
                 // but dynamically of this (implementation) type
                 foreach (var iface in type.GetInterfaces())
                 {
-                    AddFriendlyNames(iface, feature);
+                    AddKnownTypes(iface, feature);
                 }
                 // Do the same for abstract base classes
                 var baseType = type.GetTypeInfo().BaseType;
@@ -368,7 +365,7 @@ namespace Orleans.Serialization.Registration
                     var baseTypeInfo = baseType.GetTypeInfo();
                     if (baseTypeInfo.IsAbstract)
                     {
-                        AddFriendlyNames(baseType, feature);
+                        AddKnownTypes(baseType, feature);
                     }
 
                     baseType = baseTypeInfo.BaseType;
