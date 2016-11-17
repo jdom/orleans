@@ -70,12 +70,12 @@ namespace Orleans.CodeGeneration
         /// </param>
         public static Assembly GenerateAndCacheCodeForAssembly(Assembly input)
         {
+            Assembly generatedAsm = null;
             if (codeGeneratorInstance != null)
             {
-                Assembly generatedAsm;
                 codeGeneratorInstance.TryGenerateAndLoadForAssembly(input, out generatedAsm);
             }
-            return null;
+            return generatedAsm;
         }
 
         /// <summary>
