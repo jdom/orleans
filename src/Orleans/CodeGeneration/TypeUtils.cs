@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -636,6 +637,27 @@ namespace Orleans.Runtime
 #endif
 
             return TypeHasAttribute(type.GetTypeInfo(), attribType);
+        }
+
+        /// <summary>Retrieves a collection of custom attributes of a specified type that are applied to a specified member.</summary>
+        /// <typeparam name="TAttribute">The type of attribute to search for.</typeparam>
+        /// <param name="element">The member to inspect.</param>
+        /// <returns>A collection of the custom attributes that are applied to element and that match T, or an empty collection if no such attributes exist, or there is an exception due to assembly loading.</returns>
+        public static IEnumerable<TAttribute> SafeGetCustomAttributes<TAttribute>(this MemberInfo element)
+            where TAttribute : Attribute
+        {
+            try
+            {
+                return element.GetCustomAttributes<TAttribute>();
+            }
+            catch (FileLoadException)
+            {
+                return Enumerable.Empty<TAttribute>();
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                return Enumerable.Empty<TAttribute>();
+            }
         }
 
         public static bool TypeHasAttribute(TypeInfo typeInfo, Type attribType)

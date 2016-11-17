@@ -255,7 +255,7 @@ namespace Orleans.CodeGenerator
             var resultVariable = SF.IdentifierName("result");
 
             var body = new List<StatementSyntax>();
-            if (type.GetCustomAttribute<ImmutableAttribute>() != null)
+            if (type.SafeGetCustomAttributes<ImmutableAttribute>().Any())
             {
                 // Immutable types do not require copying.
                 body.Add(SF.ReturnStatement(originalVariable));
@@ -479,7 +479,7 @@ namespace Orleans.CodeGenerator
         {
             var result =
                 type.GetAllFields()
-                    .Where(field => field.GetCustomAttribute<NonSerializedAttribute>() == null)
+                    .Where(field => !field.SafeGetCustomAttributes<NonSerializedAttribute>().Any())
                     .Select((info, i) => new FieldInfoMember { FieldInfo = info, FieldNumber = i })
                     .ToList();
             result.Sort(FieldInfoMember.Comparer.Instance);
@@ -600,12 +600,12 @@ namespace Orleans.CodeGenerator
             {
                 get
                 {
-                    var obsoleteAttr = this.FieldInfo.GetCustomAttribute<ObsoleteAttribute>();
+                    var obsoleteAttr = this.FieldInfo.SafeGetCustomAttributes<ObsoleteAttribute>().FirstOrDefault();
 
                     // Get the attribute from the property, if present.
                     if (this.property != null && obsoleteAttr == null)
                     {
-                        obsoleteAttr = this.property.GetCustomAttribute<ObsoleteAttribute>();
+                        obsoleteAttr = this.property.SafeGetCustomAttributes<ObsoleteAttribute>().FirstOrDefault();
                     }
                     
                     return obsoleteAttr != null;

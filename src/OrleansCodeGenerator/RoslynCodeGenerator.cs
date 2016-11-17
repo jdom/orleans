@@ -541,7 +541,7 @@ namespace Orleans.CodeGenerator
                     .SelectMany(assembly => TypeUtils.GetDefinedTypes(assembly, Logger));
 
             // Get all generated types in each assembly.
-            var attributes = all.SelectMany(_ => _.GetCustomAttributes<GeneratedAttribute>());
+            var attributes = all.SelectMany(t => t.SafeGetCustomAttributes<GeneratedAttribute>());
             var results = new HashSet<Type>();
             foreach (var attribute in attributes)
             {
