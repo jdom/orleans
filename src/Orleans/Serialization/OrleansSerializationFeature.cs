@@ -56,7 +56,7 @@ namespace Orleans.Serialization.Registration
         public IDictionary<Type, SerializerMethods> SerializerMethods { get; } = new Dictionary<Type, SerializerMethods>();
 
         /// <summary>
-        /// Gets a reverse lookup map from friendly name to serializable type in an Orleans application.
+        /// Gets a collection of other known types that are recognizable by the serialization system type in an Orleans application.
         /// </summary>
         public HashSet<Type> OtherKnownTypes { get; } = new HashSet<Type>();
     }
