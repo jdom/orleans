@@ -1939,7 +1939,7 @@ namespace Orleans.Serialization
             var deserializer =
                 (SerializerMethods.Deserializer)concreteDeserializer.CreateDelegate(typeof(SerializerMethods.Deserializer));
 
-            SerializationManager.Register(t, copier, serializer, deserializer);
+            SerializationManager.Register(t, copier, serializer, deserializer, true);
 
             return new SerializerMethods(copier, serializer, deserializer);
         }
@@ -2029,6 +2029,7 @@ namespace Orleans.Serialization
             OrleansSerializationFeatureProvider.AddKnownTypes(typeof(decimal), feature);
             OrleansSerializationFeatureProvider.AddKnownTypes(typeof(string), feature);
             OrleansSerializationFeatureProvider.AddKnownTypes(typeof(char), feature);
+            OrleansSerializationFeatureProvider.AddKnownTypes(typeof(object), feature);
 
             // Enum names we need to recognize
             OrleansSerializationFeatureProvider.AddKnownTypes(typeof(Message.Categories), feature);
