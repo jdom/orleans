@@ -291,6 +291,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
+        /// <param name="feature">The feature to populate</param>
         private void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature)
         {
             Register(type, cop, ser, deser, feature, false);
@@ -305,6 +306,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
+        /// <param name="feature">The feature to populate</param>
         private void Register(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride)
         {
             Register(type, new SerializerMethods(cop, ser, deser), feature, forceOverride);
@@ -317,6 +319,7 @@ namespace Orleans.Serialization.Registration
         /// <param name="type">Type to be registered.</param>
         /// <param name="serializerMethods">Serializer and copier methods for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
+        /// <param name="feature">The feature to populate</param>
         private void Register(Type type, SerializerMethods serializerMethods, OrleansSerializationFeature feature, bool forceOverride)
         {
             if ((serializerMethods.Serialize == null) && (serializerMethods.Deserialize != null))
@@ -427,18 +430,15 @@ namespace Orleans.Serialization.Registration
         /// <see langword="true"/> if the type is a generated <see cref="GrainReference"/>,
         /// <see langword="false"/> otherwise.
         /// </returns>
-        internal static bool IsGeneratedGrainReference(MemberInfo type)
+        private static bool IsGeneratedGrainReference(MemberInfo type)
         {
             var attr = type.GetCustomAttribute<GrainReferenceAttribute>();
             return attr?.TargetType != null;
         }
 
-        /// <summary>
-        /// Registers <see cref="GrainReference"/> serializers for the provided <paramref name="type"/>.
-        /// </summary>
-        /// <param name="type">
-        /// The type.
-        /// </param>
+        /// <summary>Registers <see cref="GrainReference"/> serializers for the provided <paramref name="type"/>.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="feature">The feature to populate</param>
         private void RegisterGrainReferenceSerializers(Type type, OrleansSerializationFeature feature)
         {
             var attr = type.GetTypeInfo().GetCustomAttribute<GrainReferenceAttribute>();
