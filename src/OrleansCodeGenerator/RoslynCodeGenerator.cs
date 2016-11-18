@@ -160,66 +160,6 @@ namespace Orleans.CodeGenerator
         }
 
         /// <summary>
-        /// Ensures that code generation has been run for the provided assembly.
-        /// </summary>
-        /// <param name="input">
-        /// The assembly to generate code for.
-        /// </param>
-        /// <param name="loadedAssembly">The loaded instance of the generated assembly if the result is true</param>
-        public bool TryGenerateAndLoadForAssembly(Assembly input, out Assembly loadedAssembly)
-        {
-            loadedAssembly = null;
-            try
-            {
-                RegisterGeneratedCodeTargets(input);
-                if (!ShouldGenerateCodeForAssembly(input))
-                {
-                    return TryLoadGeneratedAssemblyFromCache(input, out loadedAssembly);
-                }
-
-                var timer = Stopwatch.StartNew();
-                var generated = GenerateForAssemblies(new List<Assembly> { input }, true);
-
-                CachedAssembly generatedAssembly;
-                if (generated.Syntax != null)
-                {
-                    var emitDebugSymbols = RuntimeVersion.IsAssemblyDebugBuild(input);
-                    generatedAssembly = CompileAndLoad(generated, emitDebugSymbols);
-                }
-                else
-                {
-                    generatedAssembly = new CachedAssembly { Loaded = true };
-                }
-
-                foreach (var assembly in generated.SourceAssemblies)
-                {
-                    CompiledAssemblies.AddOrUpdate(
-                        assembly.GetName().FullName,
-                        generatedAssembly,
-                        (_, __) => generatedAssembly);
-                }
-
-                if (Logger.IsVerbose2)
-                {
-                    Logger.Verbose2(
-                        ErrorCode.CodeGenCompilationSucceeded,
-                        "Generated code for 1 assembly in {0}ms",
-                        timer.ElapsedMilliseconds);
-                }
-
-                loadedAssembly = generatedAssembly.LoadedAssembly;
-                return loadedAssembly != null;
-            }
-            catch (Exception exception)
-            {
-                var message =
-                    $"Exception generating code for input assembly {input.GetName().FullName}\nException: {LogFormatter.PrintException(exception)}";
-                Logger.Warn(ErrorCode.CodeGenCompilationFailed, message, exception);
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Generates source code for the provided assembly.
         /// </summary>
         /// <param name="input">

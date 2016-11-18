@@ -63,22 +63,6 @@ namespace Orleans.CodeGeneration
         }
 
         /// <summary>
-        /// Ensures code for the <paramref name="input"/> assembly has been generated and loaded.
-        /// </summary>
-        /// <param name="input">
-        /// The input assembly.
-        /// </param>
-        public static Assembly GenerateAndCacheCodeForAssembly(Assembly input)
-        {
-            Assembly generatedAsm = null;
-            if (codeGeneratorInstance != null)
-            {
-                codeGeneratorInstance.TryGenerateAndLoadForAssembly(input, out generatedAsm);
-            }
-            return generatedAsm;
-        }
-
-        /// <summary>
         /// Ensures code for the specified loaded assemblies has been generated and loaded.
         /// </summary>
         public static ICollection<Assembly> GenerateAndCacheCodeForAssemblies(ICollection<Assembly> inputs)

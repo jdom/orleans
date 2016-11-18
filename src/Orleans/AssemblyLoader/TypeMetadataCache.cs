@@ -39,7 +39,6 @@ namespace Orleans.Runtime
         public Type GetGrainReferenceType(Type interfaceType)
         {
             var typeInfo = interfaceType.GetTypeInfo();
-            // CodeGeneratorManager.GenerateAndCacheCodeForAssembly(typeInfo.Assembly);
             var genericInterfaceType = interfaceType.IsConstructedGenericType
                                            ? typeInfo.GetGenericTypeDefinition()
                                            : interfaceType;
@@ -76,7 +75,6 @@ namespace Orleans.Runtime
         public Type GetGrainMethodInvokerType(Type interfaceType)
         {
             var typeInfo = interfaceType.GetTypeInfo();
-            // CodeGeneratorManager.GenerateAndCacheCodeForAssembly(typeInfo.Assembly);
             var genericInterfaceType = interfaceType.IsConstructedGenericType
                                            ? typeInfo.GetGenericTypeDefinition()
                                            : interfaceType;
