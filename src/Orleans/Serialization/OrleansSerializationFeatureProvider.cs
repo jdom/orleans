@@ -19,6 +19,7 @@ namespace Orleans.Serialization.Registration
         private readonly Logger logger;
         private static readonly string[] safeFailSerializers = { "Orleans.FSharp" };
         private static readonly ConcurrentDictionary<Type, Func<GrainReference, GrainReference>> grainRefConstructorDictionary = new ConcurrentDictionary<Type, Func<GrainReference, GrainReference>>();
+        private const string AddSerializerRegistrationsMethodName = "AddSerializerRegistrations";
 
         public OrleansSerializationFeatureProvider()
         {
@@ -104,7 +105,7 @@ namespace Orleans.Serialization.Registration
                                     typeInfo.Name,
                                     assembly.GetName().Name);
 
-                            var addSerializerRegistrations = typeInfo.GetMethod("AddSerializerRegistrations", new[] { typeof(OrleansSerializationFeature) });
+                            var addSerializerRegistrations = typeInfo.GetMethod(AddSerializerRegistrationsMethodName, new[] { typeof(OrleansSerializationFeature) });
                             //MethodInfo register; // temporary until codegen is fixed
                             if (addSerializerRegistrations != null)
                             {
@@ -164,8 +165,8 @@ namespace Orleans.Serialization.Registration
                             else
                             {
                                 logger.Warn(
-                                    ErrorCode.SerMgr_MissingRegisterMethod,
-                                    "Type {0} from assembly {1} has the RegisterSerializer attribute but no public static void Register method",
+                                    ErrorCode.SerMgr_MissingAddSerializerRegistrationsMethod,
+                                    "Type {0} from assembly {1} has the " + nameof(RegisterSerializerAttribute) + " attribute but no public static void " + AddSerializerRegistrationsMethodName + " method",
                                     type.Name,
                                     assembly.GetName().Name);
                             }
