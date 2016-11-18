@@ -40,14 +40,14 @@ namespace Orleans.Serialization.Registration
         {
             foreach (var type in types)
             {
-                FindSerializationInfo(type, feature);
+                FindSerializationInfo(feature, type);
             }
         }
 
         /// <summary>
         /// Looks for types with marked serializer and deserializer methods, and registers them if necessary.
         /// </summary>
-        private void FindSerializationInfo(Type type, OrleansSerializationFeature feature)
+        private void FindSerializationInfo(OrleansSerializationFeature feature, Type type)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
             var assembly = typeInfo.Assembly;
@@ -61,7 +61,7 @@ namespace Orleans.Serialization.Registration
             {
                 if (typeInfo.IsEnum)
                 {
-                    AddKnownTypes(type, feature);
+                    AddKnownTypes(feature, type);
                 }
                 else if (!systemAssembly)
                 {
@@ -86,7 +86,7 @@ namespace Orleans.Serialization.Registration
                             foreach (var serializerAttribute in serializerAttributes)
                             {
                                 // Register as the serializer for the target type.
-                                AddRegistration(serializerAttribute.TargetType, typeInfo, feature);
+                                AddRegistration(feature, serializerAttribute.TargetType, typeInfo);
                                 if (logger.IsVerbose3)
                                     logger.Verbose3(
                                         "Loaded serialization info for type {0} using serializer {1} from assembly {2}",
@@ -180,7 +180,7 @@ namespace Orleans.Serialization.Registration
                             if ((serializerMethods.DeepCopy != null) && (serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
                             {
                                 // Register type as a serializer for type.
-                                AddRegistration(type, typeInfo, feature);
+                                AddRegistration(feature, type, typeInfo);
                                 if (logger.IsVerbose3)
                                     logger.Verbose3(
                                         "Loaded serialization info for type {0} from assembly {1}",
@@ -191,7 +191,7 @@ namespace Orleans.Serialization.Registration
                             {
                                 try
                                 {
-                                    AddRegistration(type, serializerMethods, feature, true);
+                                    AddRegistration(feature, type, serializerMethods, true);
                                 }
                                 catch (ArgumentException)
                                 {
@@ -212,9 +212,9 @@ namespace Orleans.Serialization.Registration
                                 try
                                 {
                                     AddRegistration(
-                                        type,
-                                        new SerializerMethods(serializerMethods.DeepCopy, null, null), // just in case either serializer or deserializer is set (but not both)
                                         feature,
+                                        type, 
+                                        new SerializerMethods(serializerMethods.DeepCopy, null, null), // just in case either serializer or deserializer is set (but not both)
                                         true);
                                 }
                                 catch (ArgumentException)
@@ -246,18 +246,18 @@ namespace Orleans.Serialization.Registration
                                         break;
                                     }
                                 }
-                                if (comparer && (type.GetFields().Length == 0)) AddKnownTypes(type, feature);
+                                if (comparer && (type.GetFields().Length == 0)) AddKnownTypes(feature, type);
                             }
                             else
                             {
-                                AddKnownTypes(type, feature);
+                                AddKnownTypes(feature, type);
                             }
                         }
                     }
                     else
                     {
                         // type is abstract, an interface, system-defined, or its namespace is null
-                        AddKnownTypes(type, feature);
+                        AddKnownTypes(feature, type);
                     }
                 }
             }
@@ -280,26 +280,26 @@ namespace Orleans.Serialization.Registration
         /// Adds a serializer registration for a Type with the specified DeepCopier, Serializer and Deserializer functions.
         /// If <c>forcOverride == true</c> then this definition will replace any any previous functions registered for this Type.
         /// </summary>
+        /// <param name="feature">The feature to populate</param>
         /// <param name="type">Type to be registered.</param>
         /// <param name="cop">DeepCopier function for this type.</param>
         /// <param name="ser">Serializer function for this type.</param>
         /// <param name="deser">Deserializer function for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        /// <param name="feature">The feature to populate</param>
-        private static void AddRegistration(Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, OrleansSerializationFeature feature, bool forceOverride = false)
+        private static void AddRegistration(OrleansSerializationFeature feature, Type type, SerializerMethods.DeepCopier cop, SerializerMethods.Serializer ser, SerializerMethods.Deserializer deser, bool forceOverride = false)
         {
-            AddRegistration(type, new SerializerMethods(cop, ser, deser), feature, forceOverride);
+            AddRegistration(feature, type, new SerializerMethods(cop, ser, deser), forceOverride);
         }
 
         /// <summary>
         /// Adds a serializer registration for a Type with the specified serializer methods.
         /// If <c>forcOverride == true</c> then this definition will replace any any previous functions registered for this Type.
         /// </summary>
+        /// <param name="feature">The feature to populate</param>
         /// <param name="type">Type to be registered.</param>
         /// <param name="serializerMethods">Serializer and copier methods for this type.</param>
         /// <param name="forceOverride">Whether these functions should replace any previously registered functions for this Type.</param>
-        /// <param name="feature">The feature to populate</param>
-        public static void AddRegistration(Type type, SerializerMethods serializerMethods, OrleansSerializationFeature feature, bool forceOverride = false)
+        public static void AddRegistration(OrleansSerializationFeature feature, Type type, SerializerMethods serializerMethods, bool forceOverride = false)
         {
             if ((serializerMethods.Serialize == null) && (serializerMethods.Deserialize != null))
             {
@@ -328,27 +328,27 @@ namespace Orleans.Serialization.Registration
             {
                 feature.SerializerMethods[type] = serializerMethods;
             }
-            AddKnownTypes(type, feature);
+            AddKnownTypes(feature, type);
         }
 
         /// <summary>
         /// Adds a serializer registration with <paramref name="serializerType"/> as the serializer for <paramref name="type"/>.
         /// </summary>
+        /// <param name="feature">The feature instance to populate.</param>
         /// <param name="type">The type serialized by the provided serializer type.</param>
         /// <param name="serializerType">The type containing serialization methods for <paramref name="type"/>.</param>
-        /// <param name="feature">The feature instance to populate.</param>
-        public static void AddRegistration(Type type, TypeInfo serializerType, OrleansSerializationFeature feature)
+        public static void AddRegistration(OrleansSerializationFeature feature, Type type, TypeInfo serializerType)
         {
             feature.SerializerTypes[type] = serializerType;
-            AddKnownTypes(type, feature);
+            AddKnownTypes(feature, type);
         }
 
         /// <summary>
         /// Adds other known types to be recognized by the serialization system.
         /// </summary>
-        /// <param name="type">The type to register</param>
         /// <param name="feature">The feature instance to populate.</param>
-        public static void AddKnownTypes(Type type, OrleansSerializationFeature feature)
+        /// <param name="type">The type to register</param>
+        public static void AddKnownTypes(OrleansSerializationFeature feature, Type type)
         {
             if (feature.OtherKnownTypes.Add(type))
             {
@@ -356,7 +356,7 @@ namespace Orleans.Serialization.Registration
                 // but dynamically of this (implementation) type
                 foreach (var iface in type.GetInterfaces())
                 {
-                    AddKnownTypes(iface, feature);
+                    AddKnownTypes(feature, iface);
                 }
                 // Do the same for abstract base classes
                 var baseType = type.GetTypeInfo().BaseType;
@@ -365,7 +365,7 @@ namespace Orleans.Serialization.Registration
                     var baseTypeInfo = baseType.GetTypeInfo();
                     if (baseTypeInfo.IsAbstract)
                     {
-                        AddKnownTypes(baseType, feature);
+                        AddKnownTypes(feature, baseType);
                     }
 
                     baseType = baseTypeInfo.BaseType;
@@ -434,13 +434,14 @@ namespace Orleans.Serialization.Registration
 
             // Register GrainReference serialization methods.
             AddRegistration(
+                feature,
                 type,
                 GrainReference.CopyGrainReference,
                 GrainReference.SerializeGrainReference,
                 (expected, stream) =>
                 {
                     Func<GrainReference, GrainReference> ctorDelegate;
-                    var deserialized = (GrainReference)GrainReference.DeserializeGrainReference(expected, stream);
+                    var deserialized = (GrainReference) GrainReference.DeserializeGrainReference(expected, stream);
                     if (expected.IsConstructedGenericType == false)
                     {
                         return defaultCtorDelegate(deserialized);
@@ -453,8 +454,7 @@ namespace Orleans.Serialization.Registration
                     }
 
                     return ctorDelegate(deserialized);
-                },
-                feature);
+                });
         }
 
         private static Func<GrainReference, GrainReference> CreateGrainRefConstructorDelegate(Type type, Type[] genericArgs)
