@@ -76,10 +76,9 @@ namespace Orleans.Serialization.Registration
                         // TODO: investigate why we are getting this now
                         return;
                     }
-                    if (!typeInfo.IsInterface && !typeInfo.IsAbstract
-                        && (typeNamespace == null
-                            || (!typeNamespace.Equals("System", StringComparison.Ordinal)
-                                && !typeNamespace.StartsWith("System.", StringComparison.Ordinal))))
+                    if (!typeInfo.IsInterface
+                        && (!typeInfo.IsAbstract || typeInfo.IsSealed)
+                        && (typeNamespace == null || (!typeNamespace.Equals("System", StringComparison.Ordinal) && !typeNamespace.StartsWith("System.", StringComparison.Ordinal))))
                     {
                         var serializerAttributes = typeInfo.GetCustomAttributes<SerializerAttribute>(false).ToList();
                         if (serializerAttributes.Any())
@@ -171,93 +170,101 @@ namespace Orleans.Serialization.Registration
                                     assembly.GetName().Name);
                             }
                         }
-                        else if (IsGeneratedGrainReference(typeInfo))
-                        {
-                            RegisterGrainReferenceSerializers(type, feature);
-                        }
-                        else
-                        {
-                            SerializerMethods serializerMethods = GetSerializerMethods(type);
-                            if ((serializerMethods.DeepCopy != null) && (serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
+                        else if(!type.IsAbstract)
+                        { 
+                            // if the type isn't abstract (or static), check whether it can serialize itself
+                            if (IsGeneratedGrainReference(typeInfo))
                             {
-                                // Register type as a serializer for type.
-                                AddRegistration(feature, type, typeInfo);
-                                if (logger.IsVerbose3)
-                                    logger.Verbose3(
-                                        "Loaded serialization info for type {0} from assembly {1}",
-                                        type.Name,
-                                        assembly.GetName().Name);
-                            }
-                            else if ((serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
-                            {
-                                try
-                                {
-                                    AddRegistration(feature, type, serializerMethods, true);
-                                }
-                                catch (ArgumentException)
-                                {
-                                    logger.Warn(
-                                        ErrorCode.SerMgr_ErrorBindingMethods,
-                                        "Error binding serialization methods for type {0}",
-                                        type.OrleansTypeName());
-                                    throw;
-                                }
-                                if (logger.IsVerbose3)
-                                    logger.Verbose3(
-                                        "Loaded serialization info for type {0} from assembly {1}",
-                                        type.Name,
-                                        assembly.GetName().Name);
-                            }
-                            else if ((serializerMethods.DeepCopy != null))
-                            {
-                                try
-                                {
-                                    AddRegistration(
-                                        feature,
-                                        type, 
-                                        new SerializerMethods(serializerMethods.DeepCopy, null, null), // just in case either serializer or deserializer is set (but not both)
-                                        true);
-                                }
-                                catch (ArgumentException)
-                                {
-                                    logger.Warn(
-                                        ErrorCode.SerMgr_ErrorBindingMethods,
-                                        "Error binding serialization methods for type {0}",
-                                        type.OrleansTypeName());
-                                    throw;
-                                }
-                                if (logger.IsVerbose3)
-                                    logger.Verbose3(
-                                        "Loaded serialization info for type {0} from assembly {1}",
-                                        type.Name,
-                                        assembly.GetName().Name);
-                            }
-                            else if (!typeInfo.IsSerializable)
-                            {
-                                // Comparers with no fields can be safely dealt with as just a type name
-                                var comparer = false;
-                                foreach (var iface in type.GetInterfaces())
-                                {
-                                    var ifaceTypeInfo = iface.GetTypeInfo();
-                                    if (ifaceTypeInfo.IsGenericType
-                                        && (ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IComparer<>)
-                                            || ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IEqualityComparer<>)))
-                                    {
-                                        comparer = true;
-                                        break;
-                                    }
-                                }
-                                if (comparer && (type.GetFields().Length == 0)) AddKnownTypes(feature, type);
+                                RegisterGrainReferenceSerializers(type, feature);
                             }
                             else
                             {
-                                AddKnownTypes(feature, type);
+                                SerializerMethods serializerMethods = GetSerializerMethods(type);
+                                if ((serializerMethods.DeepCopy != null) && (serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
+                                {
+                                    // Register type as a serializer for type.
+                                    AddRegistration(feature, type, typeInfo);
+                                    if (logger.IsVerbose3)
+                                        logger.Verbose3(
+                                            "Loaded serialization info for type {0} from assembly {1}",
+                                            type.Name,
+                                            assembly.GetName().Name);
+                                }
+                                else if ((serializerMethods.Serialize != null) && (serializerMethods.Deserialize != null))
+                                {
+                                    try
+                                    {
+                                        AddRegistration(feature, type, serializerMethods, true);
+                                    }
+                                    catch (ArgumentException)
+                                    {
+                                        logger.Warn(
+                                            ErrorCode.SerMgr_ErrorBindingMethods,
+                                            "Error binding serialization methods for type {0}",
+                                            type.OrleansTypeName());
+                                        throw;
+                                    }
+                                    if (logger.IsVerbose3)
+                                        logger.Verbose3(
+                                            "Loaded serialization info for type {0} from assembly {1}",
+                                            type.Name,
+                                            assembly.GetName().Name);
+                                }
+                                else if ((serializerMethods.DeepCopy != null))
+                                {
+                                    try
+                                    {
+                                        AddRegistration(
+                                        feature,
+                                        type, 
+                                        new SerializerMethods(serializerMethods.DeepCopy, null, null), // just in case either serializer or deserializer is set (but not both)
+                                            true);
+                                    }
+                                    catch (ArgumentException)
+                                    {
+                                        logger.Warn(
+                                            ErrorCode.SerMgr_ErrorBindingMethods,
+                                            "Error binding serialization methods for type {0}",
+                                            type.OrleansTypeName());
+                                        throw;
+                                    }
+                                    if (logger.IsVerbose3)
+                                        logger.Verbose3(
+                                            "Loaded serialization info for type {0} from assembly {1}",
+                                            type.Name,
+                                            assembly.GetName().Name);
+                                }
+                                else if (!typeInfo.IsSerializable)
+                                {
+                                    // Comparers with no fields can be safely dealt with as just a type name
+                                    var comparer = false;
+                                    foreach (var iface in type.GetInterfaces())
+                                    {
+                                        var ifaceTypeInfo = iface.GetTypeInfo();
+                                        if (ifaceTypeInfo.IsGenericType
+                                            && (ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IComparer<>)
+                                            || ifaceTypeInfo.GetGenericTypeDefinition() == typeof(IEqualityComparer<>)))
+                                        {
+                                            comparer = true;
+                                            break;
+                                        }
+                                    }
+                                    if (comparer && (type.GetFields().Length == 0)) AddKnownTypes(feature, type);
+                                }
+                                else
+                                {
+                                    AddKnownTypes(feature, type);
+                                }
                             }
+                        }
+                        else
+                        {
+                            AddKnownTypes(feature, type);
                         }
                     }
                     else
                     {
-                        // type is abstract, an interface, system-defined, or its namespace is null
+                        // type is abstract (and non-static), an interface, system-defined, or its namespace is null
                         AddKnownTypes(feature, type);
                     }
                 }

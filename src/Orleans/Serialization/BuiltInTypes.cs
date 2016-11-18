@@ -14,7 +14,7 @@ using Orleans.Serialization.Registration;
 namespace Orleans.Serialization
 {
     [RegisterSerializer]
-    internal class BuiltInTypes
+    internal static class BuiltInTypes
     {
         #region Constants
 
