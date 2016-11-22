@@ -38,6 +38,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Orleans\Orleans.csproj" />
     <ProjectReference Include="..\..\src\OrleansRuntime\OrleansRuntime.csproj" />
+    <ProjectReference Include="..\TestInterfaces\TestInterfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -127,6 +128,21 @@
     </Compile>
     <Compile Include="..\..\..\test\TestGrainInterfaces\ISimpleGrain.cs">
       <Link>ISimpleGrain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrain.cs">
+      <Link>IGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestGrain.cs">
+      <Link>IGeneratorTestGrain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedGrain1.cs">
+      <Link>IGeneratorTestDerivedGrain1.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedGrain2.cs">
+      <Link>IGeneratorTestDerivedGrain2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedDerivedGrain.cs">
+      <Link>IGeneratorTestDerivedDerivedGrain.cs</Link>
     </Compile>
   </ItemGroup>
 
