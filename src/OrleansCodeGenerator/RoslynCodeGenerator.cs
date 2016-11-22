@@ -294,17 +294,7 @@ namespace Orleans.CodeGenerator
 #if NETSTANDARD
         private static void LoadAssembly(GeneratedAssembly asm)
         {
-            Console.Write("ddsasad");
-/*            if (asm.DebugSymbolRawBytes != null)
-            {
-                AssemblyLoadContext.Default.LoadFromStream(
-                    new MemoryStream(asm.RawBytes),
-                    new MemoryStream(asm.DebugSymbolRawBytes));
-            }
-            else
-            {
-                AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(asm.RawBytes));
-            }*/
+            Orleans.PlatformServices.PlatformAssemblyLoader.LoadFromBytes(asm.RawBytes, asm.DebugSymbolRawBytes);
         }
 #else
         private static void LoadAssembly(GeneratedAssembly asm)

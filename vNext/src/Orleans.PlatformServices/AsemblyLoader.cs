@@ -5,58 +5,48 @@
 #if NETCORE
     using System.IO;
     using System.Runtime.Loader;
-    using Microsoft.Extensions.DependencyModel;
 #endif
 
-    public class AssemblyLoader
+    public static class PlatformAssemblyLoader
     {
-#if NETCORE
-        private readonly AssemblyLoadContext assemblyLoadContext;
-#endif
-
-        public AssemblyLoader()
+        public static Assembly LoadFromBytes(byte[] assembly, byte[] debugSymbols = null)
         {
-#if NETCORE
-            assemblyLoadContext = AssemblyLoadContext.Default;
-#endif
-        }
-
-        public Assembly LoadFromBytes(byte[] rawAssembly, byte[] rawSymbolStore = null)
-        {
-            if (rawAssembly == null)
+            if (assembly == null)
             {
-                throw new ArgumentNullException(nameof(rawAssembly));
+                throw new ArgumentNullException(nameof(assembly));
             }
-            
+
 #if NETCORE
-            using (var assemblyStream = new MemoryStream(rawAssembly))
+            using (var assemblyStream = new MemoryStream(assembly))
             {
-                if (rawSymbolStore != null)
+                if (debugSymbols != null)
                 {
-                    using (var symbolStoreStream = new MemoryStream(rawSymbolStore))
+                    using (var debugSymbolStream = new MemoryStream(debugSymbols))
                     {
-                        return assemblyLoadContext.LoadFromStream(assemblyStream, symbolStoreStream);
+                        return AssemblyLoadContext.Default.LoadFromStream(assemblyStream, debugSymbolStream);
                     }
                 }
                 else
                 {
-                    return assemblyLoadContext.LoadFromStream(assemblyStream);
+                    return AssemblyLoadContext.Default.LoadFromStream(assemblyStream);
                 }
             }
+#elif NET46
+            return Assembly.Load(assembly, debugSymbols);
 #else
-            return rawSymbolStore ==null ? Assembly.Load(rawAssembly) : Assembly.Load(rawAssembly, rawSymbolStore);
+            throw new NotImplementedException();
 #endif
         }
 
-        public Assembly LoadFromAssemblyPath(string assemblyPath)
+        public static Assembly LoadFromAssemblyPath(string assemblyPath)
         {
 #if NETCORE
-            var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyPath);
+            return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+#elif NET46
+            return Assembly.LoadFrom(assemblyPath);
 #else
-            var assembly = Assembly.LoadFrom(assemblyPath);
+            throw new NotImplementedException();
 #endif
-
-            return assembly;
         }
     }
 }
