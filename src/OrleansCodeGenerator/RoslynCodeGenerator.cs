@@ -5,8 +5,15 @@ namespace Orleans.CodeGenerator
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Reflection.Emit;
+
+#if false// NETSTANDARD
+    using System.Runtime.Loader;
+#endif
+
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Orleans.Async;
     using Orleans.CodeGeneration;
@@ -258,7 +265,7 @@ namespace Orleans.CodeGenerator
             }
 
             // Load the assembly and mark it as being loaded.
-            Assembly.Load(cached.RawBytes, cached.DebugSymbolRawBytes);
+            LoadAssembly(cached);
             cached.Loaded = true;
         }
 
@@ -273,12 +280,47 @@ namespace Orleans.CodeGenerator
         private static CachedAssembly CompileAndLoad(GeneratedSyntax generatedSyntax, bool emitDebugSymbols)
         {
             var generated = CodeGeneratorCommon.CompileAssembly(generatedSyntax, "OrleansCodeGen", emitDebugSymbols: emitDebugSymbols);
-            Assembly.Load(generated.RawBytes, generated.DebugSymbolRawBytes);
+            LoadAssembly(generated);
             return new CachedAssembly(generated)
             {
                 Loaded = true
             };
         }
+
+        /// <summary>
+        /// Loads the specified assembly.
+        /// </summary>
+        /// <param name="asm">The assembly to load.</param>
+#if NETSTANDARD
+        private static void LoadAssembly(GeneratedAssembly asm)
+        {
+            Console.Write("ddsasad");
+/*            if (asm.DebugSymbolRawBytes != null)
+            {
+                AssemblyLoadContext.Default.LoadFromStream(
+                    new MemoryStream(asm.RawBytes),
+                    new MemoryStream(asm.DebugSymbolRawBytes));
+            }
+            else
+            {
+                AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(asm.RawBytes));
+            }*/
+        }
+#else
+        private static void LoadAssembly(GeneratedAssembly asm)
+        {
+            if (asm.DebugSymbolRawBytes != null)
+            {
+                Assembly.Load(
+                    asm.RawBytes,
+                    asm.DebugSymbolRawBytes);
+            }
+            else
+            {
+                Assembly.Load(asm.RawBytes);
+            }
+        }
+#endif
 
         /// <summary>
         /// Generates a syntax tree for the provided assemblies.
@@ -347,8 +389,8 @@ namespace Orleans.CodeGenerator
                                           && knownAssemblyAttribute.TreatTypesAsSerializable;
                 foreach (var type in TypeUtils.GetDefinedTypes(assembly, Logger))
                 {
-                    var considerForSerialization = considerAllTypesForSerialization || type.GetTypeInfo().IsSerializable;
-                    ConsiderType(type, runtime, targetAssembly, includedTypes, considerForSerialization);
+                    var considerForSerialization = considerAllTypesForSerialization || type.IsSerializable;
+                    ConsiderType(type.AsType(), runtime, targetAssembly, includedTypes, considerForSerialization);
                 }
             }
 
@@ -405,7 +447,7 @@ namespace Orleans.CodeGenerator
 
                             ConsoleText.WriteStatus(
                                 "\ttype " + toGen.FullName + " in namespace " + toGen.Namespace
-                                + " defined in Assembly " + toGen.Assembly.GetName());
+                                + " defined in Assembly " + toGen.GetTypeInfo().Assembly.GetName());
                         }
 
                         if (Logger.IsVerbose2)
@@ -453,8 +495,8 @@ namespace Orleans.CodeGenerator
             bool considerForSerialization = false)
         {
             // The module containing the serializer.
-            var module = runtime || type.Assembly != targetAssembly ? null : type.Module;
             var typeInfo = type.GetTypeInfo();
+            var module = runtime || !Equals(typeInfo.Assembly, targetAssembly) ? null : typeInfo.Module;
 
             // If a type was encountered which can be accessed and is marked as [Serializable], process it for serialization.
             if (considerForSerialization)
@@ -507,7 +549,7 @@ namespace Orleans.CodeGenerator
             var interfaces = typeInfo.GetInterfaces().Where(x =>
                 x.IsConstructedGenericType
                 && KnownGenericIntefaceTypes.Contains(x.GetGenericTypeDefinition()));
-            foreach (var type in interfaces.SelectMany(v => v.GetGenericArguments()))
+            foreach (var type in interfaces.SelectMany(v => v.GetTypeInfo().GetGenericArguments()))
             {
                 RecordType(type, module, targetAssembly, includedTypes);
             }
@@ -565,7 +607,9 @@ namespace Orleans.CodeGenerator
             }
         }
 
+#if !NETSTANDARD
         [Serializable]
+#endif
         private class CachedAssembly : GeneratedAssembly
         {
             public CachedAssembly()

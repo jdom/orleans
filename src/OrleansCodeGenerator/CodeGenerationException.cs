@@ -1,12 +1,13 @@
 namespace Orleans.CodeGenerator
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// The code generation exception.
     /// </summary>
+#if !NETSTANDARD
     [Serializable]
+#endif
     public class CodeGenerationException : Exception
     {
         /// <summary>
@@ -41,6 +42,7 @@ namespace Orleans.CodeGenerator
         {
         }
 
+#if !NETSTANDARD
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeGenerationException"/> class.
         /// </summary>
@@ -50,9 +52,12 @@ namespace Orleans.CodeGenerator
         /// <param name="context">
         /// The context.
         /// </param>
-        protected CodeGenerationException(SerializationInfo info, StreamingContext context)
+        protected CodeGenerationException(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         {
         }
+#endif
     }
 }
