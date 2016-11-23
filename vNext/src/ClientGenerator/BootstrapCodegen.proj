@@ -2,7 +2,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
     <PropertyGroup>
       <!--<Configuration>Debug</Configuration>-->
-      <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
+      <ExcludeCodegenConstants>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</ExcludeCodegenConstants>
       <BootstrapOutputPath Condition="'$(BootstrapOutputPath)' == ''">$(MSBuildProjectDirectory)\bin\$(Configuration)\Bootstrap\</BootstrapOutputPath>
       <Bootstrap>true</Bootstrap>
       <OutputPath>$(BootstrapOutputPath)</OutputPath>
@@ -11,7 +11,7 @@
       <TargetFramework />
       <TargetFrameworks />
       <RuntimeIdentifier />
-      <MsBuildProperties>Configuration=$(Configuration);Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>
+      <MsBuildProperties>Configuration=$(Configuration);Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(ExcludeCodegenConstants)</MsBuildProperties>
       <MsBuildProperties Condition="'$(BuildingInsideVisualStudio)' == ''">
         $(MsBuildProperties);OutDir=$(OutDir);
       </MsBuildProperties>
@@ -22,7 +22,7 @@
       <MSBuild Condition="'$(BuildingInsideVisualStudio)' != ''" Projects="..\Orleans\Orleans.csproj" Properties="$(MsBuildProperties);TargetFramework=netstandard1.5" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />
       <MSBuild Condition="'$(BuildingInsideVisualStudio)' != ''" Projects="..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" Properties="$(MsBuildProperties);TargetFramework=netstandard1.5" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />
       <MSBuild Condition="'$(BuildingInsideVisualStudio)' != ''" Projects="ClientGenerator.csproj" Properties="$(MsBuildProperties);TargetFramework=net462" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />
-      <MSBuild Condition="'$(BuildingInsideVisualStudio)' == ''"  Projects="..\Orleans\Orleans.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(BootstrapOutputPath)Intermediate\;OutDir=$(BootstrapOutputPath);DefineConstants=$(DefineConstants);TargetFramework=netstandard1.5" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
-      <MSBuild Condition="'$(BuildingInsideVisualStudio)' == ''" Projects="$(ProjectDir)..\ClientGenerator\ClientGenerator.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(DefineConstants);TargetFramework=net462" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
+      <MSBuild Condition="'$(BuildingInsideVisualStudio)' == ''"  Projects="..\Orleans\Orleans.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(BootstrapOutputPath)Intermediate\;OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodegenConstants);TargetFramework=netstandard1.5" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
+      <MSBuild Condition="'$(BuildingInsideVisualStudio)' == ''" Projects="$(ProjectDir)..\ClientGenerator\ClientGenerator.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodegenConstants);TargetFramework=net462" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
     </Target>
 </Project>  
