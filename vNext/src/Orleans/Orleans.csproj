@@ -140,7 +140,7 @@
     <PropertyGroup>
       <BootstrapOutputPath>$(ProjectDir)\$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
       <BootstrapOutputPath Condition="'$(BuildingInsideVisualStudio)' == 'true'">$(ProjectDir)$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
-      <ExcludeCodeGen>$(DefineConstants);EXCLUDE_CODEGEN</ExcludeCodeGen>
+      <ExcludeCodeGen>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP</ExcludeCodeGen>
     </PropertyGroup>
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - OutputPath: $(BootstrapOutputPath)" Importance="high" />
     <!-- Compile code generator -->

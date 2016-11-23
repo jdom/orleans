@@ -40,21 +40,21 @@ namespace Orleans.CodeGenerator
         /// The generic interface types whose type arguments needs serializators generation
         /// </summary>
         private static readonly HashSet<Type> KnownGenericIntefaceTypes = new HashSet<Type>
-            {
-                typeof(Streams.IAsyncObserver<>),
-                typeof(Streams.IAsyncStream<>),
-                typeof(Streams.IAsyncObservable<>)
-            };
+        {
+            typeof(Streams.IAsyncObserver<>),
+            typeof(Streams.IAsyncStream<>),
+            typeof(Streams.IAsyncObservable<>)
+        };
 
         /// <summary>
         /// The generic base types whose type arguments needs serializators generation
         /// </summary>
         private static readonly HashSet<Type> KnownGenericBaseTypes = new HashSet<Type>
-            {
-                typeof(Grain<>),
-                typeof(Streams.StreamSubscriptionHandleImpl<>),
-                typeof(Streams.StreamSubscriptionHandle<>)
-            };
+        {
+            typeof(Grain<>),
+            typeof(Streams.StreamSubscriptionHandleImpl<>),
+            typeof(Streams.StreamSubscriptionHandle<>)
+        };
 
         /// <summary>
         /// Adds a pre-generated assembly.
@@ -299,26 +299,28 @@ namespace Orleans.CodeGenerator
         /// Loads the specified assembly.
         /// </summary>
         /// <param name="asm">The assembly to load.</param>
-#if NETSTANDARD
         private static Assembly LoadAssembly(GeneratedAssembly asm)
         {
-            return Orleans.PlatformServices.PlatformAssemblyLoader.LoadFromBytes(asm.RawBytes, asm.DebugSymbolRawBytes);
-        }
+            Assembly result;
+#if ORLEANS_BOOTSTRAP
+            throw new NotImplementedException();
+#elif NETSTANDARD
+            result = Orleans.PlatformServices.PlatformAssemblyLoader.LoadFromBytes(asm.RawBytes, asm.DebugSymbolRawBytes);
+            AppDomain.CurrentDomain.AddAssembly(result);
 #else
-        private static Assembly LoadAssembly(GeneratedAssembly asm)
-        {
             if (asm.DebugSymbolRawBytes != null)
             {
-                return Assembly.Load(
+                result = Assembly.Load(
                     asm.RawBytes,
                     asm.DebugSymbolRawBytes);
             }
             else
             {
-                return Assembly.Load(asm.RawBytes);
+                result = Assembly.Load(asm.RawBytes);
             }
-        }
 #endif
+            return result;
+        }
 
         /// <summary>
         /// Generates a syntax tree for the provided assemblies.
