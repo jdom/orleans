@@ -42,10 +42,8 @@ namespace Orleans.CodeGeneration
         /// </summary>
         public static void Initialize()
         {
-#if !NETSTANDARD_TODO
             codeGeneratorInstance = LoadCodeGenerator();
             codeGeneratorCacheInstance = codeGeneratorInstance as ICodeGeneratorCache;
-#endif
         }
 
         /// <summary>
