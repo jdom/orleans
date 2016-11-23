@@ -60,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Orleans.PlatformServices\Orleans.PlatformServices.csproj" />
     <ProjectReference Include="..\..\src\Orleans\Orleans.csproj" />
     <ProjectReference Include="..\..\src\OrleansTestingHost\OrleansTestingHost.csproj" />
     <ProjectReference Include="..\..\src\OrleansCodeGenerator\OrleansCodeGenerator.csproj" />
