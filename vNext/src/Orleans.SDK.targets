@@ -18,6 +18,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <When Condition="'$(OrleansReferencesBase)' != ''">
       <PropertyGroup>
         <CodeGenToolExeDir>$(OrleansReferencesBase)</CodeGenToolExeDir>
+        <BuildingOrleans>true</BuildingOrleans>
       </PropertyGroup>
     </When>
     <!-- Legacy support for OrleansSDK -->
@@ -44,6 +45,16 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   <!-- include the codegen file in the project if it isn't there already -->
   <Target Name="OrleansCodeGenerationFileInclude"
           BeforeTargets="BeforeBuild">
+    <Message
+      Condition="'$(BuildingOrleans)' == 'true' And !Exists('$(CodeGenToolExe)')"
+      Text="[OrleansCodeGeneration] - Building Code Generator"
+      Importance="high" />
+    <MSBuild
+      Condition="'$(BuildingOrleans)' == 'true' And !Exists('$(CodeGenToolExe)')"
+      Projects="$(MSBuildThisFileDirectory)ClientGenerator\ClientGenerator.csproj"
+      Targets="Build"
+      UnloadProjectsOnCompletion="true"
+      UseResultsCache="false" />
 
     <FindInList
       List="@(Compile)"
