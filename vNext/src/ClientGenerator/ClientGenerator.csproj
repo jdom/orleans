@@ -9,7 +9,7 @@
     <TargetFramework>net462</TargetFramework>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RuntimeIdentifier>win</RuntimeIdentifier>
+    <RuntimeIdentifier>AnyCPU</RuntimeIdentifier>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orleans.CodeGeneration</RootNamespace>
     <AssemblyName>ClientGenerator</AssemblyName>

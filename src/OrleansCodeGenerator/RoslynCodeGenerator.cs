@@ -301,9 +301,7 @@ namespace Orleans.CodeGenerator
         /// <param name="asm">The assembly to load.</param>
         private static Assembly LoadAssembly(GeneratedAssembly asm)
         {
-#if ORLEANS_BOOTSTRAP
-            throw new NotImplementedException();
-#elif NETSTANDARD
+#if NETSTANDARD
             Assembly result;
             result = Orleans.PlatformServices.PlatformAssemblyLoader.LoadFromBytes(asm.RawBytes, asm.DebugSymbolRawBytes);
             AppDomain.CurrentDomain.AddAssembly(result);

@@ -31,20 +31,12 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Begin Orleans: Without these lines the project won't build properly -->
   <!-- Set path to ClientGenerator.exe -->
-  <Choose>
-    <When Condition="'$(builduri)' != ''">
-      <PropertyGroup>
-        <!-- TFS build -->
-        <OrleansReferencesBase>$(TargetDir)</OrleansReferencesBase>
-      </PropertyGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup>
-        <!-- Visual Studio or MsBuild .sln build -->
-        <OrleansReferencesBase>$(ProjectDir)..\Bootstrap\</OrleansReferencesBase>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
+  <PropertyGroup>
+    <!-- Visual Studio or MsBuild .sln build -->
+    <OrleansReferencesBase>$(ProjectDir)..\Bootstrap\</OrleansReferencesBase>
+    <!-- TFS build -->
+    <OrleansReferencesBase Condition="'$(builduri)' != ''">$(TargetDir)Bootstrap\</OrleansReferencesBase>
+  </PropertyGroup>
   <Import Project="$(ProjectDir)..\Orleans.SDK.targets" />
   <!--End Orleans -->
 </Project>
