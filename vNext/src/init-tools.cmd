@@ -26,6 +26,16 @@ if exist "%BUILD_TOOLS_SEMAPHORE%" (
   goto :EOF
 )
 
+for /f %%i in ('dotnet --version') do set INSTALLED_VERSION=%%i
+set /p REQUIRED_VERSION=<"%~dp0DotnetCLIVersion.txt"
+
+echo INSTALLED: %INSTALLED_VERSION%
+echo REQUIRED: %REQUIRED_VERSION%
+if '%INSTALLED_VERSION%' == '%REQUIRED_VERSION%' (
+  echo Will use system version of dotnet.
+  exit /b -1
+)
+
 if exist "%TOOLRUNTIME_DIR%" rmdir /S /Q "%TOOLRUNTIME_DIR%"
 
 if NOT exist "%PROJECT_JSON_PATH%" mkdir "%PROJECT_JSON_PATH%"

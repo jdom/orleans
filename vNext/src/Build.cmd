@@ -9,10 +9,16 @@ set Platform=
 
 :: Restore the Tools directory
 call %~dp0init-tools.cmd
-if NOT [%ERRORLEVEL%]==[0] exit /b 1
+if [%ERRORLEVEL%] GTR 0 (
+    exit /b 1
+)
 
-set _toolRuntime=%~dp0Tools
-set _dotnet=%_toolRuntime%\dotnetcli\dotnet.exe
+if [%ERRORLEVEL%]==[0] (
+    set _toolRuntime=%~dp0Tools
+    set _dotnet=%_toolRuntime%\dotnetcli\dotnet.exe
+) else (
+    set _dotnet=dotnet.exe
+)
 
 SET VERSION_FILE=%CMDHOME%\Build\Version.txt
 
