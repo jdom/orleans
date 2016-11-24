@@ -132,7 +132,7 @@
   <!-- Set path to ClientGenerator.exe -->
   <PropertyGroup>
     <!-- Visual Studio or MsBuild .sln build -->
-    <OrleansReferencesBase>$(ProjectDir)..\..\src\ClientGenerator\bin\$(Configuration)\net462\</OrleansReferencesBase>
+    <OrleansReferencesBase>$(ProjectDir)..\..\src\Bootstrap\</OrleansReferencesBase>
     <!-- TFS build -->
     <OrleansReferencesBase Condition="'$(builduri)' != ''">$(TargetDir)</OrleansReferencesBase>
   </PropertyGroup>
