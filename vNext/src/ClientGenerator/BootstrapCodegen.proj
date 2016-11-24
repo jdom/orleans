@@ -1,18 +1,16 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
       <Configuration>Debug</Configuration>
-      <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
+      <DefineConstants>EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
       <BootstrapOutputPath Condition="'$(BootstrapOutputPath)' == ''">$(MSBuildProjectDirectory)\obj\$(Configuration)\Bootstrap\</BootstrapOutputPath>
-      <BootstrapOutputPath Condition="'$(OutDir)' != ''">$(OutDir)</BootstrapOutputPath>
       <Bootstrap>true</Bootstrap>
       <OutputPath>$(BootstrapOutputPath)</OutputPath>
-      <!--<OutDir>$(BootstrapOutputPath)</OutDir>-->
+      <OutDir>$(BootstrapOutputPath)</OutDir>
       <IntermediateOutputPath>$(BootstrapOutputPath)Intermediate\</IntermediateOutputPath>
       <TargetFramework />
       <TargetFrameworks />
       <RuntimeIdentifier />
-      <MsBuildProperties>Configuration=$(Configuration);Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>
-      <!--<MsBuildProperties>Configuration=Debug;Bootstrap=true;BootstrapOutputPath=$(BootstrapOutputPath);OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>-->
+      <MsBuildProperties>Configuration=$(Configuration);Bootstrap=true;OutDir=$(OutDir);OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>
     </PropertyGroup>
     <ItemGroup>
         <ProjectToBuild Include="..\Orleans.PlatformServices\Orleans.PlatformServices.csproj">

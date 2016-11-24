@@ -36,18 +36,18 @@ call %_dotnet% restore "%CMDHOME%\.nuget\Tools.csproj"
 @echo Build Debug ==============================
 
 SET CONFIGURATION=Debug
-SET OutDir=%~dp0..\Binaries\%CONFIGURATION%
+SET OutputDirectory=%~dp0..\Binaries\%CONFIGURATION%
 
-call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION% "%PROJ%"
+call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION%;OutputPath=%OutputDirectory% "%PROJ%"
 @if ERRORLEVEL 1 GOTO :ErrorStop
 @echo BUILD ok for %CONFIGURATION% %PROJ%
 
 @echo Build Release ============================
 
 SET CONFIGURATION=Release
-SET OutDir=%CMDHOME%\..\Binaries\%CONFIGURATION%
+SET OutputDirectory=%CMDHOME%\..\Binaries\%CONFIGURATION%
 
-call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION% "%PROJ%"
+call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION%;OutputPath=%OutputDirectory% "%PROJ%"
 @if ERRORLEVEL 1 GOTO :ErrorStop
 @echo BUILD ok for %CONFIGURATION% %PROJ%
 
