@@ -18,7 +18,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <When Condition="'$(OrleansReferencesBase)' != ''">
       <PropertyGroup>
         <CodeGenToolExeDir>$(OrleansReferencesBase)</CodeGenToolExeDir>
-        <BuildingOrleans>true</BuildingOrleans>
       </PropertyGroup>
     </When>
     <!-- Legacy support for OrleansSDK -->
@@ -80,18 +79,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 - OrleansReferencesBase=$(OrleansReferencesBase)
 - OrleansSDK=$(OrleansSDK)
 - Using CodeGenToolExe location=$(CodeGenToolExe)
-" />
-    <Message
-      Condition="'$(BuildingOrleans)' == 'true' And !Exists('$(CodeGenToolExe)')"
-      Text="[OrleansCodeGeneration] - Building Code Generator"
-      Importance="high" />
-    <MSBuild
-      Condition="'$(BuildingOrleans)' == 'true' And !Exists('$(CodeGenToolExe)')"
-      Projects="$(MSBuildThisFileDirectory)ClientGenerator\ClientGenerator.csproj"
-      Targets="Build"
-      UnloadProjectsOnCompletion="true"
-      UseResultsCache="false" />
-      
+" />      
     <MakeDir Directories="$(IntermediateOutputPath)Generated"/>
     <Delete Files="$(ProjectDir)Properties\orleans.codegen.cs" ContinueOnError="true" />
     <MakeDir Directories="$(ProjectDir)Properties"/>
