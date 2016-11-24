@@ -2,6 +2,7 @@
 setlocal
 
 SET CMDHOME=%~dp0.
+SET BUILD_FLAGS=/m:1 /v:m /fl /flp:logfile=build.log;verbosity=detailed
 
 :: Clear the 'Platform' env variable for this session, as it's a per-project setting within the build, and
 :: misleading value (such as 'MCD' in HP PCs) may lead to build breakage (issue: #69).
@@ -44,7 +45,7 @@ call %_dotnet% restore "%CMDHOME%\.nuget\Tools.csproj"
 SET CONFIGURATION=Debug
 SET OutDir=%~dp0..\Binaries\%CONFIGURATION%
 
-call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION% "%PROJ%"
+call %_dotnet% build %BUILD_FLAGS% /p:Configuration=%CONFIGURATION% "%PROJ%"
 @if ERRORLEVEL 1 GOTO :ErrorStop
 @echo BUILD ok for %CONFIGURATION% %PROJ%
 
@@ -56,7 +57,7 @@ call "%CMDHOME%\NuGet\CreateOrleansPackages.bat" %_dotnet% %OutDir% %VERSION_FIL
 SET CONFIGURATION=Release
 SET OutDir=%CMDHOME%\..\Binaries\%CONFIGURATION%
 
-call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION% "%PROJ%"
+call %_dotnet% build %BUILD_FLAGS% /p:Configuration=%CONFIGURATION% "%PROJ%"
 @if ERRORLEVEL 1 GOTO :ErrorStop
 @echo BUILD ok for %CONFIGURATION% %PROJ%
 

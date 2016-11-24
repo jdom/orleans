@@ -301,25 +301,25 @@ namespace Orleans.CodeGenerator
         /// <param name="asm">The assembly to load.</param>
         private static Assembly LoadAssembly(GeneratedAssembly asm)
         {
-            Assembly result;
 #if ORLEANS_BOOTSTRAP
             throw new NotImplementedException();
 #elif NETSTANDARD
+            Assembly result;
             result = Orleans.PlatformServices.PlatformAssemblyLoader.LoadFromBytes(asm.RawBytes, asm.DebugSymbolRawBytes);
             AppDomain.CurrentDomain.AddAssembly(result);
+            return result;
 #else
             if (asm.DebugSymbolRawBytes != null)
             {
-                result = Assembly.Load(
+                return Assembly.Load(
                     asm.RawBytes,
                     asm.DebugSymbolRawBytes);
             }
             else
             {
-                result = Assembly.Load(asm.RawBytes);
+                return Assembly.Load(asm.RawBytes);
             }
 #endif
-            return result;
         }
 
         /// <summary>
