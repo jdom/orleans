@@ -139,7 +139,7 @@
     <MakeDir Directories="$(IntermediateOutputPath)Generated" />
     <Touch Files="$(ProjectDir)Properties\orleans.codegen.cs" ForceTouch="true" AlwaysCreate="true" ContinueOnError="true" Condition="!Exists('$(ProjectDir)Properties\orleans.codegen.cs')" />
     <PropertyGroup>
-      <BootstrapOutputPath>$(ProjectDir)$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
+      <BootstrapOutputPath>$(ProjectDir)..\Bootstrap\</BootstrapOutputPath>
       <!--<BootstrapOutputPath>$(OutputPath)Bootstrap\</BootstrapOutputPath>
       <BootstrapOutputPath Condition="'$(BuildingInsideVisualStudio)' == 'true'">$(ProjectDir)$(OutDir)Bootstrap\</BootstrapOutputPath>-->
     </PropertyGroup>

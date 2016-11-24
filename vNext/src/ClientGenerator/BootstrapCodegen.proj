@@ -1,7 +1,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
     <PropertyGroup>
       <!--<Configuration>Debug</Configuration>-->
-      <DefineConstants>EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
+      <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
       <BootstrapOutputPath Condition="'$(BootstrapOutputPath)' == ''">$(MSBuildProjectDirectory)\bin\$(Configuration)\Bootstrap\</BootstrapOutputPath>
       <Bootstrap>true</Bootstrap>
       <OutputPath>$(BootstrapOutputPath)</OutputPath>
@@ -12,21 +13,10 @@
       <RuntimeIdentifier />
       <MsBuildProperties>Configuration=$(Configuration);Bootstrap=true;OutDir=$(OutDir);OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>
     </PropertyGroup>
-    <ItemGroup>
-        <ProjectToBuild Include="..\Orleans.PlatformServices\Orleans.PlatformServices.csproj">
-            <Properties>$(MsBuildProperties);TargetFramework=net462</Properties>
-        </ProjectToBuild>
-        <ProjectToBuild Include="..\Orleans\Orleans.csproj" >
-            <Properties>$(MsBuildProperties);TargetFramework=netstandard1.5</Properties>
-        </ProjectToBuild>
-        <ProjectToBuild Include="..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" >
-            <Properties>$(MsBuildProperties);TargetFramework=netstandard1.5</Properties>
-        </ProjectToBuild>
-        <ProjectToBuild Include="ClientGenerator.csproj">
-            <Properties>$(MsBuildProperties);TargetFramework=net462</Properties>
-        </ProjectToBuild>
-    </ItemGroup>  
     <Target Name="Build">
-        <MSBuild Projects="@(ProjectToBuild)" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />  
-    </Target>  
+        <MSBuild Projects="..\Orleans.PlatformServices\Orleans.PlatformServices.csproj" Properties="$(MsBuildProperties);TargetFramework=net462" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />
+        <MSBuild Projects="..\Orleans\Orleans.csproj" Properties="$(MsBuildProperties);TargetFramework=netstandard1.5" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />
+        <MSBuild Projects="..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" Properties="$(MsBuildProperties);TargetFramework=netstandard1.5" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />
+        <MSBuild Projects="ClientGenerator.csproj" Properties="$(MsBuildProperties);TargetFramework=net462" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />  
+    </Target>
 </Project>  

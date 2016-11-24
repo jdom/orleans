@@ -164,7 +164,7 @@
     <Otherwise>
       <PropertyGroup>
         <!-- Visual Studio or MsBuild .sln build -->
-        <OrleansReferencesBase>$(ProjectDir)..\..\src\ClientGenerator\$(OutputPath)</OrleansReferencesBase>
+        <OrleansReferencesBase>$(ProjectDir)..\..\src\Bootstrap\</OrleansReferencesBase>
       </PropertyGroup>
     </Otherwise>
   </Choose>
