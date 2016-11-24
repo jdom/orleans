@@ -8,6 +8,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,12 @@
   <ItemGroup>
     <Compile Include="..\Build\GlobalAssemblyInfo.cs" />
     <Compile Include="..\..\..\src\Orleans\**\*.cs" Exclude="..\..\..\src\Orleans\Properties\**\*.cs;..\..\..\src\Orleans\Statistics\RuntimeStatisticsGroup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Make sure we not include it twice because of globbing.  -->
+    <Compile Remove="Properties\orleans.codegen.cs" />
+    <Compile Include="Properties\orleans.codegen.cs" />
   </ItemGroup>
 
   <ItemGroup>
