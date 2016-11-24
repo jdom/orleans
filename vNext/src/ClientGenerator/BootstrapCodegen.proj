@@ -1,8 +1,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-      <Configuration>Debug</Configuration>
+      <!--<Configuration>Debug</Configuration>-->
       <DefineConstants>EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
-      <BootstrapOutputPath Condition="'$(BootstrapOutputPath)' == ''">$(MSBuildProjectDirectory)\obj\$(Configuration)\Bootstrap\</BootstrapOutputPath>
+      <BootstrapOutputPath Condition="'$(BootstrapOutputPath)' == ''">$(MSBuildProjectDirectory)\bin\$(Configuration)\Bootstrap\</BootstrapOutputPath>
       <Bootstrap>true</Bootstrap>
       <OutputPath>$(BootstrapOutputPath)</OutputPath>
       <OutDir>$(BootstrapOutputPath)</OutDir>
@@ -27,6 +27,6 @@
         </ProjectToBuild>
     </ItemGroup>  
     <Target Name="Build">
-        <MSBuild Projects="@(ProjectToBuild)" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false"  />  
+        <MSBuild Projects="@(ProjectToBuild)" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" BuildInParallel="false" />  
     </Target>  
 </Project>  

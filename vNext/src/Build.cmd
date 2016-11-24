@@ -36,7 +36,7 @@ call %_dotnet% restore "%CMDHOME%\.nuget\Tools.csproj"
 @echo Build Debug ==============================
 
 SET CONFIGURATION=Debug
-SET OutputDirectory=%~dp0..\Binaries\%CONFIGURATION%
+SET OutDir=%~dp0..\Binaries\%CONFIGURATION%
 
 call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION% "%PROJ%"
 @if ERRORLEVEL 1 GOTO :ErrorStop
@@ -48,7 +48,7 @@ call "%CMDHOME%\NuGet\CreateOrleansPackages.bat" %_dotnet% %OutDir% %VERSION_FIL
 @echo Build Release ============================
 
 SET CONFIGURATION=Release
-SET OutputDirectory=%CMDHOME%\..\Binaries\%CONFIGURATION%
+SET OutDir=%CMDHOME%\..\Binaries\%CONFIGURATION%
 
 call %_dotnet% build /m:1 /p:Configuration=%CONFIGURATION% "%PROJ%"
 @if ERRORLEVEL 1 GOTO :ErrorStop
