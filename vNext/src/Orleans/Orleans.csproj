@@ -130,7 +130,7 @@
     <BootstrapOutputPath Condition="'$(builduri)' != ''">$(TargetDir)..\$(Configuration)Bootstrap\</BootstrapOutputPath>
     <ExcludeCodeGen>$(DefineConstants);EXCLUDE_CODEGEN</ExcludeCodeGen>
   </PropertyGroup>
-  <Target Name="OrleansDllBootstrapUsingCodeGen" AfterTargets="BeforeCompile" BeforeTargets="CoreCompile" Inputs="@(Compile);@(ReferencePath)" Outputs="$(BootstrapOutputPath)$(TargetName)$(TargetExt)" Condition="'$(Bootstrap)' != 'true'">
+  <Target Name="OrleansDllBootstrapUsingCodeGen" AfterTargets="BeforeCompile" BeforeTargets="CoreCompile" Inputs="@(Compile);@(ReferencePath)" Outputs="$(BootstrapOutputPath)$(TargetName)$(TargetExt);$(BootstrapOutputPath)ClientGenerator.exe" Condition="'$(Bootstrap)' != 'true'">
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - Bootstrapping the Orleans.dll" Importance="high" />
     <!-- Clean Generated directory -->
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - Deleting/cleaning generated files for Project=$(ProjectName)" />
@@ -142,15 +142,14 @@
       <!-- TFS build -->
       <BootstrapOutputPath Condition="'$(builduri)' != ''">$(TargetDir)..\$(Configuration)Bootstrap\</BootstrapOutputPath>
       <ExcludeCodeGen>$(DefineConstants);EXCLUDE_CODEGEN</ExcludeCodeGen>
+      <PlatformServicesTargetFrameworks>net462;netstandard1.5</PlatformServicesTargetFrameworks>
     </PropertyGroup>
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - OutputPath: $(BootstrapOutputPath)" Importance="high" />
     <!-- Compile code generator -->
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - Compiling Orleans.dll for bootstrap" Importance="high" />
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(BootstrapOutputPath)Intermediate\;OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodeGen);TargetFramework=netstandard1.5" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - Compiling code generators for bootstrap" Importance="high" />
-    <MSBuild Projects="$(ProjectDir)\..\Orleans.PlatformServices\Orleans.PlatformServices.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodeGen);TargetFramework=net462" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
-    <MSBuild Projects="$(ProjectDir)\..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodeGen);TargetFramework=netstandard1.5" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
-    <MSBuild Projects="$(ProjectDir)\..\ClientGenerator\ClientGenerator.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodeGen);TargetFramework=net462" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
+    <MSBuild Projects="$(ProjectDir)..\ClientGenerator\ClientGenerator.csproj" Targets="Build" Properties="Bootstrap=true;OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodeGen);TargetFramework=net462" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
     <!-- Finally invoke code generator on the recently built Orleans.dll -->
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - Preprocessing $(TargetName)$(TargetExt) with ClientGenerator.exe" Importance="high" />
     <PropertyGroup>
