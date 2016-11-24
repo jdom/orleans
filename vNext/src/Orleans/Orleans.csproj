@@ -138,13 +138,11 @@
     <MakeDir Directories="$(IntermediateOutputPath)Generated" />
     <Touch Files="$(ProjectDir)Properties\orleans.codegen.cs" ForceTouch="true" AlwaysCreate="true" ContinueOnError="true" Condition="!Exists('$(ProjectDir)Properties\orleans.codegen.cs')" />
     <PropertyGroup>
-      <BootstrapOutputPath>$(ProjectDir)\$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
-      <BootstrapOutputPath Condition="'$(BuildingInsideVisualStudio)' == 'true'">$(ProjectDir)$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
-      <ExcludeCodeGen>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP</ExcludeCodeGen>
+      <BootstrapOutputPath>$(ProjectDir)$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
     </PropertyGroup>
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - OutputPath: $(BootstrapOutputPath)" Importance="high" />
     <!-- Compile code generator -->
-    <MSBuild Projects="$(ProjectDir)..\ClientGenerator\BootstrapCodegen.proj" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
+    <MSBuild Projects="$(ProjectDir)..\ClientGenerator\BootstrapCodegen.proj" Properties="BootstrapOutputPath=$(BootstrapOutputPath)" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false" />
     <!-- Finally invoke code generator on the recently built Orleans.dll -->
     <Message Text="[OrleansDllBootstrapUsingCodeGen] - Preprocessing $(TargetName)$(TargetExt) with ClientGenerator.exe" Importance="high" />
     <PropertyGroup>

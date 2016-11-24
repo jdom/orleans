@@ -1,25 +1,34 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-      <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
-      <BootstrapOutputPath>$(ProjectDir)\$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
-      <BootstrapOutputPath Condition="'$(BuildingInsideVisualStudio)' == 'true'">$(ProjectDir)$(IntermediateOutputPath)Bootstrap\</BootstrapOutputPath>
-      <Bootstrap>true</Bootstrap>
       <Configuration>Debug</Configuration>
+      <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN;ORLEANS_BOOTSTRAP;NETSTANDARD;NETSTANDARD_TODO</DefineConstants>
+      <BootstrapOutputPath Condition="'$(BootstrapOutputPath)' == ''">$(MSBuildProjectDirectory)\obj\$(Configuration)\Bootstrap\</BootstrapOutputPath>
+      <BootstrapOutputPath Condition="'$(OutDir)' != ''">$(OutDir)</BootstrapOutputPath>
+      <Bootstrap>true</Bootstrap>
       <OutputPath>$(BootstrapOutputPath)</OutputPath>
-      <OutDir>$(BootstrapOutputPath)</OutDir>
-      <MsBuildProperties>Configuration=Debug;Bootstrap=true;BootstrapOutputPath=$(BootstrapOutputPath);OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>
+      <!--<OutDir>$(BootstrapOutputPath)</OutDir>-->
+      <IntermediateOutputPath>$(BootstrapOutputPath)Intermediate\</IntermediateOutputPath>
+      <TargetFramework />
+      <TargetFrameworks />
+      <RuntimeIdentifier />
+      <MsBuildProperties>Configuration=$(Configuration);Bootstrap=true;OutputPath=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>
+      <!--<MsBuildProperties>Configuration=Debug;Bootstrap=true;BootstrapOutputPath=$(BootstrapOutputPath);OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);IntermediateOutputPath=$(IntermediateOutputPath);DefineConstants=$(DefineConstants)</MsBuildProperties>-->
     </PropertyGroup>
     <ItemGroup>
-        <ProjectToBuild Include="..\Orleans.PlatformServices\Orleans.PlatformServices.csproj" />
-        <ProjectToBuild Include="..\Orleans\Orleans.csproj">
-            <!--<Properties>$(MsBuildProperties);TargetFramework=netstandard1.5</Properties>-->
+        <ProjectToBuild Include="..\Orleans.PlatformServices\Orleans.PlatformServices.csproj">
+            <Properties>$(MsBuildProperties);TargetFramework=net462</Properties>
         </ProjectToBuild>
-        <ProjectToBuild Include="..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" />
-        <ProjectToBuild Include="ClientGenerator.csproj">  
-            <!--<Properties>Configuration=Debug;BootstrapOutputPath=$(BootstrapOutputPath);OutputPath=$(BootstrapOutputPath);OutDir=$(BootstrapOutputPath);DefineConstants=$(ExcludeCodeGen)</Properties>-->
-        </ProjectToBuild>  
+        <ProjectToBuild Include="..\Orleans\Orleans.csproj" >
+            <Properties>$(MsBuildProperties);TargetFramework=netstandard1.5</Properties>
+        </ProjectToBuild>
+        <ProjectToBuild Include="..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" >
+            <Properties>$(MsBuildProperties);TargetFramework=netstandard1.5</Properties>
+        </ProjectToBuild>
+        <ProjectToBuild Include="ClientGenerator.csproj">
+            <Properties>$(MsBuildProperties);TargetFramework=net462</Properties>
+        </ProjectToBuild>
     </ItemGroup>  
-    <Target Name="Build">  
-        <MSBuild Projects="@(ProjectToBuild)" Targets="Build" Properties="$(MsBuildProperties)" />  
+    <Target Name="Build">
+        <MSBuild Projects="@(ProjectToBuild)" Targets="Build" UnloadProjectsOnCompletion="true" UseResultsCache="false"  />  
     </Target>  
 </Project>  

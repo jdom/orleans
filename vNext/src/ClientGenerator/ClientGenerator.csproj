@@ -43,12 +43,5 @@
     <ProjectReference Include="..\OrleansCodeGenerator\OrleansCodeGenerator.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Bootstrap)' == 'true'">
-    <OutputPath>$(BootstrapOutputPath)</OutputPath>
-    <OutDir>$(BootstrapOutputPath)</OutDir>
-    <IntermediateOutputPath>$(BootstrapOutputPath)Intermediate\</IntermediateOutputPath>
-    <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN</DefineConstants>
-  </PropertyGroup>
-
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

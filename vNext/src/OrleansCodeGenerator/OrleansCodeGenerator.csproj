@@ -31,11 +31,5 @@
     <ProjectReference Include="..\Orleans.PlatformServices\Orleans.PlatformServices.csproj" />
     <ProjectReference Include="..\Orleans\Orleans.csproj" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(Bootstrap)' == 'true'">
-    <OutputPath>$(BootstrapOutputPath)</OutputPath>
-    <OutDir>$(BootstrapOutputPath)</OutDir>
-    <IntermediateOutputPath>$(BootstrapOutputPath)Intermediate\</IntermediateOutputPath>
-    <DefineConstants>$(DefineConstants);EXCLUDE_CODEGEN</DefineConstants>
-  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
