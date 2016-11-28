@@ -14,7 +14,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Build\GlobalAssemblyInfo.cs" />
-    <Compile Include="..\..\..\src\Orleans\**\*.cs" Exclude="..\..\..\src\Orleans\Properties\**\*.cs;..\..\..\src\Orleans\Statistics\RuntimeStatisticsGroup.cs" />
+    <Compile
+      Include="..\..\..\src\Orleans\**\*.cs"
+      Exclude="
+        ..\..\..\src\Orleans\obj\**\*.cs;
+        ..\..\..\src\Orleans\bin\**\*.cs;
+        ..\..\..\src\Orleans\Properties\**\*.cs;
+        ..\..\..\src\Orleans\Statistics\RuntimeStatisticsGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- Make sure we not include it twice because of globbing.  -->

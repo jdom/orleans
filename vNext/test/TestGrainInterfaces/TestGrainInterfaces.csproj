@@ -13,6 +13,14 @@
 
   <ItemGroup>
     <Compile Include="**\*.cs" />
+    <Compile
+      Include="..\..\..\test\TestGrainInterfaces\**\*.cs"
+      Exclude="
+        ..\..\..\test\TestGrainInterfaces\IFSharpParametersGrain.cs;
+        ..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedFromFSharpInterfaceInExternalAssemblyGrain.cs;
+        ..\..\..\test\TestGrainInterfaces\Properties\*.cs;
+        ..\..\..\test\TestGrainInterfaces\obj\**\*.cs;
+        ..\..\..\test\TestGrainInterfaces\bin\**\*.cs"/>
     <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
 
@@ -39,111 +47,6 @@
     <ProjectReference Include="..\..\src\Orleans\Orleans.csproj" />
     <ProjectReference Include="..\..\src\OrleansRuntime\OrleansRuntime.csproj" />
     <ProjectReference Include="..\TestInterfaces\TestInterfaces.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\CodegenTestInterfaces.cs">
-      <Link>CodegenTestInterfaces.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\GetGrainInterfaces.cs">
-      <Link>GetGrainInterfaces.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\GrainInterfaceHierarchyIGrains.cs">
-      <Link>GrainInterfaceHierarchyIGrains.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IActivateDeactivateTestGrain.cs">
-      <Link>IActivateDeactivateTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IActivateDeactivateWatcherGrain.cs">
-      <Link>IActivateDeactivateWatcherGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ICircularStateTestGrain.cs">
-      <Link>ICircularStateTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IClusterTestGrains.cs">
-      <Link>IClusterTestGrains.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IExceptionGrain.cs">
-      <Link>IExceptionGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IExtensionTestGrain.cs">
-      <Link>IExtensionTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IExternalTypeGrain.cs">
-      <Link>IExternalTypeGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IInitialStateGrain.cs">
-      <Link>IInitialStateGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IJsonEchoGrain.cs">
-      <Link>IJsonEchoGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IKeyExtensionTestGrain.cs">
-      <Link>IKeyExtensionTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IMethodInterceptionGrain.cs">
-      <Link>IMethodInterceptionGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IPersistenceTestGrains.cs">
-      <Link>IPersistenceTestGrains.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IReminderTestGrain.cs">
-      <Link>IReminderTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ISerializationGeneratorTests.cs">
-      <Link>ISerializationGeneratorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ISimpleGenericGrain.cs">
-      <Link>ISimpleGenericGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ISimpleObserverableGrain.cs">
-      <Link>ISimpleObserverableGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ISimplePersistentGrain.cs">
-      <Link>ISimplePersistentGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IStatelessWorkerGrain.cs">
-      <Link>IStatelessWorkerGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IStreamLifecycleTestGrains.cs">
-      <Link>IStreamLifecycleTestGrains.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ITestExtension.cs">
-      <Link>ITestExtension.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ITestGrain.cs">
-      <Link>ITestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IValueTypeTestGrain.cs">
-      <Link>IValueTypeTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\SerializerExclusions.cs">
-      <Link>SerializerExclusions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IEchoTaskGrain.cs">
-      <Link>IEchoTaskGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IGenericInterfaces.cs">
-      <Link>IGenericInterfaces.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\ISimpleGrain.cs">
-      <Link>ISimpleGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrain.cs">
-      <Link>IGeneratorTestDerivedFromCSharpInterfaceInExternalAssemblyGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestGrain.cs">
-      <Link>IGeneratorTestGrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedGrain1.cs">
-      <Link>IGeneratorTestDerivedGrain1.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedGrain2.cs">
-      <Link>IGeneratorTestDerivedGrain2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\TestGrainInterfaces\IGeneratorTestDerivedDerivedGrain.cs">
-      <Link>IGeneratorTestDerivedDerivedGrain.cs</Link>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

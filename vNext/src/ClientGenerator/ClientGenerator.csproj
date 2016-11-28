@@ -22,7 +22,12 @@
   
   <ItemGroup>
     <Compile Include="..\Build\GlobalAssemblyInfo.cs" />
-    <Compile Include="..\..\..\src\ClientGenerator\**\*.cs" Exclude="..\..\..\src\ClientGenerator\Properties\**\*.cs" />
+    <Compile
+      Include="..\..\..\src\ClientGenerator\**\*.cs"
+      Exclude="
+        ..\..\..\src\ClientGenerator\obj\**\*.cs;
+        ..\..\..\src\ClientGenerator\bin\**\*.cs;
+        ..\..\..\src\ClientGenerator\Properties\**\*.cs" />
   </ItemGroup>
  
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
