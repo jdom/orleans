@@ -1267,6 +1267,8 @@ namespace Orleans.Runtime
                                 grainCreator.Release(activationData, grainInstance);
                             }
                         }
+
+                        activationData.Dispose();
                     }
                     catch (Exception exc)
                     {
