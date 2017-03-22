@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Orleans.CodeGeneration;
 using Orleans.Core;
 using Orleans.GrainDirectory;
@@ -157,6 +158,7 @@ namespace Orleans.Runtime
         private readonly SerializationManager serializationManager;
         private readonly MultiClusterRegistrationStrategyManager multiClusterRegistrationStrategyManager;
         private readonly CachedVersionSelectorManager versionSelectorManager;
+        private readonly IServiceScopeFactory serviceScopeFactory;
 
         public Catalog(
             ILocalSiloDetails localSiloDetails,
@@ -175,7 +177,8 @@ namespace Orleans.Runtime
             IStreamProviderRuntime providerRuntime,
             IStreamProviderManager providerManager,
             IServiceProvider serviceProvider,
-            CachedVersionSelectorManager versionSelectorManager)
+            CachedVersionSelectorManager versionSelectorManager,
+            IServiceScopeFactory serviceScopeFactory)
             : base(Constants.CatalogId, messageCenter.MyAddress)
         {
             LocalSilo = localSiloDetails.SiloAddress;
@@ -194,6 +197,8 @@ namespace Orleans.Runtime
             this.providerRuntime = providerRuntime;
             this.serviceProvider = serviceProvider;
             this.providerManager = providerManager;
+            this.serviceScopeFactory = serviceScopeFactory;
+
             logger = LogManager.GetLogger("Catalog", Runtime.LoggerType.Runtime);
             this.config = config.Globals;
             ActivationCollector = new ActivationCollector(config);
@@ -733,6 +738,7 @@ namespace Orleans.Runtime
             {
                 Grain grain;
 
+                data.ServiceScope = this.serviceScopeFactory.CreateScope();
                 if (typeof(IStatefulGrain).IsAssignableFrom(grainType))
                 {
                     //for stateful grains, install storage bridge
@@ -740,14 +746,14 @@ namespace Orleans.Runtime
 
                     var storage = new GrainStateStorageBridge(grainType.FullName, data.StorageProvider);
 
-                    grain = grainCreator.CreateGrainInstance(grainType, data.Identity, stateObjectType, storage);
+                    grain = grainCreator.CreateGrainInstance(data.ServiceProvider, grainType, data.Identity, stateObjectType, storage);
 
                     storage.SetGrain(grain);
                 }
                 else
                 {
                     // Create a new instance of the given grain type
-                    grain = grainCreator.CreateGrainInstance(grainType, data.Identity);
+                    grain = grainCreator.CreateGrainInstance(data.ServiceProvider, grainType, data.Identity);
 
                     // for log-view grains, install log-view adaptor
                     if (grain is ILogConsistentGrain)
@@ -1257,6 +1263,9 @@ namespace Orleans.Runtime
                         directory.InvalidateCacheEntry(activationData.Address);
 
                         RerouteAllQueuedMessages(activationData, null, "Finished Destroy Activation");
+
+                        activationData.ServiceScope?.Dispose();
+                        activationData.ServiceScope = null;
                     }
                     catch (Exception exc)
                     {

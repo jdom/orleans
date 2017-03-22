@@ -6,9 +6,6 @@ using Orleans.LogConsistency;
 using Orleans.Storage;
 using Orleans.Runtime.LogConsistency;
 using Orleans.GrainDirectory;
-using Orleans.Serialization;
-using Orleans.Runtime.MultiClusterNetwork;
-using Orleans.Runtime.Configuration;
 
 namespace Orleans.Runtime
 {
@@ -19,8 +16,6 @@ namespace Orleans.Runtime
     {
         private readonly Lazy<IGrainRuntime> grainRuntime;
 
-        private readonly IServiceProvider services;
-
         private readonly Func<Type, ObjectFactory> createFactory;
 
         private readonly ConcurrentDictionary<Type, ObjectFactory> typeActivatorCache = new ConcurrentDictionary<Type, ObjectFactory>();
@@ -30,15 +25,12 @@ namespace Orleans.Runtime
         /// <summary>
         /// Initializes a new instance of the <see cref="GrainCreator"/> class.
         /// </summary>
-        /// <param name="services">Service provider used to create new grains</param>
         /// <param name="getGrainRuntime">The delegate used to get the grain runtime.</param>
         /// <param name="protocolServicesFactory"></param>
         public GrainCreator(
-            IServiceProvider services,
             Func<IGrainRuntime> getGrainRuntime,
             Factory<Grain, IMultiClusterRegistrationStrategy, ProtocolServices> protocolServicesFactory)
         {
-            this.services = services;
             this.protocolServicesFactory = protocolServicesFactory;
             this.grainRuntime = new Lazy<IGrainRuntime>(getGrainRuntime);
             this.createFactory = type => ActivatorUtilities.CreateFactory(type, Type.EmptyTypes);
@@ -47,13 +39,14 @@ namespace Orleans.Runtime
         /// <summary>
         /// Create a new instance of a grain
         /// </summary>
+        /// <param name="serviceProvider">The service provider used to resolve the grain activation dependencies.</param>
         /// <param name="grainType">The grain type.</param>
         /// <param name="identity">Identity for the new grain</param>
         /// <returns>The newly created grain.</returns>
-        public Grain CreateGrainInstance(Type grainType, IGrainIdentity identity)
+        public Grain CreateGrainInstance(IServiceProvider serviceProvider, Type grainType, IGrainIdentity identity)
         {
             var activator = this.typeActivatorCache.GetOrAdd(grainType, this.createFactory);
-            var grain = (Grain)activator(this.services, arguments: null);
+            var grain = (Grain)activator(serviceProvider, arguments: null);
 
             // Inject runtime hooks into grain instance
             grain.Runtime = this.grainRuntime.Value;
@@ -65,15 +58,16 @@ namespace Orleans.Runtime
         /// <summary>
         /// Create a new instance of a grain
         /// </summary>
+        /// <param name="serviceProvider">The service provider used to resolve the grain activation dependencies.</param>
         /// <param name="grainType"></param>
         /// <param name="identity">Identity for the new grain</param>
         /// <param name="stateType">If the grain is a stateful grain, the type of the state it persists.</param>
         /// <param name="storage">If the grain is a stateful grain, the storage used to persist the state.</param>
         /// <returns></returns>
-        public Grain CreateGrainInstance(Type grainType, IGrainIdentity identity, Type stateType, IStorage storage)
+        public Grain CreateGrainInstance(IServiceProvider serviceProvider, Type grainType, IGrainIdentity identity, Type stateType, IStorage storage)
 		{
             //Create a new instance of the grain
-            var grain = CreateGrainInstance(grainType, identity);
+            var grain = CreateGrainInstance(serviceProvider, grainType, identity);
 
             var statefulGrain = grain as IStatefulGrain;
 

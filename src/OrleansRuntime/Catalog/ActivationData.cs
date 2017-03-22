@@ -10,6 +10,7 @@ using Orleans.GrainDirectory;
 using Orleans.Runtime.Configuration;
 using Orleans.Runtime.Scheduler;
 using Orleans.Storage;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Orleans.Runtime
 {
@@ -326,6 +327,8 @@ namespace Orleans.Runtime
 
         public ActivationAddress Address { get; private set; }
 
+        public IServiceProvider ServiceProvider => this.ServiceScope?.ServiceProvider;
+
         public void OnTimerCreated(IGrainTimer timer)
         {
             AddTimer(timer);
@@ -403,6 +406,8 @@ namespace Orleans.Runtime
 
             CollectionTicket = ticket;
         }
+
+        internal IServiceScope ServiceScope { get; set; }
 
         #endregion
 
