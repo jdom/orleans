@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Orleans.CodeGeneration;
 using Orleans.Core;
 using Orleans.GrainDirectory;
@@ -207,6 +208,7 @@ namespace Orleans.Runtime
             // Register system services.
             var services = new ServiceCollection();
             services.AddSingleton(this);
+            services.AddLogging();
             services.AddSingleton(initializationParams);
             services.AddFromExisting<ILocalSiloDetails, SiloInitializationParameters>();
             services.AddSingleton(initializationParams.ClusterConfig);
