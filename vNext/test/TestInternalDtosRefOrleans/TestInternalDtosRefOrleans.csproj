@@ -4,14 +4,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\..\test\TestInternalDtosRefOrleans\**\*.cs" Exclude="..\..\..\test\TestInternalDtosRefOrleans\obj\**\*.cs;..\..\..\test\TestInternalDtosRefOrleans\bin\**\*.cs;..\..\..\test\TestInternalDtosRefOrleans\Properties\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />

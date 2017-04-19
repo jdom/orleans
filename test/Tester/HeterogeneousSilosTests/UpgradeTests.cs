@@ -58,7 +58,7 @@ namespace Tester.HeterogeneousSilosTests
                 else
                 {
                     // vnext
-                    var target = @"\net462";
+                    var target = @"\net461";
                     assemblyGrainsV1Dir = new DirectoryInfo(@"..\" + AssemblyGrainsV1Vs + target);
                     assemblyGrainsV2Dir = new DirectoryInfo(@"..\" + AssemblyGrainsV2Vs + target);
                 }

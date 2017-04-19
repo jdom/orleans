@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
@@ -12,7 +12,7 @@
     <Compile Include="..\..\..\test\TestInternalGrainInterfaces\**\*.cs" Exclude="..\..\..\test\TestInternalGrainInterfaces\obj\**\*.cs;..\..\..\test\TestInternalGrainInterfaces\bin\**\*.cs;..\..\..\test\TestInternalGrainInterfaces\Properties\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
