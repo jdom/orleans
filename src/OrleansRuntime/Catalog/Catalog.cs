@@ -728,7 +728,8 @@ namespace Orleans.Runtime
 
             //Gets the type for the grain's state
             Type stateObjectType = grainTypeData.StateObjectType;
-            
+
+            var context = new GrainActivationContext(grainTypeData, data.Identity);
             lock (data)
             {
                 Grain grain;
@@ -740,14 +741,14 @@ namespace Orleans.Runtime
 
                     var storage = new GrainStateStorageBridge(grainType.FullName, data.StorageProvider);
 
-                    grain = grainCreator.CreateGrainInstance(grainType, data.Identity, stateObjectType, storage);
+                    grain = grainCreator.CreateGrainInstance(context, stateObjectType, storage);
 
                     storage.SetGrain(grain);
                 }
                 else
                 {
                     // Create a new instance of the given grain type
-                    grain = grainCreator.CreateGrainInstance(grainType, data.Identity);
+                    grain = grainCreator.CreateGrainInstance(context);
 
                     // for log-view grains, install log-view adaptor
                     if (grain is ILogConsistentGrain)
@@ -766,6 +767,7 @@ namespace Orleans.Runtime
 
                 grain.Data = data;
                 data.SetGrainInstance(grain);
+                data.SetGrainContext
             }
 
 
