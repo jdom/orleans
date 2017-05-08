@@ -8,7 +8,7 @@ using Orleans.GrainDirectory;
 namespace Orleans.Runtime
 {
     /// <summary>
-    /// Helper class used to create local instances of grains.
+    /// Helper class used to create local instances of grains. In the future this should be opened up for extension similar to ASP.NET's ControllerFactory.
     /// </summary>
     internal class GrainCreator
     {
@@ -37,9 +37,9 @@ namespace Orleans.Runtime
         /// <summary>
         /// Create a new instance of a grain
         /// </summary>
-        /// <param name="context">The <see cref="GrainActivationContext"/> for the executing action.</param>
+        /// <param name="context">The <see cref="IGrainActivationContext"/> for the executing action.</param>
         /// <returns>The newly created grain.</returns>
-        public Grain CreateGrainInstance(GrainActivationContext context)
+        public Grain CreateGrainInstance(IGrainActivationContext context)
         {
             var grain = (Grain)grainActivator.Create(context);
 
@@ -53,11 +53,11 @@ namespace Orleans.Runtime
         /// <summary>
         /// Create a new instance of a grain
         /// </summary>
-        /// <param name="context">The <see cref="GrainActivationContext"/> for the executing action.</param>
+        /// <param name="context">The <see cref="IGrainActivationContext"/> for the executing action.</param>
         /// <param name="stateType">If the grain is a stateful grain, the type of the state it persists.</param>
         /// <param name="storage">If the grain is a stateful grain, the storage used to persist the state.</param>
         /// <returns></returns>
-        public Grain CreateGrainInstance(GrainActivationContext context, Type stateType, IStorage storage)
+        public Grain CreateGrainInstance(IGrainActivationContext context, Type stateType, IStorage storage)
 		{
             //Create a new instance of the grain
             var grain = CreateGrainInstance(context);
@@ -95,6 +95,11 @@ namespace Orleans.Runtime
             var state = Activator.CreateInstance(stateType);
 
             ((ILogConsistentGrain)grain).InstallAdaptor(factory, state, grainType.FullName, storageProvider, svc);
+        }
+
+        public virtual void Release(IGrainActivationContext context, object grain)
+        {
+            this.grainActivator.Release(context, grain);
         }
     }
 }

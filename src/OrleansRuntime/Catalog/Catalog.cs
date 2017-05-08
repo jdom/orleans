@@ -729,9 +729,10 @@ namespace Orleans.Runtime
             //Gets the type for the grain's state
             Type stateObjectType = grainTypeData.StateObjectType;
 
-            var context = new GrainActivationContext(grainTypeData, data.Identity);
             lock (data)
             {
+                data.SetupContext(grainTypeData, this.serviceProvider);
+
                 Grain grain;
 
                 if (typeof(IStatefulGrain).IsAssignableFrom(grainType))
@@ -741,14 +742,14 @@ namespace Orleans.Runtime
 
                     var storage = new GrainStateStorageBridge(grainType.FullName, data.StorageProvider);
 
-                    grain = grainCreator.CreateGrainInstance(context, stateObjectType, storage);
+                    grain = grainCreator.CreateGrainInstance(data, stateObjectType, storage);
 
                     storage.SetGrain(grain);
                 }
                 else
                 {
                     // Create a new instance of the given grain type
-                    grain = grainCreator.CreateGrainInstance(context);
+                    grain = grainCreator.CreateGrainInstance(data);
 
                     // for log-view grains, install log-view adaptor
                     if (grain is ILogConsistentGrain)
@@ -767,9 +768,7 @@ namespace Orleans.Runtime
 
                 grain.Data = data;
                 data.SetGrainInstance(grain);
-                data.SetGrainContext
             }
-
 
             activations.IncrementGrainCounter(grainClassName);
 
@@ -1238,6 +1237,7 @@ namespace Orleans.Runtime
                 // step 4 - UnregisterMessageTarget and OnFinishedGrainDeactivate
                 foreach (var activationData in list)
                 {
+                    Grain grainInstance = activationData.GrainInstance;
                     try
                     {
                         lock (activationData)
@@ -1259,6 +1259,13 @@ namespace Orleans.Runtime
                         directory.InvalidateCacheEntry(activationData.Address);
 
                         RerouteAllQueuedMessages(activationData, null, "Finished Destroy Activation");
+                        if (grainInstance != null)
+                        {
+                            lock (activationData)
+                            {
+                                grainCreator.Release(activationData, grainInstance);
+                            }
+                        }
                     }
                     catch (Exception exc)
                     {

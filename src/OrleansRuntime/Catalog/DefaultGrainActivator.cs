@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Globalization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Orleans.Runtime
 {
@@ -14,7 +14,7 @@ namespace Orleans.Runtime
         private readonly ConcurrentDictionary<Type, ObjectFactory> typeActivatorCache = new ConcurrentDictionary<Type, ObjectFactory>();
 
         /// <inheritdoc />
-        public virtual object Create(GrainActivationContext context)
+        public virtual object Create(IGrainActivationContext context)
         {
             if (context == null)
             {
@@ -30,7 +30,7 @@ namespace Orleans.Runtime
                     string.Format(
                         CultureInfo.InvariantCulture, "The '{0}' property of '{1}' must not be null.",
                         nameof(context.GrainType),
-                        nameof(GrainActivationContext)));
+                        nameof(IGrainActivationContext)));
             }
 
             var serviceProvider = context.GrainServices;
@@ -40,7 +40,7 @@ namespace Orleans.Runtime
         }
 
         /// <inheritdoc />
-        public virtual void Release(GrainActivationContext context, object grain)
+        public virtual void Release(IGrainActivationContext context, object grain)
         {
             if (context == null)
             {

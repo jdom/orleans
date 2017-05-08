@@ -8,15 +8,15 @@
         /// <summary>
         /// Creates a grain.
         /// </summary>
-        /// <param name="context">The <see cref="GrainActivationContext"/> for the executing action.</param>
+        /// <param name="context">The <see cref="IGrainActivationContext"/> for the executing action.</param>
         /// <returns>An instantiated grain.</returns>
-        object Create(GrainActivationContext context);
+        object Create(IGrainActivationContext context);
 
         /// <summary>
         /// Releases a controller.
         /// </summary>
-        /// <param name="context">The <see cref="GrainActivationContext"/> for the executing action.</param>
+        /// <param name="context">The <see cref="IGrainActivationContext"/> for the executing action.</param>
         /// <param name="grain">The grain to release.</param>
-        void Release(GrainActivationContext context, object grain);
+        void Release(IGrainActivationContext context, object grain);
     }
 }
