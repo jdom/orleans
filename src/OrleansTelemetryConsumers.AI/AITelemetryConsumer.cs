@@ -5,8 +5,7 @@ using Orleans.Runtime;
 
 namespace Orleans.TelemetryConsumers.AI
 {
-    public class AITelemetryConsumer : ITraceTelemetryConsumer, IEventTelemetryConsumer, IExceptionTelemetryConsumer, 
-        IDependencyTelemetryConsumer, IMetricTelemetryConsumer, IRequestTelemetryConsumer
+    public class AITelemetryConsumer : IMetricTelemetryConsumer
     {
         private TelemetryClient _client;
 

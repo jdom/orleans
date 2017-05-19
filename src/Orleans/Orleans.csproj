@@ -76,7 +76,7 @@
     <OrleansBootstrapSteps>
       OrleansDllBootstrapUsingCodeGen
     </OrleansBootstrapSteps>
-  </PropertyGroup>
+    </PropertyGroup>
 
   <Target Name="OrleansBootstrap" BeforeTargets="AssignTargetPaths" DependsOnTargets="$(OrleansBootstrapSteps)" Condition="'$(Bootstrap)' != 'true'" />
 

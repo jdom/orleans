@@ -257,22 +257,22 @@ namespace Orleans.Runtime
                 }
             }
 
-            var formatedTraceMessage = TraceParserUtils.FormatLogMessage(sev, loggerType, Name, message, LogManager.MyIPEndPoint, exception, errorCode);
+            //var formatedTraceMessage = TraceParserUtils.FormatLogMessage(sev, loggerType, Name, message, LogManager.MyIPEndPoint, exception, errorCode);
 
-            if (exception != null)
-                TrackException(exception);
+            //if (exception != null)
+            //    TrackException(exception);
 
-            TrackTrace(formatedTraceMessage, sev);
+            //TrackTrace(formatedTraceMessage, sev);
 
-            if (logMessageTruncated)
-            {
-                formatedTraceMessage = TraceParserUtils.FormatLogMessage(Severity.Warning, loggerType, Name,
-                    "Previous log message was truncated - Max size = " + LogManager.MAX_LOG_MESSAGE_SIZE,
-                    LogManager.MyIPEndPoint, exception,
-                    (int)ErrorCode.Logger_LogMessageTruncated);
+            //if (logMessageTruncated)
+            //{
+            //    formatedTraceMessage = TraceParserUtils.FormatLogMessage(Severity.Warning, loggerType, Name,
+            //        "Previous log message was truncated - Max size = " + LogManager.MAX_LOG_MESSAGE_SIZE,
+            //        LogManager.MyIPEndPoint, exception,
+            //        (int)ErrorCode.Logger_LogMessageTruncated);
 
-                TrackTrace(formatedTraceMessage);
-            }
+            //    TrackTrace(formatedTraceMessage);
+            //}
 
             if ((DateTime.UtcNow - lastFlush) > flushInterval)
             {
@@ -280,120 +280,151 @@ namespace Orleans.Runtime
                 LogManager.Flush();
             }
         }
+    }
+
+    internal class MetricsWriter : IMetricsWriter
+    {
+        private readonly List<IMetricTelemetryConsumer> consumers;
+
+        public MetricsWriter(IEnumerable<IMetricTelemetryConsumer> consumers)
+        {
+            this.consumers = consumers.ToList();
+        }
+
+        internal static MetricsWriter FromConfiguration(Configuration.MetricsTelemetryConfiguration configuration, IServiceProvider serviceProvider)
+        {
+            var consumers = new List<IMetricTelemetryConsumer>(configuration.Consumers.Count);
+            foreach (var consumerConfig in configuration.Consumers)
+            {
+                IMetricTelemetryConsumer consumer = null;
+                if ((consumerConfig.Properties?.Count ?? 0) == 0)
+                {
+                    // first check whether it is registered in the container already
+                    consumer = (IMetricTelemetryConsumer)serviceProvider.GetService(consumerConfig.ConsumerType);
+                }
+                if (consumer == null)
+                {
+                    consumer = (IMetricTelemetryConsumer)Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(serviceProvider, consumerConfig.ConsumerType, consumerConfig.Properties.Values.ToArray());
+                }
+                consumers.Add(consumer);
+            }
+
+            return new MetricsWriter(consumers);
+        }
 
         #region APM Methods
 
-        public override void TrackDependency(string name, string commandName, DateTimeOffset startTime, TimeSpan duration, bool success)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IDependencyTelemetryConsumer>())
-            {
-                tc.TrackDependency(name, commandName, startTime, duration, success);
-            }
-        }
+        //public override void TrackDependency(string name, string commandName, DateTimeOffset startTime, TimeSpan duration, bool success)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<IDependencyTelemetryConsumer>())
+        //    {
+        //        tc.TrackDependency(name, commandName, startTime, duration, success);
+        //    }
+        //}
 
-        public override void TrackEvent(string name, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IEventTelemetryConsumer>())
-            {
-                tc.TrackEvent(name, properties, metrics);
-            }
-        }
+        //public override void TrackEvent(string name, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<IEventTelemetryConsumer>())
+        //    {
+        //        tc.TrackEvent(name, properties, metrics);
+        //    }
+        //}
 
-        public override void TrackMetric(string name, double value, IDictionary<string, string> properties = null)
+        public void TrackMetric(string name, double value, IDictionary<string, string> properties = null)
         {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IMetricTelemetryConsumer>())
-            {
-                tc.TrackMetric(name, value, properties);
-            }
-        }
-
-        public override void TrackMetric(string name, TimeSpan value, IDictionary<string, string> properties = null)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IMetricTelemetryConsumer>())
+            foreach (var tc in this.consumers)
             {
                 tc.TrackMetric(name, value, properties);
             }
         }
 
-        public override void IncrementMetric(string name)
+        public void TrackMetric(string name, TimeSpan value, IDictionary<string, string> properties = null)
         {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IMetricTelemetryConsumer>())
+            foreach (var tc in this.consumers)
+            {
+                tc.TrackMetric(name, value, properties);
+            }
+        }
+
+        public void IncrementMetric(string name)
+        {
+            foreach (var tc in this.consumers)
             {
                 tc.IncrementMetric(name);
             }
         }
 
-        public override void IncrementMetric(string name, double value)
+        public void IncrementMetric(string name, double value)
         {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IMetricTelemetryConsumer>())
+            foreach (var tc in this.consumers)
             {
                 tc.IncrementMetric(name, value);
             }
         }
 
-        public override void DecrementMetric(string name)
+        public void DecrementMetric(string name)
         {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IMetricTelemetryConsumer>())
+            foreach (var tc in this.consumers)
             {
                 tc.DecrementMetric(name);
             }
         }
 
-        public override void DecrementMetric(string name, double value)
+        public void DecrementMetric(string name, double value)
         {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IMetricTelemetryConsumer>())
+            foreach (var tc in this.consumers)
             {
                 tc.DecrementMetric(name, value);
             }
         }
 
-        public override void TrackRequest(string name, DateTimeOffset startTime, TimeSpan duration, string responseCode, bool success)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IRequestTelemetryConsumer>())
-            {
-                tc.TrackRequest(name, startTime, duration, responseCode, success);
-            }
-        }
+        //public override void TrackRequest(string name, DateTimeOffset startTime, TimeSpan duration, string responseCode, bool success)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<IRequestTelemetryConsumer>())
+        //    {
+        //        tc.TrackRequest(name, startTime, duration, responseCode, success);
+        //    }
+        //}
 
-        public override void TrackException(Exception exception, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<IExceptionTelemetryConsumer>())
-            {
-                tc.TrackException(exception, properties, metrics);
-            }
-        }
+        //public override void TrackException(Exception exception, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<IExceptionTelemetryConsumer>())
+        //    {
+        //        tc.TrackException(exception, properties, metrics);
+        //    }
+        //}
 
-        public override void TrackTrace(string message)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
-            {
-                tc.TrackTrace(message);
-            }
-        }
+        //public override void TrackTrace(string message)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
+        //    {
+        //        tc.TrackTrace(message);
+        //    }
+        //}
 
-        public override void TrackTrace(string message, Severity severity)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
-            {
-                tc.TrackTrace(message, severity);
-            }
-        }
+        //public override void TrackTrace(string message, Severity severity)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
+        //    {
+        //        tc.TrackTrace(message, severity);
+        //    }
+        //}
 
-        public override void TrackTrace(string message, Severity severity, IDictionary<string, string> properties)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
-            {
-                tc.TrackTrace(message, severity, properties);
-            }
-        }
+        //public override void TrackTrace(string message, Severity severity, IDictionary<string, string> properties)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
+        //    {
+        //        tc.TrackTrace(message, severity, properties);
+        //    }
+        //}
 
-        public override void TrackTrace(string message, IDictionary<string, string> properties)
-        {
-            foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
-            {
-                tc.TrackTrace(message, properties);
-            }
-        }
+        //public override void TrackTrace(string message, IDictionary<string, string> properties)
+        //{
+        //    foreach (var tc in LogManager.TelemetryConsumers.OfType<ITraceTelemetryConsumer>())
+        //    {
+        //        tc.TrackTrace(message, properties);
+        //    }
+        //}
 
         #endregion
 

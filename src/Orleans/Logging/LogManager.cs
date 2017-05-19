@@ -149,36 +149,38 @@ namespace Orleans.Runtime
                 // We need the default listener so that Debug.Assert and Debug.Fail work properly
                 Trace.Listeners.Add(new DefaultTraceListener());
                 */
-                if (config.TraceToConsole)
-                {
-                    if (!TelemetryConsumers.OfType<ConsoleTelemetryConsumer>().Any())
-                    {
-                        TelemetryConsumers.Add(new ConsoleTelemetryConsumer());
-                    }
-                }
-                if (!string.IsNullOrEmpty(config.TraceFileName))
-                {
-                    try
-                    {
-                        if (!TelemetryConsumers.OfType<FileTelemetryConsumer>().Any())
-                        {
-                            TelemetryConsumers.Add(new FileTelemetryConsumer(config.TraceFileName));
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        Trace.Listeners.Add(new DefaultTraceListener());
-                        Trace.TraceError("Error opening trace file {0} -- Using DefaultTraceListener instead -- Exception={1}", config.TraceFileName, exc);
-                    }
-                }
 
-                if (Trace.Listeners.Count > 0)
-                {
-                    if (!TelemetryConsumers.OfType<TraceTelemetryConsumer>().Any())
-                    {
-                        TelemetryConsumers.Add(new TraceTelemetryConsumer());
-                    }
-                }
+                // TODO: need to re-connect this to the logging abstractions!!
+                //if (config.TraceToConsole)
+                //{
+                //    if (!TelemetryConsumers.OfType<ConsoleTelemetryConsumer>().Any())
+                //    {
+                //        TelemetryConsumers.Add(new ConsoleTelemetryConsumer());
+                //    }
+                //}
+                //if (!string.IsNullOrEmpty(config.TraceFileName))
+                //{
+                //    try
+                //    {
+                //        if (!TelemetryConsumers.OfType<FileTelemetryConsumer>().Any())
+                //        {
+                //            TelemetryConsumers.Add(new FileTelemetryConsumer(config.TraceFileName));
+                //        }
+                //    }
+                //    catch (Exception exc)
+                //    {
+                //        Trace.Listeners.Add(new DefaultTraceListener());
+                //        Trace.TraceError("Error opening trace file {0} -- Using DefaultTraceListener instead -- Exception={1}", config.TraceFileName, exc);
+                //    }
+                //}
+
+                //if (Trace.Listeners.Count > 0)
+                //{
+                //    if (!TelemetryConsumers.OfType<TraceTelemetryConsumer>().Any())
+                //    {
+                //        TelemetryConsumers.Add(new TraceTelemetryConsumer());
+                //    }
+                //}
 
                 IsInitialized = true;
             }
