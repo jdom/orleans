@@ -78,6 +78,22 @@ namespace UnitTests.General
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task CanResolveScopedGrainActivationContext()
+        {
+            long id1 = GetRandomGrainId();
+            long id2 = GetRandomGrainId();
+            var grain1 = this.fixture.GrainFactory.GetGrain<IDIGrainWithInjectedServices>(id1);
+            var grain2 = this.fixture.GrainFactory.GetGrain<IDIGrainWithInjectedServices>(id2);
+
+            // the injected service will only return a different value if it's a different instance
+            Assert.Contains(id1.ToString(), await grain1.GetStringValue());
+            Assert.Contains(id2.ToString(), await grain2.GetStringValue());
+
+            await grain1.DoDeactivate();
+            await grain2.DoDeactivate();
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
         public async Task CanResolveSameDependenciesViaServiceProvider()
         {
             var grain1 = this.fixture.GrainFactory.GetGrain<IDIGrainWithInjectedServices>(GetRandomGrainId());

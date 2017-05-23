@@ -285,6 +285,8 @@ namespace Orleans.Runtime
             this.GrainTypeData = typeData;
             this.serviceScope = grainServices.CreateScope();
 
+            SetGrainActivationContextInScopedServices();
+
             if (typeData != null)
             {
                 var grainType = typeData.Type;
@@ -295,6 +297,21 @@ namespace Orleans.Runtime
                 {
                     this.collector = null;
                 }
+            }
+        }
+
+        internal static AsyncLocal<IGrainActivationContext> CurrentScopedIGrainActivationContextInitializer = new AsyncLocal<IGrainActivationContext>();
+        private void SetGrainActivationContextInScopedServices()
+        {
+            // TODO: is there a better way to avoid this hack of using a an async local value to force it to initialize the instance?
+            CurrentScopedIGrainActivationContextInitializer.Value = this;
+            try
+            {
+                this.GrainServices.GetRequiredService<IGrainActivationContext>();
+            }
+            finally
+            {
+                CurrentScopedIGrainActivationContextInitializer.Value = null;
             }
         }
 
