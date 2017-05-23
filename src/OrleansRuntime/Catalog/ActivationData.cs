@@ -12,6 +12,7 @@ using Orleans.Runtime.Configuration;
 using Orleans.Runtime.Scheduler;
 using Orleans.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 
 namespace Orleans.Runtime
 {
@@ -282,10 +283,11 @@ namespace Orleans.Runtime
 
         internal void SetupContext(GrainTypeData typeData, IServiceProvider grainServices)
         {
+            if (this.serviceScope != null) throw new InvalidOperationException("context already initialized");
             this.GrainTypeData = typeData;
             this.serviceScope = grainServices.CreateScope();
 
-            SetGrainActivationContextInScopedServices();
+            SetGrainActivationContextInScopedServices(this.GrainServices, this);
 
             if (typeData != null)
             {
@@ -300,15 +302,19 @@ namespace Orleans.Runtime
             }
         }
 
-        [ThreadStatic]
-        private static IGrainActivationContext currentScopedIGrainActivationContextInitializer;
-
-        private void SetGrainActivationContextInScopedServices()
+        private static ConcurrentDictionary<IServiceProvider, IGrainActivationContext> currentScopedIGrainActivationContextInitializer = new ConcurrentDictionary<IServiceProvider, IGrainActivationContext>();
+        internal class DummyGrainActivationContext : IGrainActivationContext
         {
-            var sp = this.GrainServices;
+            public Type GrainType => throw new NotImplementedException();
 
-            // TODO: is there a better way to avoid this hack of using a an async local value to force it to initialize the instance?
-            if (Interlocked.CompareExchange(ref currentScopedIGrainActivationContextInitializer, this, null) != null)
+            public IGrainIdentity GrainIdentity => throw new NotImplementedException();
+
+            public IServiceProvider GrainServices => throw new NotImplementedException();
+        }
+        private static void SetGrainActivationContextInScopedServices(IServiceProvider sp, IGrainActivationContext context)
+        {
+            // TODO: is there a better way to avoid this hack of using a static value to force it to initialize the instance?
+            if (!currentScopedIGrainActivationContextInitializer.TryAdd(sp, context))
             {
                 throw new InvalidOperationException($"Invalid value when setting {nameof(currentScopedIGrainActivationContextInitializer)}");
             }
@@ -318,17 +324,18 @@ namespace Orleans.Runtime
             }
             finally
             {
-                if (currentScopedIGrainActivationContextInitializer != null)
+                IGrainActivationContext current;
+                if (currentScopedIGrainActivationContextInitializer.TryRemove(sp, out current))
                 {
-                    //throw new InvalidOperationException($"Value should be null: {nameof(currentScopedIGrainActivationContextInitializer)}");
+                    throw new InvalidOperationException($"Value should be null: {nameof(currentScopedIGrainActivationContextInitializer)}");
                 }
             }
         }
 
-        internal static IGrainActivationContext PopCurrentScopedIGrainActivationContext()
+        internal static IGrainActivationContext PopCurrentScopedIGrainActivationContext(IServiceProvider sp)
         {
-            var currentContext = Interlocked.Exchange(ref currentScopedIGrainActivationContextInitializer, null);
-            if (currentContext == null)
+            IGrainActivationContext currentContext;
+            if (!currentScopedIGrainActivationContextInitializer.TryRemove(sp, out currentContext))
             {
                 throw new InvalidOperationException($"Unexpected null value when getting {nameof(currentScopedIGrainActivationContextInitializer)}");
             }

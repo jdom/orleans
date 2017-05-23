@@ -8,6 +8,8 @@ using TestExtensions;
 using UnitTests.GrainInterfaces;
 using UnitTests.Grains;
 using Xunit;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace UnitTests.General
 {
@@ -91,6 +93,27 @@ namespace UnitTests.General
 
             await grain1.DoDeactivate();
             await grain2.DoDeactivate();
+        }
+
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
+        public async Task ScopedDependenciesAreThreadSafe()
+        {
+            const int parallelCalls = 10;
+            var grain1 = this.fixture.GrainFactory.GetGrain<IDIGrainWithInjectedServices>(GetRandomGrainId());
+
+            var calls =
+                Enumerable.Range(0, parallelCalls)
+                    .Select(i => grain1.GetInjectedScopedServiceValue())
+                    .ToList();
+
+            await Task.WhenAll(calls);
+            string expected = calls[0].Result;
+            foreach (var value in calls.Select(x => x.Result))
+            {
+                Assert.Equal(expected, value);
+            }
+
+            await grain1.DoDeactivate();
         }
 
         [Fact, TestCategory("BVT"), TestCategory("Functional")]

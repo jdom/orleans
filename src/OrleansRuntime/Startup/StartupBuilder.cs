@@ -37,7 +37,8 @@ namespace Orleans.Runtime.Startup
                 return servicesMethod.Build(instance, serviceCollection);
             }
 
-            return serviceCollection.BuildServiceProvider(validateScopes: true);
+            // TODO: validateScopes should be true after we move to 1.1.2 and this bug is fixed: https://github.com/aspnet/DependencyInjection/issues/467
+            return serviceCollection.BuildServiceProvider(validateScopes: false);
         }
 
         private static ConfigureServicesBuilder FindConfigureServicesDelegate(Type startupType)
