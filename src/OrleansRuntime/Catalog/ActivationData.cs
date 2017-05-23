@@ -300,19 +300,39 @@ namespace Orleans.Runtime
             }
         }
 
-        internal static AsyncLocal<IGrainActivationContext> CurrentScopedIGrainActivationContextInitializer = new AsyncLocal<IGrainActivationContext>();
+        [ThreadStatic]
+        private static IGrainActivationContext currentScopedIGrainActivationContextInitializer;
+
         private void SetGrainActivationContextInScopedServices()
         {
+            var sp = this.GrainServices;
+
             // TODO: is there a better way to avoid this hack of using a an async local value to force it to initialize the instance?
-            CurrentScopedIGrainActivationContextInitializer.Value = this;
+            if (Interlocked.CompareExchange(ref currentScopedIGrainActivationContextInitializer, this, null) != null)
+            {
+                throw new InvalidOperationException($"Invalid value when setting {nameof(currentScopedIGrainActivationContextInitializer)}");
+            }
             try
             {
-                this.GrainServices.GetRequiredService<IGrainActivationContext>();
+                sp.GetRequiredService<IGrainActivationContext>();
             }
             finally
             {
-                CurrentScopedIGrainActivationContextInitializer.Value = null;
+                if (currentScopedIGrainActivationContextInitializer != null)
+                {
+                    //throw new InvalidOperationException($"Value should be null: {nameof(currentScopedIGrainActivationContextInitializer)}");
+                }
             }
+        }
+
+        internal static IGrainActivationContext PopCurrentScopedIGrainActivationContext()
+        {
+            var currentContext = Interlocked.Exchange(ref currentScopedIGrainActivationContextInitializer, null);
+            if (currentContext == null)
+            {
+                throw new InvalidOperationException($"Unexpected null value when getting {nameof(currentScopedIGrainActivationContextInitializer)}");
+            }
+            return currentContext;
         }
 
         public IStorageProvider StorageProvider { get; set; }
