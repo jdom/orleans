@@ -301,7 +301,8 @@ namespace Orleans.Runtime
             services.AddSingleton<Catalog>();
             services.AddSingleton<GrainCreator>();
             services.AddSingleton<IGrainActivator, DefaultGrainActivator>();
-            services.AddScoped<IGrainActivationContext>(ActivationData.PopCurrentScopedIGrainActivationContext);
+            services.AddScoped<ActivationData.GrainActivationContextFactory>();
+            services.AddScoped<IGrainActivationContext>(sp => sp.GetRequiredService<ActivationData.GrainActivationContextFactory>().Context);
 
             services.AddSingleton<IStreamSubscriptionManagerAdmin>(sp => new StreamSubscriptionManagerAdmin(sp.GetRequiredService<IStreamProviderRuntime>()));
             if (initializationParams.GlobalConfig.UseVirtualBucketsConsistentRing)

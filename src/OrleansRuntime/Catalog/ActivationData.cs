@@ -155,6 +155,11 @@ namespace Orleans.Runtime
             }
         }
 
+        internal class GrainActivationContextFactory
+        {
+            public IGrainActivationContext Context { get; set; }
+        }
+
         // This is the maximum amount of time we expect a request to continue processing
         private readonly TimeSpan maxRequestProcessingTime;
         private readonly TimeSpan maxWarningRequestProcessingTime;
@@ -300,36 +305,10 @@ namespace Orleans.Runtime
             }
         }
 
-        [ThreadStatic]
-        private static IGrainActivationContext currentScopedIGrainActivationContextInitializer;
         private static void SetGrainActivationContextInScopedServices(IServiceProvider sp, IGrainActivationContext context)
         {
-            // TODO: is there a better way to avoid this hack of using a an async local value to force it to initialize the instance?
-            if (Interlocked.CompareExchange(ref currentScopedIGrainActivationContextInitializer, context, null) != null)
-            {
-                throw new InvalidOperationException($"Invalid value when setting {nameof(currentScopedIGrainActivationContextInitializer)}");
-            }
-            try
-            {
-                sp.GetRequiredService<IGrainActivationContext>();
-            }
-            finally
-            {
-                if (currentScopedIGrainActivationContextInitializer != null)
-                {
-                    throw new InvalidOperationException($"Value should be null: {nameof(currentScopedIGrainActivationContextInitializer)}");
-                }
-            }
-        }
-
-        internal static IGrainActivationContext PopCurrentScopedIGrainActivationContext(IServiceProvider sp)
-        {
-            var currentContext = Interlocked.Exchange(ref currentScopedIGrainActivationContextInitializer, null);
-            if (currentContext == null)
-            {
-                throw new InvalidOperationException($"Unexpected null value when getting {nameof(currentScopedIGrainActivationContextInitializer)}");
-            }
-            return currentContext;
+            var contextFactory = sp.GetRequiredService<GrainActivationContextFactory>();
+            contextFactory.Context = context;
         }
 
         public IStorageProvider StorageProvider { get; set; }
