@@ -527,6 +527,7 @@ namespace Orleans.Runtime
             {
                 lock (activation)
                 {
+                    // Validate activation.State == ActivationState.Activating
                     activation.SetState(ActivationState.Invalid);
                     try
                     {
