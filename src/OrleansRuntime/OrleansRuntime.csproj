@@ -223,6 +223,10 @@
     <Compile Include="Versions\VersionStoreGrain.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orleans.Core.Abstractions\Orleans.Core.Abstractions.csproj">
+      <Project>{c7482cbf-45fa-48b8-b567-859a0f665c8a}</Project>
+      <Name>Orleans.Core.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orleans\Orleans.csproj">
       <Project>{BC1BD60C-E7D8-4452-A21C-290AEC8E2E74}</Project>
       <Name>Orleans</Name>

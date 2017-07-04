@@ -1,13 +1,5 @@
-using System;
-using Orleans.Runtime.Configuration;
-
-namespace Orleans.Runtime
+﻿namespace Orleans.Runtime
 {
-    [Serializable]
-    public abstract class PlacementStrategy
-    {
-    }
-
     internal class DefaultPlacementStrategy
     {
         public DefaultPlacementStrategy(GlobalConfiguration config) : this(config.DefaultPlacementStrategy)

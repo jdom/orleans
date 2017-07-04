@@ -1,27 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Orleans.Runtime.Configuration;
 using Orleans.MultiCluster;
-using System.Collections.Generic;
 
 namespace Orleans.GrainDirectory
 {
-    /// <summary>
-    /// Interface for multi-cluster registration strategies. Used by protocols that coordinate multiple instances.
-    /// </summary>
-    public interface IMultiClusterRegistrationStrategy {
-
-        /// <summary>
-        /// Determines which remote clusters have instances.
-        /// </summary>
-        /// <param name="mcConfig">The multi-cluster configuration</param>
-        /// <param name="myClusterId">The cluster id of this cluster</param>
-        /// <returns></returns>
-        IEnumerable<string> GetRemoteInstances(MultiClusterConfiguration mcConfig, string myClusterId);
-
-    }
-
     internal class MultiClusterRegistrationStrategyManager
     {
         public MultiClusterRegistrationStrategyManager(GlobalConfiguration config)
@@ -56,15 +39,5 @@ namespace Orleans.GrainDirectory
                             grainClass.Name));
             }
         }
-    }
-
-    /// <summary>
-    /// A superclass for all multi-cluster registration strategies.
-    /// Strategy object which is used as keys to select the proper registrar.
-    /// </summary>
-    [Serializable]
-    internal abstract class MultiClusterRegistrationStrategy : IMultiClusterRegistrationStrategy
-    {
-        public abstract IEnumerable<string> GetRemoteInstances(MultiClusterConfiguration mcConfig, string myClusterId);
     }
 }

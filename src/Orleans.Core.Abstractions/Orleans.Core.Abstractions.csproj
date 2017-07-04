@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C7482CBF-45FA-48B8-B567-859A0F665C8A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Orleans.Core</RootNamespace>
+    <AssemblyName>Microsoft.Orleans.Core.Abstractions</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\GrainAttributes.cs" />
+    <Compile Include="Core\IGrain.cs" />
+    <Compile Include="Core\IGrainFactory.cs" />
+    <Compile Include="Core\IGrainIdentity.cs" />
+    <Compile Include="Core\IGrainObserver.cs" />
+    <Compile Include="Core\Immutable.cs" />
+    <Compile Include="GrainDirectory\ClusterLocalRegistration.cs" />
+    <Compile Include="GrainDirectory\GlobalSingleInstanceRegistration.cs" />
+    <Compile Include="GrainDirectory\MultiClusterRegistrationStrategy.cs" />
+    <Compile Include="IDs\ActivationAddress.cs" />
+    <Compile Include="IDs\ActivationId.cs" />
+    <Compile Include="IDs\GrainId.cs" />
+    <Compile Include="IDs\GuidId.cs" />
+    <Compile Include="IDs\Interner.cs" />
+    <Compile Include="IDs\JenkinsHash.cs" />
+    <Compile Include="IDs\QueueId.cs" />
+    <Compile Include="IDs\SiloAddress.cs" />
+    <Compile Include="IDs\StreamId.cs" />
+    <Compile Include="IDs\UniqueIdentifier.cs" />
+    <Compile Include="IDs\UniqueKey.cs" />
+    <Compile Include="Logging\ILogConsumer.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\Severity.cs" />
+    <Compile Include="MultiCluster\MultiClusterConfiguration.cs" />
+    <Compile Include="Placement\ActivationCountBasedPlacement.cs" />
+    <Compile Include="Placement\HashBasedPlacement.cs" />
+    <Compile Include="Placement\PlacementStrategy.cs" />
+    <Compile Include="Placement\PreferLocalPlacement.cs" />
+    <Compile Include="Placement\RandomPlacement.cs" />
+    <Compile Include="Placement\StatelessWorkerPlacement.cs" />
+    <Compile Include="Placement\SystemPlacement.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\Constants.cs" />
+    <Compile Include="Runtime\GrainReference.cs" />
+    <Compile Include="Runtime\IAddressable.cs" />
+    <Compile Include="Runtime\IGrainReferenceRuntime.cs" />
+    <Compile Include="Runtime\InvokeMethodRequest.cs" />
+    <Compile Include="Runtime\IRingIdentifier.cs" />
+    <Compile Include="Storage\IGrainState.cs" />
+    <Compile Include="Storage\IStatefulGrain.cs" />
+    <Compile Include="Storage\IStorage.cs" />
+    <Compile Include="Streams\Core\IStreamIdentity.cs" />
+    <Compile Include="Streams\Predicates\AllStreamNamespacesPredicate.cs" />
+    <Compile Include="Streams\Predicates\DefaultStreamFilterPredicateWrapper.cs" />
+    <Compile Include="Streams\Predicates\ExactMatchStreamNamespacePredicate.cs" />
+    <Compile Include="Streams\Predicates\IStreamFilterPredicateWrapper.cs" />
+    <Compile Include="Streams\Predicates\IStreamNamespacePredicate.cs" />
+    <Compile Include="Streams\Predicates\OrFilter.cs" />
+    <Compile Include="Streams\Predicates\RegexStreamNamespacePredicate.cs" />
+    <Compile Include="Streams\Predicates\StreamFilterPredicate.cs" />
+    <Compile Include="Utils\AbstractionsUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messaging\" />
+    <Folder Include="Serialization\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

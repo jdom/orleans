@@ -116,22 +116,21 @@
     <Compile Include="CodeGeneration\OrleansCodeGenerationTargetAttribute.cs" />
     <Compile Include="CodeGeneration\ConsiderForCodeGenerationAttribute.cs" />
     <Compile Include="CodeGeneration\SkipCodeGenerationAttribute.cs" />
-    <Compile Include="CodeGeneration\IGrainState.cs" />
+    <Compile Include="CodeGeneration\GrainState.cs" />
     <Compile Include="CodeGeneration\TypeFormattingOptions.cs" />
     <Compile Include="Configuration\ConfigurationExtensions.cs" />
     <Compile Include="Core\IGrainInvokeInterceptor.cs" />
     <Compile Include="Core\InterfaceToImplementationMappingCache.cs" />
-    <Compile Include="Core\IStatefulGrain.cs" />
     <Compile Include="GrainDirectory\MultiClusterStatus.cs" />
+    <Compile Include="GrainDirectory\MultiClusterRegistrationStrategyManager.cs" />
     <Compile Include="LogConsistency\ILogViewAdaptorHost.cs" />
-    <Compile Include="Placement\HashBasedPlacement.cs" />
+    <Compile Include="Placement\DefaultPlacementStrategy.cs" />
     <Compile Include="Placement\IPlacementDirector.cs" />
     <Compile Include="Placement\IPlacementContext.cs" />
     <Compile Include="Placement\PlacementTarget.cs" />
     <Compile Include="Providers\ProviderStateManager.cs" />
     <Compile Include="Providers\MemoryStorageEtagMismatchException.cs" />
     <Compile Include="Runtime\IGrainReferenceConverter.cs" />
-    <Compile Include="Runtime\IGrainReferenceRuntime.cs" />
     <Compile Include="Runtime\IGrainTimer.cs" />
     <Compile Include="Runtime\ILocalSiloDetails.cs" />
     <Compile Include="Runtime\RingRange.cs" />
@@ -139,21 +138,13 @@
     <Compile Include="Serialization\IExternalSerializer.cs" />
     <Compile Include="Configuration\LimitNames.cs" />
     <Compile Include="Configuration\LimitValue.cs" />
-    <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\GrainStateStorageBridge.cs" />
-    <Compile Include="Core\IGrainIdentity.cs" />
-    <Compile Include="MultiCluster\MultiClusterConfiguration.cs" />
     <Compile Include="MultiCluster\IProtocolParticipant.cs" />
     <Compile Include="LogConsistency\ILogViewAdaptor.cs" />
     <Compile Include="LogConsistency\ILogConsistentGrain.cs" />
-    <Compile Include="Core\IStorage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="GrainDirectory\MultiClusterRegistrationStrategy.cs" />
-    <Compile Include="GrainDirectory\GlobalSingleInstanceRegistration.cs" />
     <Compile Include="GrainDirectory\IGrainDirectory.cs" />
     <Compile Include="GrainDirectory\IGrainRegistrar.cs" />
-    <Compile Include="GrainDirectory\ClusterLocalRegistration.cs" />
-    <Compile Include="IDs\GuidId.cs" />
     <Compile Include="Messaging\GatewayManager.cs" />
     <Compile Include="Messaging\IncomingMessageBuffer.cs" />
     <Compile Include="Messaging\RequestInvocationHistory.cs" />
@@ -162,14 +153,10 @@
     <Compile Include="LogConsistency\ILogConsistencyProvider.cs" />
     <Compile Include="Providers\StorageProviderUtils.cs" />
     <Compile Include="LogConsistency\ILogConsistencyProtocolServices.cs" />
-    <Compile Include="Runtime\IAddressable.cs" />
-    <Compile Include="Placement\PreferLocalPlacement.cs" />
     <Compile Include="AssemblyLoader\AssemblyLoader.cs" />
     <Compile Include="Providers\IMemoryStorageGrain.cs" />
     <Compile Include="AssemblyLoader\CachedReflectionOnlyTypeResolver.cs" />
     <Compile Include="Runtime\IActivationData.cs" />
-    <Compile Include="IDs\UniqueKey.cs" />
-    <Compile Include="Core\IGrainFactory.cs" />
     <Compile Include="Runtime\IGrainRuntime.cs" />
     <Compile Include="Serialization\ILBasedSerializer.cs" />
     <Compile Include="Serialization\ILFieldBuilder.cs" />
@@ -193,11 +180,7 @@
     <Compile Include="Streams\Core\StreamSubscriptionManager.cs" />
     <Compile Include="Streams\Core\StreamSubscriptionManagerAdmin.cs" />
     <Compile Include="Streams\Internal\StreamSubscriptionChangeHandler.cs" />
-    <Compile Include="Streams\Predicates\AllStreamNamespacesPredicate.cs" />
-    <Compile Include="Streams\Predicates\ExactMatchStreamNamespacePredicate.cs" />
-    <Compile Include="Streams\Predicates\RegexStreamNamespacePredicate.cs" />
     <Compile Include="Streams\Providers\StreamProviderManagerExtensions.cs" />
-    <Compile Include="Streams\Predicates\IStreamNamespacePredicate.cs" />
     <Compile Include="Streams\PubSub\StreamSubscriptionManagerExtensions.cs" />
     <Compile Include="SystemTargetInterfaces\IVersionManager.cs" />
     <Compile Include="Utils\CachedReadConcurrentDictionary.cs" />
@@ -221,7 +204,6 @@
     <Compile Include="Streams\PersistentStreams\NoOpStreamFailureHandler.cs" />
     <Compile Include="Streams\PersistentStreams\IStreamFailureHandler.cs" />
     <Compile Include="Streams\PersistentStreams\StreamEventDeliveryFailureException.cs" />
-    <Compile Include="Streams\Predicates\DefaultStreamFilterPredicateWrapper.cs" />
     <Compile Include="Streams\PubSub\FaultedSubscriptionException.cs" />
     <Compile Include="SystemTargetInterfaces\IClusterGrainDirectory.cs" />
     <Compile Include="SystemTargetInterfaces\ILogConsistencyProtocolGateway.cs" />
@@ -240,7 +222,6 @@
     <Compile Include="Telemetry\IRequestTelemetryConsumer.cs" />
     <Compile Include="Telemetry\ITelemetryConsumer.cs" />
     <Compile Include="Telemetry\ITraceTelemetryConsumer.cs" />
-    <Compile Include="Telemetry\Severity.cs" />
     <Compile Include="Telemetry\TraceParserUtils.cs" />
     <Compile Include="Cancellation\GrainCancellationTokenSource.cs" />
     <Compile Include="SystemTargetInterfaces\IMultiClusterGossipService.cs" />
@@ -277,10 +258,8 @@
     <Compile Include="Streams\PersistentStreams\PersistentStreamProvider.cs" />
     <Compile Include="Streams\PersistentStreams\StreamConsumerCollection.cs" />
     <Compile Include="Streams\Predicates\FilterPredicateWrapperData.cs" />
-    <Compile Include="Streams\Predicates\IStreamFilterPredicateWrapper.cs" />
     <Compile Include="Streams\Core\IAsyncObservable.cs" />
     <Compile Include="Streams\Internal\IStreamControl.cs" />
-    <Compile Include="Streams\Core\IStreamIdentity.cs" />
     <Compile Include="Streams\Providers\StreamProviderDirection.cs" />
     <Compile Include="Streams\Providers\IStreamProviderImpl.cs" />
     <Compile Include="Streams\Providers\IStreamProviderManager.cs" />
@@ -293,7 +272,6 @@
     <Compile Include="Streams\QueueAdapters\IQueueAdapterCache.cs" />
     <Compile Include="Streams\QueueAdapters\IQueueAdapterReceiver.cs" />
     <Compile Include="Streams\QueueAdapters\IQueueCacheCursor.cs" />
-    <Compile Include="Streams\Predicates\OrFilter.cs" />
     <Compile Include="Streams\PubSub\ImplicitStreamSubscriberTable.cs" />
     <Compile Include="Streams\PubSub\PubSubPublisherState.cs" />
     <Compile Include="Streams\PubSub\GrainBasedPubSubRuntime.cs" />
@@ -319,8 +297,6 @@
     <Compile Include="Streams\PersistentStreams\PersistentStreamProducer.cs" />
     <Compile Include="Streams\QueueAdapters\IStreamQueueMapper.cs" />
     <Compile Include="Streams\PersistentStreams\QueueStreamDataStructures.cs" />
-    <Compile Include="IDs\QueueId.cs" />
-    <Compile Include="IDs\StreamId.cs" />
     <Compile Include="Streams\Internal\IStreamGrainExtensions.cs" />
     <Compile Include="Streams\PubSub\IPubSubRendezvousGrain.cs" />
     <Compile Include="Streams\Core\StreamSequenceToken.cs" />
@@ -329,11 +305,6 @@
     <Compile Include="Utils\RuntimeTypeNameFormatter.cs" />
     <Compile Include="Utils\ServiceCollectionExtensions.cs" />
     <Compile Include="Utils\SetExtensions.cs" />
-    <Compile Include="Placement\ActivationCountBasedPlacement.cs" />
-    <Compile Include="Placement\StatelessWorkerPlacement.cs" />
-    <Compile Include="Placement\PlacementStrategy.cs" />
-    <Compile Include="Placement\RandomPlacement.cs" />
-    <Compile Include="Placement\SystemPlacement.cs" />
     <Compile Include="Statistics\ApplicationRequestsStatisticsGroup.cs" />
     <Compile Include="Statistics\AverageValueStatistic.cs" />
     <Compile Include="Statistics\QueueTrackingStatistic.cs" />
@@ -356,11 +327,9 @@
     <Compile Include="Statistics\LogStatistics.cs" />
     <Compile Include="Statistics\RuntimeStatisticsGroup.cs" />
     <Compile Include="Statistics\ClientTableStatistics.cs" />
-    <Compile Include="Core\Immutable.cs" />
     <Compile Include="Providers\ProviderLoader.cs" />
     <Compile Include="Providers\ProviderTypeLoader.cs" />
     <Compile Include="Messaging\IOutgoingMessage.cs" />
-    <Compile Include="IDs\JenkinsHash.cs" />
     <Compile Include="Streams\Core\IAsyncStream.cs" />
     <Compile Include="Streams\Providers\IStreamProvider.cs" />
     <Compile Include="Providers\IStorageProvider.cs" />
@@ -402,19 +371,13 @@
     <Compile Include="Core\GrainClient.cs" />
     <Compile Include="Runtime\OutsideRuntimeClient.cs" />
     <Compile Include="Runtime\CallbackData.cs" />
-    <Compile Include="Core\GrainAttributes.cs" />
     <Compile Include="CodeGeneration\GrainFactoryBase.cs" />
     <Compile Include="Runtime\IClientObserverRegistrar.cs" />
-    <Compile Include="Logging\ILogConsumer.cs" />
     <Compile Include="CodeGeneration\ActivationAttribute.cs" />
-    <Compile Include="Core\IGrainObserver.cs" />
-    <Compile Include="Core\IGrain.cs" />
     <Compile Include="Messaging\ProxiedMessageCenter.cs" />
     <Compile Include="Messaging\SocketManager.cs" />
     <Compile Include="Async\ObserverSubscriptionManager.cs" />
     <Compile Include="CodeGeneration\GrainInterfaceUtils.cs" />
-    <Compile Include="IDs\ActivationAddress.cs" />
-    <Compile Include="IDs\ActivationId.cs" />
     <Compile Include="Runtime\AsynchAgent.cs" />
     <Compile Include="Runtime\AsynchQueueAgent.cs" />
     <Compile Include="Messaging\ByteArrayBuilder.cs" />
@@ -425,28 +388,20 @@
     <Compile Include="Configuration\NodeConfiguration.cs" />
     <Compile Include="Configuration\ClusterConfiguration.cs" />
     <Compile Include="Logging\ConsoleText.cs" />
-    <Compile Include="Runtime\Constants.cs" />
     <Compile Include="Messaging\CorrelationId.cs" />
-    <Compile Include="IDs\GrainId.cs" />
     <Compile Include="Messaging\IMessageCenter.cs" />
-    <Compile Include="IDs\Interner.cs" />
     <Compile Include="Placement\PlacementResult.cs" />
     <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="Utils\LRU.cs" />
     <Compile Include="Messaging\Message.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="CodeGeneration\InvokeMethodRequest.cs" />
-    <Compile Include="IDs\SiloAddress.cs" />
     <Compile Include="Runtime\SystemStatus.cs" />
     <Compile Include="CodeGeneration\TypeUtils.cs" />
-    <Compile Include="IDs\UniqueIdentifier.cs" />
     <Compile Include="Runtime\RuntimeContext.cs" />
     <Compile Include="Serialization\BuiltInTypes.cs" />
     <Compile Include="Serialization\DeserializationContext.cs" />
     <Compile Include="Serialization\SerializationContext.cs" />
     <Compile Include="Serialization\SerializationManager.cs" />
     <Compile Include="Core\Grain.cs" />
-    <Compile Include="Runtime\GrainReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="..\Build\GlobalAssemblyInfo.cs">
@@ -466,6 +421,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orleans.Core.Abstractions\Orleans.Core.Abstractions.csproj">
+      <Project>{c7482cbf-45fa-48b8-b567-859a0f665c8a}</Project>
+      <Name>Orleans.Core.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IDs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateVersionNumber" BeforeTargets="VersionInit" Condition="'$(BuildingInsideVisualStudio)' != 'true'" Outputs="$(SolutionDir)Build\Version.txt">
