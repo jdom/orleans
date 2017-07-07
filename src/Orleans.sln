@@ -237,6 +237,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVersionGrains2", "..\te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Core.Abstractions", "Orleans.Core.Abstractions\Orleans.Core.Abstractions.csproj", "{C7482CBF-45FA-48B8-B567-859A0F665C8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedSource", "SharedSource\SharedSource.csproj", "{A127DAF5-CF35-4719-A432-FF224F2C30BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -656,6 +658,13 @@ Global
 		{C7482CBF-45FA-48B8-B567-859A0F665C8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7482CBF-45FA-48B8-B567-859A0F665C8A}.Release|x64.ActiveCfg = Release|Any CPU
 		{C7482CBF-45FA-48B8-B567-859A0F665C8A}.Release|x64.Build.0 = Release|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Debug|x64.Build.0 = Debug|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Release|x64.ActiveCfg = Release|Any CPU
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -717,5 +726,6 @@ Global
 		{668AC915-7C11-4EC7-A899-BB49011E529A} = {2C188181-1B01-4E77-A83D-F6A2EA855BE9}
 		{40FF243D-DF4D-4299-B3CF-C50DC089DBF4} = {2C188181-1B01-4E77-A83D-F6A2EA855BE9}
 		{C7482CBF-45FA-48B8-B567-859A0F665C8A} = {4CD3AA9E-D937-48CA-BB6C-158E12257D23}
+		{A127DAF5-CF35-4719-A432-FF224F2C30BA} = {4CD3AA9E-D937-48CA-BB6C-158E12257D23}
 	EndGlobalSection
 EndGlobal

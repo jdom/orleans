@@ -28,7 +28,7 @@ namespace Orleans.Runtime
 
         internal SafeTimerBase(Func<object, Task> asynTaskCallback, object state)
         {
-            Init(asynTaskCallback, null, state, Constants.INFINITE_TIMESPAN, Constants.INFINITE_TIMESPAN);
+            Init(asynTaskCallback, null, state, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
 
         internal SafeTimerBase(Func<object, Task> asynTaskCallback, object state, TimeSpan dueTime, TimeSpan period)
@@ -39,7 +39,7 @@ namespace Orleans.Runtime
 
         internal SafeTimerBase(TimerCallback syncCallback, object state)
         {
-            Init(null, syncCallback, state, Constants.INFINITE_TIMESPAN, Constants.INFINITE_TIMESPAN);
+            Init(null, syncCallback, state, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
 
         internal SafeTimerBase(TimerCallback syncCallback, object state, TimeSpan dueTime, TimeSpan period)
@@ -57,7 +57,7 @@ namespace Orleans.Runtime
             dueTime = due;
             timerStarted = true;
             previousTickTime = DateTime.UtcNow;
-            timer.Change(due, Constants.INFINITE_TIMESPAN);
+            timer.Change(due, Timeout.InfiniteTimeSpan);
         }
 
         private void Init(Func<object, Task> asynCallback, TimerCallback synCallback, object state, TimeSpan due, TimeSpan period)
@@ -76,7 +76,7 @@ namespace Orleans.Runtime
             logger = syncCallbackFunc != null ? syncLogger : asyncLogger;
             if (logger.IsVerbose) logger.Verbose(ErrorCode.TimerChanging, "Creating timer {0} with dueTime={1} period={2}", GetFullName(), due, period);
 
-            timer = new Timer(HandleTimerCallback, state, Constants.INFINITE_TIMESPAN, Constants.INFINITE_TIMESPAN);
+            timer = new Timer(HandleTimerCallback, state, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
 
         #region IDisposable Members
@@ -191,7 +191,7 @@ namespace Orleans.Runtime
             try
             {
                 // Queue first new timer tick
-                return timer.Change(newDueTime, Constants.INFINITE_TIMESPAN);
+                return timer.Change(newDueTime, Timeout.InfiniteTimeSpan);
             }
             catch (Exception exc)
             {
@@ -278,16 +278,16 @@ namespace Orleans.Runtime
 
                 if (logger.IsVerbose3) logger.Verbose3(ErrorCode.TimerChanging, "About to QueueNextTimerTick for timer {0}", GetFullName());
 
-                if (timerFrequency == Constants.INFINITE_TIMESPAN)
+                if (timerFrequency == Timeout.InfiniteTimeSpan)
                 {
-                    //timer.Change(Constants.INFINITE_TIMESPAN, Constants.INFINITE_TIMESPAN);
+                    //timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
                     DisposeTimer();
 
                     if (logger.IsVerbose) logger.Verbose(ErrorCode.TimerStopped, "Timer {0} is now stopped and disposed", GetFullName());
                 }
                 else
                 {
-                    timer.Change(timerFrequency, Constants.INFINITE_TIMESPAN);
+                    timer.Change(timerFrequency, Timeout.InfiniteTimeSpan);
 
                     if (logger.IsVerbose3) logger.Verbose3(ErrorCode.TimerNextTick, "Queued next tick for timer {0} in {1}", GetFullName(), timerFrequency);
                 }

@@ -40,6 +40,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedSource\Logging\ErrorCodes.cs">
+      <Link>Logging\ErrorCodes.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Logging\LogFormatter.cs">
+      <Link>Logging\LogFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Logging\LoggerExtensionsWithErrorCodes.cs">
+      <Link>Logging\LoggerExtensionsWithErrorCodes.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Timers\SafeTimer.cs">
+      <Link>Timers\SafeTimer.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Timers\SafeTimerBase.cs">
+      <Link>Timers\SafeTimerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Utils\Interner.cs">
+      <Link>IDs\Interner.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Utils\StandardExtensions.cs">
+      <Link>Utils\StandardExtensions.cs</Link>
+    </Compile>
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\GrainAttributes.cs" />
     <Compile Include="Core\IGrain.cs" />
@@ -54,7 +75,6 @@
     <Compile Include="IDs\ActivationId.cs" />
     <Compile Include="IDs\GrainId.cs" />
     <Compile Include="IDs\GuidId.cs" />
-    <Compile Include="IDs\Interner.cs" />
     <Compile Include="IDs\JenkinsHash.cs" />
     <Compile Include="IDs\QueueId.cs" />
     <Compile Include="IDs\SiloAddress.cs" />
@@ -63,6 +83,7 @@
     <Compile Include="IDs\UniqueKey.cs" />
     <Compile Include="Logging\ILogConsumer.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="Logging\Severity.cs" />
     <Compile Include="MultiCluster\MultiClusterConfiguration.cs" />
     <Compile Include="Placement\ActivationCountBasedPlacement.cs" />

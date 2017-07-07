@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedSource\Utils\StandardExtensions.cs">
+      <Link>Utils\StandardExtensions.cs</Link>
+    </Compile>
     <Compile Include="AssemblyLoader\TypeMetadataCache.cs" />
     <Compile Include="AssemblyLoader\AssemblyProcessor.cs" />
     <Compile Include="Async\AsyncBatchedContinuationQueue.cs" />
@@ -99,9 +102,16 @@
     <Compile Include="Serialization\GrainReferenceSerializer.cs" />
     <Compile Include="Runtime\IGrainActivationContext.cs" />
     <Compile Include="LogConsistency\ILogConsistencyDiagnostics.cs" />
-    <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="Logging\LoggerImpl.cs" />
-    <Compile Include="Logging\LogFormatter.cs" />
+    <Compile Include="..\SharedSource\Logging\ErrorCodes.cs">
+      <Link>Logging\ErrorCodes.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Logging\LogFormatter.cs">
+      <Link>Logging\LogFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Logging\LoggerExtensionsWithErrorCodes.cs">
+      <Link>Logging\LoggerExtensionsWithErrorCodes.cs</Link>
+    </Compile>
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="LogConsistency\ConnectionIssues.cs" />
     <Compile Include="LogConsistency\IConnectionIssueListener.cs" />
@@ -351,12 +361,14 @@
     <Compile Include="Messaging\BufferPool.cs" />
     <Compile Include="Statistics\IPerformanceMetrics.cs" />
     <Compile Include="Configuration\LimitManager.cs" />
-    <Compile Include="Timers\SafeTimerBase.cs" />
-    <Compile Include="Timers\SafeTimer.cs" />
-    <Compile Include="Utils\StandardExtensions.cs" />
+    <Compile Include="..\SharedSource\Timers\SafeTimerBase.cs">
+      <Link>Timers\SafeTimerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedSource\Timers\SafeTimer.cs">
+      <Link>Timers\SafeTimer.cs</Link>
+    </Compile>
     <Compile Include="Runtime\GrainReferenceCache.cs" />
     <Compile Include="Runtime\RequestContext.cs" />
-    <Compile Include="Logging\ErrorCodes.cs" />
     <Compile Include="Messaging\IGatewayListProvider.cs" />
     <Compile Include="Statistics\CounterStatistic.cs" />
     <Compile Include="Statistics\IntValueStatistic.cs" />
