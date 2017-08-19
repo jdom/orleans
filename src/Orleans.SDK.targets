@@ -37,7 +37,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
   <!-- This target is run just before Compile for an Orleans Grain Interface Project -->
   <Target Name="OrleansCodeGeneration"
-          BeforeTargets="AssignTargetPaths"
+          AfterTargets="BeforeCompile"
+          BeforeTargets="CoreCompile"
           Condition="'$(OrleansCodeGenPrecompile)'!='true'"
           Inputs="@(Compile);@(ReferencePath)"
           Outputs="$(IntermediateOutputPath)$(TargetName).orleans.g.cs">
