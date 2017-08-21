@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Orleans.Runtime
 {
+    [Obsolete]
     internal class LoggerWrapper : Logger
     {
         public override Severity SeverityLevel => this.maxSeverityLevel;

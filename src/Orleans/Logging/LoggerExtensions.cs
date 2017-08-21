@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Diagnostics;
-
+/*
 namespace Orleans.Runtime
 {
     public static class LoggerExtensions
@@ -359,3 +359,4 @@ namespace Orleans.Runtime
         #endregion
     }
 }
+*/
