@@ -1,11 +1,13 @@
 ﻿
 using System;
 using System.Diagnostics;
-/*
+
 namespace Orleans.Runtime
 {
+    /*
     public static class LoggerExtensions
     {
+        
         private static readonly object[] EmptyObjectArray = new object[0];
 
         /// <summary>
@@ -310,7 +312,7 @@ namespace Orleans.Runtime
             logger.Log((int)errorCode, Severity.Error, message, EmptyObjectArray, exception);
         }
 
-        internal static void Assert(this Logger logger, ErrorCode errorCode, bool condition, string message = null)
+        internal static void Assert(this ILogger logger, ErrorCode errorCode, bool condition, string message = null)
         {
             if (condition) return;
 

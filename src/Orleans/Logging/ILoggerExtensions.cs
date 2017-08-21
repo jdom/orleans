@@ -2,6 +2,7 @@
 using Orleans.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Orleans.Runtime
@@ -89,7 +90,7 @@ namespace Orleans.Runtime
             logger.LogDebug(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
 
-        public static void Debug(this ILogger logger, ErrorCode logCode, string format, params object[] args)
+        internal static void Debug(this ILogger logger, ErrorCode logCode, string format, params object[] args)
         {
             logger.LogDebug(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
@@ -105,7 +106,7 @@ namespace Orleans.Runtime
             logger.LogDebug(LoggingUtils.CreateEventId(0, logCode), message);
         }
 
-        public static void Debug(this ILogger logger, ErrorCode logCode, string message)
+        internal static void Debug(this ILogger logger, ErrorCode logCode, string message)
         {
             logger.LogDebug(LoggingUtils.CreateEventId(0, logCode), message);
         }
@@ -121,7 +122,7 @@ namespace Orleans.Runtime
             logger.LogTrace(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
 
-        public static void Trace(this ILogger logger, ErrorCode logCode, string format, params object[] args)
+        internal static void Trace(this ILogger logger, ErrorCode logCode, string format, params object[] args)
         {
             logger.LogTrace(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
@@ -137,7 +138,7 @@ namespace Orleans.Runtime
             logger.LogTrace(LoggingUtils.CreateEventId(0, logCode), message);
         }
 
-        public static void Trace(this ILogger logger, ErrorCode logCode, string message)
+        internal static void Trace(this ILogger logger, ErrorCode logCode, string message)
         {
             logger.LogTrace(LoggingUtils.CreateEventId(0, logCode), message);
         }
@@ -154,7 +155,7 @@ namespace Orleans.Runtime
             logger.LogInformation(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
 
-        public static void Info(this ILogger logger, ErrorCode logCode, string format, params object[] args)
+        internal static void Info(this ILogger logger, ErrorCode logCode, string format, params object[] args)
         {
             logger.LogInformation(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
@@ -170,7 +171,7 @@ namespace Orleans.Runtime
             logger.LogInformation(LoggingUtils.CreateEventId(0, logCode), message);
         }
 
-        public static void Info(this ILogger logger, ErrorCode logCode, string message)
+        internal static void Info(this ILogger logger, ErrorCode logCode, string message)
         {
             logger.LogInformation(LoggingUtils.CreateEventId(0, logCode), message);
         }
@@ -186,7 +187,7 @@ namespace Orleans.Runtime
             logger.LogWarning(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
 
-        public static void Warn(this ILogger logger, ErrorCode logCode, string format, params object[] args)
+        internal static void Warn(this ILogger logger, ErrorCode logCode, string format, params object[] args)
         {
             logger.LogWarning(LoggingUtils.CreateEventId(0, logCode), format, args);
         }
@@ -202,7 +203,7 @@ namespace Orleans.Runtime
             logger.LogWarning(LoggingUtils.CreateEventId(0, logCode), exception, message);
         }
 
-        public static void Warn(this ILogger logger, ErrorCode logCode, string message, Exception exception = null)
+        internal static void Warn(this ILogger logger, ErrorCode logCode, string message, Exception exception = null)
         {
             logger.LogWarning(LoggingUtils.CreateEventId(0, logCode), exception, message);
         }
@@ -218,9 +219,56 @@ namespace Orleans.Runtime
             logger.LogError(LoggingUtils.CreateEventId(0, logCode), exception, message);
         }
 
-        public static void Error(this ILogger logger, ErrorCode logCode, string message, Exception exception = null)
+        internal static void Error(this ILogger logger, ErrorCode logCode, string message, Exception exception = null)
         {
             logger.LogError(LoggingUtils.CreateEventId(0, logCode), exception, message);
+        }
+
+
+        internal static void Assert(this ILogger logger, ErrorCode errorCode, bool condition, string message = null)
+        {
+            if (condition) return;
+
+            if (message == null)
+            {
+                message = "Internal contract assertion has failed!";
+            }
+
+            logger.Fail(errorCode, "Assert failed with message = " + message);
+        }
+
+        internal static void Fail(this ILogger logger, ErrorCode errorCode, string message)
+        {
+            if (message == null)
+            {
+                message = "Internal Fail!";
+            }
+
+            if (errorCode == 0)
+            {
+                errorCode = ErrorCode.Runtime;
+            }
+
+            logger.Error(errorCode, "INTERNAL FAILURE! About to crash! Fail message is: " + message + Environment.NewLine + Environment.StackTrace);
+
+            // Create mini-dump of this failure, for later diagnosis
+            var dumpFile = LogManager.CreateMiniDump();
+            logger.Error(ErrorCode.Logger_MiniDumpCreated, "INTERNAL FAILURE! Application mini-dump written to file " + dumpFile.FullName);
+
+            LogManager.Flush(); // Flush logs to disk
+
+            // Kill process
+            if (Debugger.IsAttached)
+            {
+                Debugger.Break();
+            }
+            else
+            {
+                logger.Error(ErrorCode.Logger_ProcessCrashing, "INTERNAL FAILURE! Process crashing!");
+                LogManager.Close();
+
+                Environment.FailFast("Unrecoverable failure: " + message);
+            }
         }
     }
 }

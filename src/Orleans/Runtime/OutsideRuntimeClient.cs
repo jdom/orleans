@@ -15,6 +15,7 @@ using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Serialization;
 using Orleans.Streams;
+using Microsoft.Extensions.Logging;
 
 namespace Orleans
 {
@@ -22,7 +23,7 @@ namespace Orleans
     {
         internal static bool TestOnlyThrowExceptionDuringInit { get; set; }
 
-        private Logger logger;
+        private ILogger logger;
 
         private ClientConfiguration config;
 
@@ -66,8 +67,6 @@ namespace Orleans
         private IGatewayListProvider gatewayListProvider;
 
         public SerializationManager SerializationManager { get; set; }
-
-        public Logger AppLogger { get; private set; }
 
         public ActivationAddress CurrentActivationAddress
         {
@@ -132,8 +131,7 @@ namespace Orleans
             this.assemblyProcessor = this.ServiceProvider.GetRequiredService<AssemblyProcessor>();
             this.assemblyProcessor.Initialize();
 
-            logger = LogManager.GetLogger("OutsideRuntimeClient", LoggerType.Runtime);
-            this.AppLogger = LogManager.GetLogger("Application", LoggerType.Application);
+            logger = services.GetRequiredService<ILogger<OutsideRuntimeClient>>();
 
             BufferPool.InitGlobalBufferPool(config);
 
