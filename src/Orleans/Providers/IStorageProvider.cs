@@ -15,6 +15,7 @@ namespace Orleans.Storage
         /// <summary>Logger used by this storage provider instance.</summary>
         /// <returns>Reference to the Logger object used by this provider.</returns>
         /// <seealso cref="Logger"/>
+        [Obsolete]
         Logger Log { get; }
 
         /// <summary>Read data function for this storage provider instance.</summary>

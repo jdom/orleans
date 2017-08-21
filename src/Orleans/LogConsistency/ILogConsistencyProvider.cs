@@ -17,6 +17,7 @@ namespace Orleans.LogConsistency
     public interface ILogConsistencyProvider : IProvider, ILogViewAdaptorFactory
     {
         /// <summary>Gets the TraceLogger used by this log-consistency provider.</summary>
+        [Obsolete]
         Logger Log { get; }
 
     }

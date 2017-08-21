@@ -21,6 +21,7 @@ namespace Orleans
         /// Provides logging facility for applications.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if Orleans runtime is not correctly initialized before this call.</exception>
+        [Obsolete]
         Logger Logger { get; }
 
         /// <summary>

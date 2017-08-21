@@ -35,6 +35,7 @@ namespace Orleans.Runtime
 
         IServiceProvider ServiceProvider { get; }
 
+        [Obsolete]
         Logger GetLogger(string loggerName);
 
         void DeactivateOnIdle(Grain grain);
