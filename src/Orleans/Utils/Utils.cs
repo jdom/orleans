@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -257,7 +258,7 @@ namespace Orleans.Runtime
             return false;
         }
 
-        public static void SafeExecute(Action action, Logger logger = null, string caller = null)
+        public static void SafeExecute(Action action, ILogger logger = null, string caller = null)
         {
             SafeExecute(action, logger, caller==null ? (Func<string>)null : () => caller);
         }
@@ -265,7 +266,7 @@ namespace Orleans.Runtime
         // a function to safely execute an action without any exception being thrown.
         // callerGetter function is called only in faulty case (now string is generated in the success case).
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static void SafeExecute(Action action, Logger logger, Func<string> callerGetter)
+        public static void SafeExecute(Action action, ILogger logger, Func<string> callerGetter)
         {
             try
             {
