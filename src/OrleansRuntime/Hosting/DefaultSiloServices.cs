@@ -15,7 +15,6 @@ using Orleans.Runtime.Placement;
 using Orleans.Runtime.Providers;
 using Orleans.Runtime.ReminderService;
 using Orleans.Runtime.Scheduler;
-using Orleans.Runtime.Utilities;
 using Orleans.Runtime.Versions;
 using Orleans.Runtime.Versions.Compatibility;
 using Orleans.Runtime.Versions.Selector;
@@ -32,19 +31,15 @@ using Orleans.Runtime.Storage;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Diagnostics;
+using System.Net;
 
 namespace Orleans.Hosting
 {
     internal static class DefaultSiloServices
     {
-
-        internal static ILoggerFactory CreateDefaultLoggerFactory(string fileName)
+        internal static ILoggerFactory CreateDefaultLoggerFactory()
         {
-            var logOutput = File.Open(fileName, FileMode.Append, FileAccess.Write, FileShare.Write);
-            var defaultSwitch = new SourceSwitch("DefaultSourceSwitch");
-            defaultSwitch.Level = SourceLevels.Warning;
-            var loggerFactory = new LoggerFactory().AddTraceSource(defaultSwitch,
-                new TextWriterTraceListener(logOutput));
+            var loggerFactory = new LoggerFactory().AddConsole();
             return loggerFactory;
         }
 
@@ -80,7 +75,8 @@ namespace Orleans.Hosting
             services.TryAddSingleton<BootstrapProviderManager>();
             services.TryAddSingleton<LoadedProviderTypeLoaders>();
             services.AddLogging();
-            services.TryAddSingleton(sp=> CreateDefaultLoggerFactory($"{sp.GetRequiredService<NodeConfiguration>().SiloName}-log.txt"));
+            services.TryAddSingleton(sp=> CreateDefaultLoggerFactory());
+            services.TryAddSingleton<IPEndPoint>(sp => sp.GetService<NodeConfiguration>()?.Endpoint);
             services.TryAddSingleton<SerializationManager>();
             services.TryAddSingleton<ITimerRegistry, TimerRegistry>();
             services.TryAddSingleton<IReminderRegistry, ReminderRegistry>();
@@ -108,7 +104,7 @@ namespace Orleans.Hosting
             services.TryAddSingleton<MessageCenter>();
             services.TryAddFromExisting<IMessageCenter, MessageCenter>();
             services.TryAddFromExisting<ISiloMessageCenter, MessageCenter>();
-            services.TryAddSingleton(FactoryUtility.Create<MessageCenter, Gateway>);
+            services.TryAddSingleton(Utilities.FactoryUtility.Create<MessageCenter, Gateway>);
             services.TryAddSingleton<Dispatcher>(sp => sp.GetRequiredService<Catalog>().Dispatcher);
             services.TryAddSingleton<InsideRuntimeClient>();
             services.TryAddFromExisting<IRuntimeClient, InsideRuntimeClient>();
@@ -137,8 +133,8 @@ namespace Orleans.Hosting
             services.TryAddSingleton<IGrainRegistrar<GlobalSingleInstanceRegistration>, GlobalSingleInstanceRegistrar>();
             services.TryAddSingleton<IGrainRegistrar<ClusterLocalRegistration>, ClusterLocalRegistrar>();
             services.TryAddSingleton<RegistrarManager>();
-            services.TryAddSingleton(FactoryUtility.Create<Grain, IMultiClusterRegistrationStrategy, ProtocolServices>);
-            services.TryAddSingleton(FactoryUtility.Create<GrainDirectoryPartition>);
+            services.TryAddSingleton(Utilities.FactoryUtility.Create<Grain, IMultiClusterRegistrationStrategy, ProtocolServices>);
+            services.TryAddSingleton(Utilities.FactoryUtility.Create<GrainDirectoryPartition>);
 
             // Placement
             services.TryAddSingleton<PlacementDirectorsManager>();

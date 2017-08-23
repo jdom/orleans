@@ -8,7 +8,7 @@ namespace Orleans.Runtime
     /// Interface of Orleans runtime for logging services. 
     /// </summary>
     [Serializable]
-    [Obsolete]
+    //TODO: Mark it as [Obsolete] after all runtime has migrated
     public abstract class Logger
     {
         /// <summary> Current SeverityLevel set for this logger. </summary>
@@ -24,7 +24,7 @@ namespace Orleans.Runtime
         /// </summary>
         /// <param name="loggerName">Name of the Logger to find or create</param>
         /// <returns>Logger associated with the specified name</returns>
-        [Obsolete]
+       //TODO: Mark it as [Obsolete] after all runtime has migrated
         public abstract Logger GetLogger(string loggerName);
 
         /// <summary>

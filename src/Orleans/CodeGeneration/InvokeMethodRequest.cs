@@ -59,7 +59,7 @@ namespace Orleans.CodeGeneration
 
 
         /// <summary>Obsolete field.</summary>
-        [Obsolete]
+        //TODO: Mark it as [Obsolete] after all runtime has migrated
         DelayForConsistency = 0x20,
 
         /// <summary>The invocation can interleave with any other request type, including write requests.</summary>

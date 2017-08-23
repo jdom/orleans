@@ -35,7 +35,7 @@ namespace Orleans.Runtime
 
         IServiceProvider ServiceProvider { get; }
 
-        [Obsolete]
+        //TODO: Mark it as [Obsolete] after all runtime has migrated
         Logger GetLogger(string loggerName);
 
         void DeactivateOnIdle(Grain grain);

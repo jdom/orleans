@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Orleans.Runtime
 {
-    [Obsolete]
+    //TODO: Mark it as [Obsolete] after all runtime has migrated
     internal class LoggerWrapper : Logger
     {
         public override Severity SeverityLevel => this.maxSeverityLevel;
@@ -104,7 +104,7 @@ namespace Orleans.Runtime
             return Severity.Verbose3;
         }
 
-        [Obsolete]
+        //TODO: Mark it as [Obsolete] after all runtime has migrated
         public override Logger GetLogger(string loggerName)
         {
             return new LoggerWrapper(loggerName, this.loggerFactory, this.ipEndpoint);
