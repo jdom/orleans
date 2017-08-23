@@ -10,7 +10,8 @@ namespace Orleans.Runtime
     public class LoggingUtils
     {
         private const string LogCodeString = "OrleansLogCode: ";
-        //this enables message bulking if OrleansLoggerDecorator is used 
+        ///In order to user message bulking feature, Application needs to use this method to create EventId, 
+        /// and also build their loggerProvider on top of OrleansLoggerDecorator 
         public static EventId CreateEventId(int eventId, int errorCode)
         {
             return new EventId(eventId, $"{LogCodeString}{errorCode}");

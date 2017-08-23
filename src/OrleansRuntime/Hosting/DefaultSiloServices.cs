@@ -40,7 +40,7 @@ namespace Orleans.Hosting
 
         internal static ILoggerFactory CreateDefaultLoggerFactory(string fileName)
         {
-            var logOutput = File.Open(fileName, FileMode.OpenOrCreate);
+            var logOutput = File.Open(fileName, FileMode.Append, FileAccess.Write, FileShare.Write);
             var defaultSwitch = new SourceSwitch("DefaultSourceSwitch");
             defaultSwitch.Level = SourceLevels.Warning;
             var loggerFactory = new LoggerFactory().AddTraceSource(defaultSwitch,

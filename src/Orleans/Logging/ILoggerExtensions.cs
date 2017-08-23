@@ -8,7 +8,7 @@ using System.Text;
 namespace Orleans.Runtime
 {
     /// <summary>
-    /// Extension methods which preserves legacy orleans log methods 
+    /// Extension methods which preserves legacy orleans log methods style
     /// </summary>
     internal static class OrleansLoggerExtension
     {
