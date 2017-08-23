@@ -398,7 +398,7 @@ namespace Orleans
                 start = !objectData.Running;
                 objectData.Running = true;
             }
-            if (logger.IsVerbose) logger.Verbose("InvokeLocalObjectAsync {0} start {1}", message, start);
+            if (logger.IsEnabled(LogLevel.Debug)) logger.Debug("InvokeLocalObjectAsync {0} start {1}", message, start);
             if (start)
             {
                 // we use Task.Run() to ensure that the message pump operates asynchronously
@@ -641,7 +641,7 @@ namespace Orleans
                 callbackData.StartTimer(responseTimeout);
             }
 
-            if (logger.IsVerbose2) logger.Verbose2("Send {0}", message);
+            if (logger.IsEnabled(LogLevel.Trace)) logger.Trace("Send {0}", message);
             transport.SendMessage(message);
         }
 
@@ -652,7 +652,7 @@ namespace Orleans
                 return false;
             }
 
-            if (logger.IsVerbose) logger.Verbose("Resend {0}", message);
+            if (logger.IsEnabled(LogLevel.Debug)) logger.Debug("Resend {0}", message);
 
             message.ResendCount = message.ResendCount + 1;
             message.TargetHistory = message.GetTargetHistory();
@@ -670,7 +670,7 @@ namespace Orleans
 
         public void ReceiveResponse(Message response)
         {
-            if (logger.IsVerbose2) logger.Verbose2("Received {0}", response);
+            if (logger.IsEnabled(LogLevel.Trace)) logger.Trace("Received {0}", response);
 
             // ignore duplicate requests
             if (response.Result == Message.ResponseTypes.Rejection && response.RejectionType == Message.RejectionTypes.DuplicateRequest)
@@ -705,7 +705,7 @@ namespace Orleans
                 {
                     logger.Info("OutsideRuntimeClient.Reset(): client Id " + clientId);
                 }
-            });
+            }, this.logger);
 
             Utils.SafeExecute(() =>
             {

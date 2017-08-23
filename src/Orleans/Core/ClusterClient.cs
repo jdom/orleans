@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Streams;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 
 namespace Orleans
 {
@@ -49,7 +52,7 @@ namespace Orleans
             get
             {
                 this.ThrowIfDisposedOrNotInitialized();
-                return this.runtimeClient.AppLogger;
+                return new LoggerWrapper("Application", runtimeClient.ServiceProvider.GetRequiredService<ILoggerFactory>(), runtimeClient.ServiceProvider.GetService<IPEndPoint>());
             }
         }
 

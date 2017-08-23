@@ -4,7 +4,6 @@ using System.Diagnostics;
 
 namespace Orleans.Runtime
 {
-    /*
     public static class LoggerExtensions
     {
         
@@ -312,7 +311,7 @@ namespace Orleans.Runtime
             logger.Log((int)errorCode, Severity.Error, message, EmptyObjectArray, exception);
         }
 
-        internal static void Assert(this ILogger logger, ErrorCode errorCode, bool condition, string message = null)
+        internal static void Assert(this Logger logger, ErrorCode errorCode, bool condition, string message = null)
         {
             if (condition) return;
 
@@ -361,4 +360,3 @@ namespace Orleans.Runtime
         #endregion
     }
 }
-*/
