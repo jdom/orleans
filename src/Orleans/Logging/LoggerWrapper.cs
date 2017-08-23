@@ -104,15 +104,10 @@ namespace Orleans.Runtime
             return Severity.Verbose3;
         }
 
+        [Obsolete]
         public override Logger GetLogger(string loggerName)
         {
             return new LoggerWrapper(loggerName, this.loggerFactory, this.ipEndpoint);
-        }
-
-        //return the asp.net logger
-        public ILogger GetRecommendedLogger()
-        {
-            return this.logger;
         }
 
         //TODO: delete those APM methods after Julian's PR. 

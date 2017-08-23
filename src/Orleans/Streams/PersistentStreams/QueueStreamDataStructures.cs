@@ -30,7 +30,7 @@ namespace Orleans.Streams
             Filter = filter;
         }
 
-        internal void SafeDisposeCursor(ILogger logger)
+        internal void SafeDisposeCursor(Logger logger)
         {
             try
             {
