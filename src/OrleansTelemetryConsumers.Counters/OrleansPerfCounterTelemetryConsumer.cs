@@ -31,7 +31,7 @@ namespace OrleansTelemetryConsumers.Counters
             this.isInitialized = new Lazy<bool>(this.Initialize, true);
             if (!AreWindowsPerfCountersAvailable())
             {
-                logger.Warn(ErrorCode.PerfCounterNotFound, "Windows perf counters not found -- defaulting to in-memory counters. " + ExplainHowToCreateOrleansPerfCounters);
+                LoggerExtensions.Warn(logger, ErrorCode.PerfCounterNotFound, "Windows perf counters not found -- defaulting to in-memory counters. " + ExplainHowToCreateOrleansPerfCounters);
             }
         }
 
@@ -47,7 +47,7 @@ namespace OrleansTelemetryConsumers.Counters
             {
                 if (Environment.OSVersion.ToString().StartsWith("unix", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    logger.Warn(ErrorCode.PerfCounterNotFound, "Windows perf counters are only available on Windows :) -- defaulting to in-memory counters.");
+                    LoggerExtensions.Warn(logger, ErrorCode.PerfCounterNotFound, "Windows perf counters are only available on Windows :) -- defaulting to in-memory counters.");
                     return false;
                 }
 
@@ -55,7 +55,7 @@ namespace OrleansTelemetryConsumers.Counters
             }
             catch (Exception exc)
             {
-                logger.Warn(ErrorCode.PerfCounterCategoryCheckError,
+                LoggerExtensions.Warn(logger, ErrorCode.PerfCounterCategoryCheckError,
                     string.Format("Ignoring error checking for {0} perf counter category", CATEGORY_NAME), exc);
             }
             return false;
@@ -85,7 +85,7 @@ namespace OrleansTelemetryConsumers.Counters
             if (!isInitialized.Value)
             {
                 var msg = "Unable to install Windows Performance counters";
-                logger.Warn(ErrorCode.PerfCounterNotFound, msg);
+                LoggerExtensions.Warn(logger, ErrorCode.PerfCounterNotFound, msg);
                 throw new InvalidOperationException(msg);
             }
 
@@ -274,7 +274,7 @@ namespace OrleansTelemetryConsumers.Counters
             }
             catch (Exception ex)
             {
-                logger.Error(ErrorCode.PerfCounterUnableToWrite, string.Format("Unable to write to Windows perf counter '{0}'", statsName), ex);
+                LoggerExtensions.Warn(logger, ErrorCode.PerfCounterUnableToWrite, string.Format("Unable to write to Windows perf counter '{0}'", statsName), ex);
             }
         }
 

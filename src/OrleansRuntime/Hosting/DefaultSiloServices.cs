@@ -29,11 +29,25 @@ using Orleans.Versions.Selector;
 using Orleans.Providers;
 using Orleans.Runtime;
 using Orleans.Runtime.Storage;
+using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Diagnostics;
 
 namespace Orleans.Hosting
 {
     internal static class DefaultSiloServices
     {
+
+        internal static ILoggerFactory CreateDefaultLoggerFactory(string fileName)
+        {
+            var logOutput = File.Open(fileName, FileMode.OpenOrCreate);
+            var defaultSwitch = new SourceSwitch("DefaultSourceSwitch");
+            defaultSwitch.Level = SourceLevels.Warning;
+            var loggerFactory = new LoggerFactory().AddTraceSource(defaultSwitch,
+                new TextWriterTraceListener(logOutput));
+            return loggerFactory;
+        }
+
         internal static void AddDefaultServices(IServiceCollection services)
         {
             services.AddOptions();
@@ -65,6 +79,8 @@ namespace Orleans.Hosting
             services.TryAddSingleton<LogConsistencyProviderManager>();
             services.TryAddSingleton<BootstrapProviderManager>();
             services.TryAddSingleton<LoadedProviderTypeLoaders>();
+            services.AddLogging();
+            services.TryAddSingleton(sp=> CreateDefaultLoggerFactory($"{sp.GetRequiredService<NodeConfiguration>().SiloName}-log.txt"));
             services.TryAddSingleton<SerializationManager>();
             services.TryAddSingleton<ITimerRegistry, TimerRegistry>();
             services.TryAddSingleton<IReminderRegistry, ReminderRegistry>();
