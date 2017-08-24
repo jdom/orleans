@@ -37,12 +37,6 @@ namespace Orleans.Hosting
 {
     internal static class DefaultSiloServices
     {
-        internal static ILoggerFactory CreateDefaultLoggerFactory()
-        {
-            var loggerFactory = new LoggerFactory().AddConsole();
-            return loggerFactory;
-        }
-
         internal static void AddDefaultServices(IServiceCollection services)
         {
             services.AddOptions();
@@ -75,7 +69,6 @@ namespace Orleans.Hosting
             services.TryAddSingleton<BootstrapProviderManager>();
             services.TryAddSingleton<LoadedProviderTypeLoaders>();
             services.AddLogging();
-            services.TryAddSingleton(sp=> CreateDefaultLoggerFactory());
             services.TryAddSingleton<IPEndPoint>(sp => sp.GetService<NodeConfiguration>()?.Endpoint);
             services.TryAddSingleton<SerializationManager>();
             services.TryAddSingleton<ITimerRegistry, TimerRegistry>();

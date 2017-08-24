@@ -11,6 +11,8 @@ using Orleans.Runtime.Configuration;
 using Orleans.Serialization;
 using Orleans.Streams;
 using Orleans.Streams.Core;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Orleans
 {
@@ -78,6 +80,7 @@ namespace Orleans
 
         private static void AddDefaultServices(IServiceCollection services)
         {
+            services.AddLogging();
             services.TryAddSingleton<LoadedProviderTypeLoaders>();
             services.TryAddSingleton<StatisticsProviderManager>();
             services.TryAddSingleton<TypeMetadataCache>();
