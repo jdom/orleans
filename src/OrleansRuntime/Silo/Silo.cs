@@ -34,6 +34,7 @@ using Orleans.Streams;
 using Orleans.Runtime.Hosting;
 using Orleans.Runtime.Versions;
 using Orleans.Versions;
+using Microsoft.Extensions.Logging;
 
 namespace Orleans.Runtime
 {
@@ -849,6 +850,8 @@ namespace Orleans.Runtime
             SafeExecute(() => this.SystemStatus = SystemStatus.Terminated);
             SafeExecute(() => AppDomain.CurrentDomain.UnhandledException -= this.DomainUnobservedExceptionHandler);
             SafeExecute(() => this.assemblyProcessor?.Dispose());
+            //there might be dispose/clean-up logic in log providers
+            SafeExecute(() => DisposeLogProviders(this.Services));
             SafeExecute(() => (this.Services as IDisposable)?.Dispose());
             SafeExecute(LogManager.Close);
 
@@ -883,6 +886,16 @@ namespace Orleans.Runtime
             finally
             {
                 LogManager.Close();
+            }
+        }
+
+        private void DisposeLogProviders(IServiceProvider svc)
+        {
+            var providers = svc.GetServices<ILoggerProvider>();
+            if (providers == null) return;
+            foreach (var provider in providers)
+            {
+                provider.Dispose();
             }
         }
 
