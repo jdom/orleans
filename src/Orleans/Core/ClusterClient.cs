@@ -18,6 +18,7 @@ namespace Orleans
         private readonly OutsideRuntimeClient runtimeClient;
         private readonly AsyncLock initLock = new AsyncLock();
         private LifecycleState state = LifecycleState.Created;
+        private readonly LoggerWrapper appLogger;
 
         private enum LifecycleState
         {
@@ -34,10 +35,11 @@ namespace Orleans
         /// </summary>
         /// <param name="runtimeClient">The runtime client.</param>
         /// <param name="configuration">The client configuration.</param>
-        public ClusterClient(OutsideRuntimeClient runtimeClient, ClientConfiguration configuration)
+        public ClusterClient(OutsideRuntimeClient runtimeClient, ClientConfiguration configuration, ILoggerFactory loggerFactory)
         {
             this.Configuration = configuration;
             this.runtimeClient = runtimeClient;
+            this.appLogger = new LoggerWrapper("Application", loggerFactory, null);
         }
 
         /// <inheritdoc />
@@ -52,7 +54,7 @@ namespace Orleans
             get
             {
                 this.ThrowIfDisposedOrNotInitialized();
-                return new LoggerWrapper("Application", runtimeClient.ServiceProvider.GetRequiredService<ILoggerFactory>(), runtimeClient.ServiceProvider.GetService<IPEndPoint>());
+                return this.appLogger;
             }
         }
 

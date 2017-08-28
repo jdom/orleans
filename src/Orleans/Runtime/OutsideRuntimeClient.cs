@@ -93,8 +93,9 @@ namespace Orleans
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "MessageCenter is IDisposable but cannot call Dispose yet as it lives past the end of this method call.")]
-        public OutsideRuntimeClient()
+        public OutsideRuntimeClient(ILoggerFactory loggerFactory)
         {
+            this.logger = loggerFactory.CreateLogger<OutsideRuntimeClient>();
             this.handshakeClientId = GrainId.NewClientId();
             tryResendMessage = TryResendMessage;
             unregisterCallback = msg => UnRegisterCallback(msg.Id);
@@ -130,8 +131,6 @@ namespace Orleans
             StatisticsCollector.Initialize(config);
             this.assemblyProcessor = this.ServiceProvider.GetRequiredService<AssemblyProcessor>();
             this.assemblyProcessor.Initialize();
-
-            logger = services.GetRequiredService<ILogger<OutsideRuntimeClient>>();
 
             BufferPool.InitGlobalBufferPool(config);
 

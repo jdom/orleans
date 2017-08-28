@@ -27,14 +27,14 @@ namespace Orleans.Providers.Streams.SimpleMessageStream
         private readonly bool                       optimizeForImmutableData;
         private readonly ILogger                     logger;
 
-        internal SimpleMessageStreamProducerExtension(IStreamProviderRuntime providerRt, IStreamPubSub pubsub, bool fireAndForget, bool optimizeForImmutable)
+        internal SimpleMessageStreamProducerExtension(IStreamProviderRuntime providerRt, IStreamPubSub pubsub, ILoggerFactory loggerFac, bool fireAndForget, bool optimizeForImmutable)
         {
             providerRuntime = providerRt;
             streamPubSub = pubsub;
             fireAndForgetDelivery = fireAndForget;
             optimizeForImmutableData = optimizeForImmutable;
             remoteConsumers = new Dictionary<StreamId, StreamConsumerExtensionCollection>();
-            logger = providerRuntime.ServiceProvider.GetRequiredService<ILogger<SimpleMessageStreamProducerExtension>>();
+            logger = loggerFac.CreateLogger<SimpleMessageStreamProducerExtension>();
         }
 
         internal void AddStream(StreamId streamId)
