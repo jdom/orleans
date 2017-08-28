@@ -158,21 +158,21 @@ namespace Orleans.Runtime
                 //        TelemetryConsumers.Add(new ConsoleTelemetryConsumer());
                 //    }
                 //}
-                //if (!string.IsNullOrEmpty(config.TraceFileName))
-                //{
-                //    try
-                //    {
-                //        if (!TelemetryConsumers.OfType<FileTelemetryConsumer>().Any())
-                //        {
-                //            TelemetryConsumers.Add(new FileTelemetryConsumer(config.TraceFileName));
-                //        }
-                //    }
-                //    catch (Exception exc)
-                //    {
-                //        Trace.Listeners.Add(new DefaultTraceListener());
-                //        Trace.TraceError("Error opening trace file {0} -- Using DefaultTraceListener instead -- Exception={1}", config.TraceFileName, exc);
-                //    }
-                //}
+                if (!string.IsNullOrEmpty(config.TraceFileName))
+                {
+                    try
+                    {
+                        if (!LogConsumers.OfType<Extensions.Logging.FileLogConsumer>().Any())
+                        {
+                            LogConsumers.Add(new Extensions.Logging.FileLogConsumer(config.TraceFileName));
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Trace.Listeners.Add(new DefaultTraceListener());
+                        Trace.TraceError("Error opening trace file {0} -- Using DefaultTraceListener instead -- Exception={1}", config.TraceFileName, exc);
+                    }
+                }
 
                 //if (Trace.Listeners.Count > 0)
                 //{
