@@ -338,20 +338,20 @@ namespace UnitTests
             }
         }
 
-        //[Fact, TestCategory("Logger"), TestCategory("Performance")]
-        //public void Logger_Perf_FileLogWriter()
-        //{
-        //    const string testName = "Logger_Perf_FileLogWriter";
-        //    TimeSpan target = TimeSpan.FromMilliseconds(1000);
-        //    int n = 10000;
-        //    int logCode = TestUtils.Random.Next(100000);
+        [Fact, TestCategory("Logger"), TestCategory("Performance")]
+        public void Logger_Perf_FileLogWriter()
+        {
+            const string testName = "Logger_Perf_FileLogWriter";
+            TimeSpan target = TimeSpan.FromMilliseconds(1000);
+            int n = 10000;
+            int logCode = TestUtils.Random.Next(100000);
 
-        //    var logConsumer = new Orleans.Extensions.Logging.FileLogConsumer("log-" + testName + ".txt");
-        //    LogManager.LogConsumers.Add(logConsumer);
-        //    LogManager.BulkMessageInterval = target;
-        //    Logger logger = LogManager.GetLogger(testName);
-        //    RunLoggerPerfTest(testName, n, logCode, target, logger);
-        //}
+            var logConsumer = new Orleans.Extensions.Logging.FileLogConsumer("log-" + testName + ".txt");
+            LogManager.LogConsumers.Add(logConsumer);
+            LogManager.BulkMessageInterval = target;
+            Logger logger = LogManager.GetLogger(testName);
+            RunLoggerPerfTest(testName, n, logCode, target, logger);
+        }
 
         [Fact, TestCategory("Logger"), TestCategory("Performance")]
         public void Logger_Perf_Logger_Dummy()
