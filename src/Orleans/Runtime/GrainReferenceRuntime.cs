@@ -20,13 +20,13 @@ namespace Orleans.Runtime
         private readonly SerializationManager serializationManager;
 
         public GrainReferenceRuntime(
-            ILoggerFactory loggerFactory,
+            ILogger<GrainReferenceRuntime> logger,
             IRuntimeClient runtimeClient,
             IInternalGrainFactory internalGrainFactory,
             SerializationManager serializationManager)
         {
             this.responseCallbackDelegate = this.ResponseCallback;
-            this.logger = loggerFactory.CreateLogger<GrainReferenceRuntime>();
+            this.logger = logger;
             this.RuntimeClient = runtimeClient;
             this.internalGrainFactory = internalGrainFactory;
             this.serializationManager = serializationManager;

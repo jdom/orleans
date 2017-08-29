@@ -24,7 +24,6 @@ namespace Orleans.Runtime
         /// </summary>
         /// <param name="loggerName">Name of the Logger to find or create</param>
         /// <returns>Logger associated with the specified name</returns>
-       //TODO: Mark it as [Obsolete] after all runtime has migrated
         public abstract Logger GetLogger(string loggerName);
 
         /// <summary>

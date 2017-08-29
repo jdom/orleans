@@ -40,7 +40,7 @@ namespace Orleans.Providers.Streams.SimpleMessageStream
         internal SimpleMessageStreamProducer(StreamImpl<T> stream, string streamProviderName,
             IStreamProviderRuntime providerUtilities, bool fireAndForgetDelivery, bool optimizeForImmutableData,
             IStreamPubSub pubSub, bool isRewindable, SerializationManager serializationManager,
-            ILoggerFactory loggerFac)
+            ILoggerFactory loggerFactory)
         {
             this.stream = stream;
             this.streamProviderName = streamProviderName;
@@ -54,7 +54,7 @@ namespace Orleans.Providers.Streams.SimpleMessageStream
             isDisposed = false;
             logger = providerRuntime.GetLogger(GetType().Name);
             initLock = new AsyncLock();
-            this.loggerFactory = loggerFac;
+            this.loggerFactory = loggerFactory;
             ConnectToRendezvous().Ignore();
         }
 

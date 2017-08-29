@@ -9,17 +9,17 @@ namespace Orleans.Runtime
 {
     public class LoggingUtils
     {
-        private const string LogCodeString = "OrleansLogCode: ";
+        private const string LogCodeString = "OrleansLogCode";
         ///In order to user message bulking feature, Application needs to use this method to create EventId, 
         /// and also build their loggerProvider on top of OrleansLoggerDecorator 
-        public static EventId CreateEventId(int eventId, int errorCode)
+        public static EventId CreateEventId(int errorCode)
         {
-            return new EventId(eventId, $"{LogCodeString}{errorCode}");
+            return new EventId(errorCode, LogCodeString);
         }
 
-        internal static EventId CreateEventId(int eventId, ErrorCode errorCode)
+        internal static EventId CreateEventId(ErrorCode errorCode)
         {
-            return new EventId(eventId, $"{LogCodeString}{(int)errorCode}");
+            return new EventId((int)errorCode, LogCodeString);
         }
     }
 }

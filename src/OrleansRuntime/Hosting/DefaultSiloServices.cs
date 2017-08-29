@@ -32,6 +32,7 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Diagnostics;
 using System.Net;
+using Orleans.Runtime.Utilities;
 
 namespace Orleans.Hosting
 {
@@ -69,7 +70,6 @@ namespace Orleans.Hosting
             services.TryAddSingleton<BootstrapProviderManager>();
             services.TryAddSingleton<LoadedProviderTypeLoaders>();
             services.AddLogging();
-            services.TryAddSingleton<IPEndPoint>(sp => sp.GetService<NodeConfiguration>()?.Endpoint);
             services.TryAddSingleton<SerializationManager>();
             services.TryAddSingleton<ITimerRegistry, TimerRegistry>();
             services.TryAddSingleton<IReminderRegistry, ReminderRegistry>();
@@ -97,7 +97,7 @@ namespace Orleans.Hosting
             services.TryAddSingleton<MessageCenter>();
             services.TryAddFromExisting<IMessageCenter, MessageCenter>();
             services.TryAddFromExisting<ISiloMessageCenter, MessageCenter>();
-            services.TryAddSingleton(Utilities.FactoryUtility.Create<MessageCenter, Gateway>);
+            services.TryAddSingleton(FactoryUtility.Create<MessageCenter, Gateway>);
             services.TryAddSingleton<Dispatcher>(sp => sp.GetRequiredService<Catalog>().Dispatcher);
             services.TryAddSingleton<InsideRuntimeClient>();
             services.TryAddFromExisting<IRuntimeClient, InsideRuntimeClient>();
@@ -126,8 +126,8 @@ namespace Orleans.Hosting
             services.TryAddSingleton<IGrainRegistrar<GlobalSingleInstanceRegistration>, GlobalSingleInstanceRegistrar>();
             services.TryAddSingleton<IGrainRegistrar<ClusterLocalRegistration>, ClusterLocalRegistrar>();
             services.TryAddSingleton<RegistrarManager>();
-            services.TryAddSingleton(Utilities.FactoryUtility.Create<Grain, IMultiClusterRegistrationStrategy, ProtocolServices>);
-            services.TryAddSingleton(Utilities.FactoryUtility.Create<GrainDirectoryPartition>);
+            services.TryAddSingleton(FactoryUtility.Create<Grain, IMultiClusterRegistrationStrategy, ProtocolServices>);
+            services.TryAddSingleton(FactoryUtility.Create<GrainDirectoryPartition>);
 
             // Placement
             services.TryAddSingleton<PlacementDirectorsManager>();

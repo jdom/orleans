@@ -104,7 +104,6 @@ namespace Orleans.Runtime
             return Severity.Verbose3;
         }
 
-        //TODO: Mark it as [Obsolete] after all runtime has migrated
         public override Logger GetLogger(string loggerName)
         {
             return new LoggerWrapper(loggerName, this.loggerFactory, this.ipEndpoint);
