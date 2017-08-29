@@ -87,7 +87,7 @@ namespace Orleans.Runtime
             //traversal from the lowest LogLevel to the highest to find the Severity of current Logger
             //If Trace is enabled, then minimun enabled LogLevel is Trace, which maps to Severity being Verbose2
             if (logger.IsEnabled(LogLevel.Trace))
-                return Severity.Verbose2;
+                return Severity.Verbose3;
             //If Trace is not enabled but Debug is enabled, then minimun enabled LogLevel is Debug, which maps to Severity being Verbose.
             if (logger.IsEnabled(LogLevel.Debug))
                 return Severity.Verbose;

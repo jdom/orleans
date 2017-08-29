@@ -255,8 +255,6 @@ namespace Orleans.Runtime
             var dumpFile = LogManager.CreateMiniDump();
             logger.Error(ErrorCode.Logger_MiniDumpCreated, "INTERNAL FAILURE! Application mini-dump written to file " + dumpFile.FullName);
 
-            LogManager.Flush(); // Flush logs to disk
-
             // Kill process
             if (Debugger.IsAttached)
             {
@@ -265,7 +263,6 @@ namespace Orleans.Runtime
             else
             {
                 logger.Error(ErrorCode.Logger_ProcessCrashing, "INTERNAL FAILURE! Process crashing!");
-                LogManager.Close();
 
                 Environment.FailFast("Unrecoverable failure: " + message);
             }

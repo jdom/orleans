@@ -25,7 +25,8 @@ namespace Orleans.Providers.Streams.SimpleMessageStream
         private readonly IStreamPubSub              streamPubSub;
         private readonly bool                       fireAndForgetDelivery;
         private readonly bool                       optimizeForImmutableData;
-        private readonly ILogger                     logger;
+        private readonly ILogger                    logger;
+        private readonly ILoggerFactory             loggerFactory;
 
         internal SimpleMessageStreamProducerExtension(IStreamProviderRuntime providerRt, IStreamPubSub pubsub, ILoggerFactory loggerFactory, bool fireAndForget, bool optimizeForImmutable)
         {
@@ -35,6 +36,7 @@ namespace Orleans.Providers.Streams.SimpleMessageStream
             optimizeForImmutableData = optimizeForImmutable;
             remoteConsumers = new Dictionary<StreamId, StreamConsumerExtensionCollection>();
             logger = loggerFactory.CreateLogger<SimpleMessageStreamProducerExtension>();
+            this.loggerFactory = loggerFactory;
         }
 
         internal void AddStream(StreamId streamId)
@@ -44,7 +46,7 @@ namespace Orleans.Providers.Streams.SimpleMessageStream
             // so this call is only made once, when StreamProducer is created.
             if (remoteConsumers.TryGetValue(streamId, out obs)) return;
 
-            obs = new StreamConsumerExtensionCollection(streamPubSub, providerRuntime.ServiceProvider.GetRequiredService<ILoggerFactory>());
+            obs = new StreamConsumerExtensionCollection(streamPubSub, this.loggerFactory);
             remoteConsumers.Add(streamId, obs);
         }
 
