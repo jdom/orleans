@@ -87,7 +87,7 @@ namespace Orleans.Runtime
         /// <param name="args">Any arguments to the format string.</param>
         public static void Debug(this ILogger logger, int logCode, string format, params object[] args)
         {
-            logger.LogDebug(new EventId(logCode), format, args);
+            logger.LogDebug(logCode, format, args);
         }
 
         internal static void Debug(this ILogger logger, ErrorCode logCode, string format, params object[] args)
@@ -103,7 +103,7 @@ namespace Orleans.Runtime
         /// <param name="message">The log message.</param>
         public static void Debug(this ILogger logger, int logCode, string message)
         {
-            logger.LogDebug(new EventId(logCode), message);
+            logger.LogDebug(logCode, message);
         }
 
         internal static void Debug(this ILogger logger, ErrorCode logCode, string message)
@@ -119,7 +119,7 @@ namespace Orleans.Runtime
         /// <param name="args">Any arguments to the format string.</param>
         public static void Trace(this ILogger logger, int logCode, string format, params object[] args)
         {
-            logger.LogTrace(new EventId(logCode), format, args);
+            logger.LogTrace(logCode, format, args);
         }
 
         internal static void Trace(this ILogger logger, ErrorCode logCode, string format, params object[] args)
@@ -135,7 +135,7 @@ namespace Orleans.Runtime
         /// <param name="message">The log message.</param>
         public static void Trace(this ILogger logger, int logCode, string message)
         {
-            logger.LogTrace(new EventId(logCode), message);
+            logger.LogTrace(logCode, message);
         }
 
         internal static void Trace(this ILogger logger, ErrorCode logCode, string message)
@@ -152,7 +152,7 @@ namespace Orleans.Runtime
         /// <param name="args">Any arguments to the format string.</param>
         public static void Info(this ILogger logger, int logCode, string format, params object[] args)
         {
-            logger.LogInformation(new EventId(logCode), format, args);
+            logger.LogInformation(logCode, format, args);
         }
 
         internal static void Info(this ILogger logger, ErrorCode logCode, string format, params object[] args)
@@ -168,7 +168,7 @@ namespace Orleans.Runtime
         /// <param name="message">The log message.</param>
         public static void Info(this ILogger logger, int logCode, string message)
         {
-            logger.LogInformation(new EventId(logCode), message);
+            logger.LogInformation(logCode, message);
         }
 
         internal static void Info(this ILogger logger, ErrorCode logCode, string message)
@@ -184,7 +184,7 @@ namespace Orleans.Runtime
         /// <param name="args">Any arguments to the format string.</param>
         public static void Warn(this ILogger logger, int logCode, string format, params object[] args)
         {
-            logger.LogWarning(new EventId(logCode), format, args);
+            logger.LogWarning(logCode, format, args);
         }
 
         internal static void Warn(this ILogger logger, ErrorCode logCode, string format, params object[] args)
@@ -200,7 +200,7 @@ namespace Orleans.Runtime
         /// <param name="exception">An exception related to the warning, if any.</param>
         public static void Warn(this ILogger logger, int logCode, string message, Exception exception = null)
         {
-            logger.LogWarning(new EventId(logCode), exception, message);
+            logger.LogWarning(logCode, exception, message);
         }
 
         internal static void Warn(this ILogger logger, ErrorCode logCode, string message, Exception exception = null)
@@ -216,7 +216,7 @@ namespace Orleans.Runtime
         /// <param name="exception">An exception related to the error, if any.</param>
         public static void Error(this ILogger logger, int logCode, string message, Exception exception = null)
         {
-            logger.LogError(new EventId(logCode), exception, message);
+            logger.LogError(logCode, exception, message);
         }
 
         internal static void Error(this ILogger logger, ErrorCode logCode, string message, Exception exception = null)
