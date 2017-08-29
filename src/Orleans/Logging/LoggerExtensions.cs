@@ -6,6 +6,7 @@ namespace Orleans.Runtime
 {
     public static class LoggerExtensions
     {
+        
         private static readonly object[] EmptyObjectArray = new object[0];
 
         /// <summary>

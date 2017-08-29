@@ -1,5 +1,6 @@
 using System;
 using Orleans.Runtime;
+using Microsoft.Extensions.Logging;
 
 namespace Orleans.Streams
 {

@@ -15,7 +15,6 @@ using Orleans.Runtime.Placement;
 using Orleans.Runtime.Providers;
 using Orleans.Runtime.ReminderService;
 using Orleans.Runtime.Scheduler;
-using Orleans.Runtime.Utilities;
 using Orleans.Runtime.Versions;
 using Orleans.Runtime.Versions.Compatibility;
 using Orleans.Runtime.Versions.Selector;
@@ -29,6 +28,11 @@ using Orleans.Versions.Selector;
 using Orleans.Providers;
 using Orleans.Runtime;
 using Orleans.Runtime.Storage;
+using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Diagnostics;
+using System.Net;
+using Orleans.Runtime.Utilities;
 
 namespace Orleans.Hosting
 {
@@ -66,6 +70,7 @@ namespace Orleans.Hosting
             services.TryAddSingleton<LogConsistencyProviderManager>();
             services.TryAddSingleton<BootstrapProviderManager>();
             services.TryAddSingleton<LoadedProviderTypeLoaders>();
+            services.AddLogging();
             services.TryAddSingleton<SerializationManager>();
             services.TryAddSingleton<ITimerRegistry, TimerRegistry>();
             services.TryAddSingleton<IReminderRegistry, ReminderRegistry>();
