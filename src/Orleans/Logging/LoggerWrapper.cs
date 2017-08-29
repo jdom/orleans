@@ -16,17 +16,17 @@ namespace Orleans.Runtime
 
         public override string Name => this.name;
         private string name;
-        private Severity maxSeverityLevel;
-        private ILogger logger;
-        private IPEndPoint ipEndpoint;
-        private ILoggerFactory loggerFactory;
-        public LoggerWrapper(string name, ILoggerFactory loggerFac, IPEndPoint ipEndpoint)
+        private readonly Severity maxSeverityLevel;
+        private readonly ILogger logger;
+        private readonly IPEndPoint ipEndpoint;
+        private readonly ILoggerFactory loggerFactory;
+        public LoggerWrapper(string name, ILoggerFactory loggerFactory, IPEndPoint ipEndpoint)
         {
             this.name = Name;
-            this.logger = loggerFac.CreateLogger(name);
+            this.logger = loggerFactory.CreateLogger(name);
             this.maxSeverityLevel = FindSeverityForLogger(logger);
             this.ipEndpoint = ipEndpoint;
-            this.loggerFactory = loggerFac;
+            this.loggerFactory = loggerFactory;
         }
 
         public override void Log(int errorCode, Severity sev, string format, object[] args, Exception exception)

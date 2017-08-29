@@ -7,19 +7,11 @@ using System.Threading.Tasks;
 
 namespace Orleans.Runtime
 {
-    public class LoggingUtils
+    internal class LoggingUtils
     {
-        private const string LogCodeString = "OrleansLogCode";
-        ///In order to user message bulking feature, Application needs to use this method to create EventId, 
-        /// and also build their loggerProvider on top of OrleansLoggerDecorator 
-        public static EventId CreateEventId(int errorCode)
-        {
-            return new EventId(errorCode, LogCodeString);
-        }
-
         internal static EventId CreateEventId(ErrorCode errorCode)
         {
-            return new EventId((int)errorCode, LogCodeString);
+            return new EventId((int)errorCode);
         }
     }
 }

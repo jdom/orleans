@@ -52,7 +52,7 @@ namespace Orleans.Runtime
             SerializationManager serializationManager,
             MessageFactory messageFactory,
             IEnumerable<IGrainCallFilter> registeredInterceptors,
-            ILoggerFactory loggerFac)
+            ILoggerFactory loggerFactory)
         {
             this.ServiceProvider = serviceProvider;
             this.SerializationManager = serializationManager;
@@ -68,8 +68,8 @@ namespace Orleans.Runtime
             tryResendMessage = msg => this.Dispatcher.TryResendMessage(msg);
             unregisterCallback = msg => UnRegisterCallback(msg.Id);
             this.siloInterceptors = new List<IGrainCallFilter>(registeredInterceptors);
-            this.logger = loggerFac.CreateLogger<InsideRuntimeClient>();
-            this.invokeExceptionLogger =loggerFac.CreateLogger("Grain.InvokeException");
+            this.logger = loggerFactory.CreateLogger<InsideRuntimeClient>();
+            this.invokeExceptionLogger =loggerFactory.CreateLogger("Grain.InvokeException");
         }
         
         public IServiceProvider ServiceProvider { get; }
