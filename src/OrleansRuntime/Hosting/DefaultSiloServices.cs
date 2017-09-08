@@ -56,6 +56,7 @@ namespace Orleans.Hosting
                 });
             services.TryAddFromExisting<IMessagingConfiguration, GlobalConfiguration>();
             services.TryAddFromExisting<ITraceConfiguration, NodeConfiguration>();
+            services.AddSingleton<IMetricsWriter>(sp => MetricsWriter.FromConfiguration(sp.GetRequiredService<NodeConfiguration>().MetricsConfiguration, sp));
 
             // queue balancer contructing related
             services.TryAddTransient<StaticClusterConfigDeploymentBalancer>();
