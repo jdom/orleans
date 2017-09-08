@@ -10,6 +10,8 @@ namespace TestExtensions
             var options = new TestClusterOptions();
             options.ClusterConfiguration.AddMemoryStorageProvider("Default");
             options.ClusterConfiguration.AddMemoryStorageProvider("MemoryStore");
+            options.ClusterConfiguration.AddPerfCountersTelemetryConsumer();
+            options.ClientConfiguration.AddPerfCountersTelemetryConsumer();
             return new TestCluster(options);
         }
     }

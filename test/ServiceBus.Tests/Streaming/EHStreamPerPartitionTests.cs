@@ -51,6 +51,8 @@ namespace ServiceBus.Tests.StreamingTests
                 options.ClusterConfiguration.AddMemoryStorageProvider("PubSubStore");
                 options.ClusterConfiguration.Globals.RegisterStreamProvider<StreamPerPartitionEventHubStreamProvider>(StreamProviderName, BuildProviderSettings());
                 options.ClientConfiguration.RegisterStreamProvider<EventHubStreamProvider>(StreamProviderName, BuildProviderSettings());
+                options.ClusterConfiguration.AddPerfCountersTelemetryConsumer();
+                options.ClientConfiguration.AddPerfCountersTelemetryConsumer();
                 return new TestCluster(options);
             }
 
