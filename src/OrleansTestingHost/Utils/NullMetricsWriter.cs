@@ -9,34 +9,74 @@ namespace Orleans.TestingHost.Utils
     /// </summary>
     public class NullTelemetryClient : ITelemetryClient
     {
-        /// <inheritdoc />
-        public void DecrementMetric(string name)
+        void ITelemetryClient.DecrementMetric(string name)
         {
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public void DecrementMetric(string name, double value)
+        void ITelemetryClient.DecrementMetric(string name, double value)
         {
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public void IncrementMetric(string name)
+        void ITelemetryClient.IncrementMetric(string name)
         {
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public void IncrementMetric(string name, double value)
+        void ITelemetryClient.IncrementMetric(string name, double value)
         {
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public void TrackMetric(string name, double value, IDictionary<string, string> properties = null)
+        void ITelemetryClient.TrackDependency(string name, string commandName, DateTimeOffset startTime, TimeSpan duration, bool success)
         {
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        public void TrackMetric(string name, TimeSpan value, IDictionary<string, string> properties = null)
+        void ITelemetryClient.TrackEvent(string name, IDictionary<string, string> properties, IDictionary<string, double> metrics)
         {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackException(Exception exception, IDictionary<string, string> properties, IDictionary<string, double> metrics)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackMetric(string name, double value, IDictionary<string, string> properties)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackMetric(string name, TimeSpan value, IDictionary<string, string> properties)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackRequest(string name, DateTimeOffset startTime, TimeSpan duration, string responseCode, bool success)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackTrace(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackTrace(string message, Severity severityLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackTrace(string message, Severity severityLevel, IDictionary<string, string> properties)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITelemetryClient.TrackTrace(string message, IDictionary<string, string> properties)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,13 +8,17 @@ namespace Orleans.Runtime
 {
     public class TelemetryManager : ITelemetryClient, IDisposable
     {
+        internal const string ObsoleteMessageTelemetry = "This method might be removed in the future in favor of a non Orleans-owned abstraction for APMs.";
+
         private List<ITelemetryConsumer> consumers;
         private List<IMetricTelemetryConsumer> metricTelemetryConsumers;
+        private List<ITraceTelemetryConsumer> traceTelemetryConsumers;
 
         public TelemetryManager(IEnumerable<ITelemetryConsumer> consumers)
         {
             this.consumers = consumers.ToList();
             this.metricTelemetryConsumers = consumers.OfType<IMetricTelemetryConsumer>().ToList();
+            this.traceTelemetryConsumers = consumers.OfType<ITraceTelemetryConsumer>().ToList();
         }
 
         internal static TelemetryManager FromConfiguration(TelemetryConfiguration configuration, IServiceProvider serviceProvider)
@@ -86,6 +90,70 @@ namespace Orleans.Runtime
             }
         }
 
+        public void TrackDependency(string name, string commandName, DateTimeOffset startTime, TimeSpan duration, bool success)
+        {
+            foreach (var tc in this.consumers.OfType<IDependencyTelemetryConsumer>())
+            {
+                tc.TrackDependency(name, commandName, startTime, duration, success);
+            }
+        }
+
+        public void TrackEvent(string name, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
+        {
+            foreach (var tc in this.consumers.OfType<IEventTelemetryConsumer>())
+            {
+                tc.TrackEvent(name, properties, metrics);
+            }
+        }
+
+        public void TrackRequest(string name, DateTimeOffset startTime, TimeSpan duration, string responseCode, bool success)
+        {
+            foreach (var tc in this.consumers.OfType<IRequestTelemetryConsumer>())
+            {
+                tc.TrackRequest(name, startTime, duration, responseCode, success);
+            }
+        }
+
+        public void TrackException(Exception exception, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
+        {
+            foreach (var tc in this.consumers.OfType<IExceptionTelemetryConsumer>())
+            {
+                tc.TrackException(exception, properties, metrics);
+            }
+        }
+
+        public void TrackTrace(string message)
+        {
+            foreach (var tc in this.traceTelemetryConsumers)
+            {
+                tc.TrackTrace(message);
+            }
+        }
+
+        public void TrackTrace(string message, Severity severity)
+        {
+            foreach (var tc in this.traceTelemetryConsumers)
+            {
+                tc.TrackTrace(message, severity);
+            }
+        }
+
+        public void TrackTrace(string message, Severity severity, IDictionary<string, string> properties)
+        {
+            foreach (var tc in this.traceTelemetryConsumers)
+            {
+                tc.TrackTrace(message, severity, properties);
+            }
+        }
+
+        public void TrackTrace(string message, IDictionary<string, string> properties)
+        {
+            foreach (var tc in this.traceTelemetryConsumers)
+            {
+                tc.TrackTrace(message, properties);
+            }
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
@@ -98,6 +166,7 @@ namespace Orleans.Runtime
                     var all = this.consumers;
                     this.consumers = new List<ITelemetryConsumer>();
                     this.metricTelemetryConsumers = new List<IMetricTelemetryConsumer>();
+                    this.traceTelemetryConsumers = new List<ITraceTelemetryConsumer>();
                     foreach (var tc in all)
                     {
                         try
