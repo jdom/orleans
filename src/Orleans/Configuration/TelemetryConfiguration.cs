@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Orleans.Runtime.Configuration
 {
     [Serializable]
-    public class MetricsTelemetryConfiguration
+    public class TelemetryConfiguration
     {
         [Serializable]
         public struct ConsumerConfiguration
@@ -43,9 +43,9 @@ namespace Orleans.Runtime.Configuration
             Consumers.Add(new ConsumerConfiguration { ConsumerType = pluginType, Properties = extendedProperties });
         }
 
-        public MetricsTelemetryConfiguration Clone()
+        public TelemetryConfiguration Clone()
         {
-            var config = new MetricsTelemetryConfiguration();
+            var config = new TelemetryConfiguration();
             config.Consumers = this.Consumers.ToList();
             return config;
         }
