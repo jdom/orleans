@@ -1146,6 +1146,14 @@ namespace UnitTests
 
     public class DummyMetricTelemetryConsumer : IMetricTelemetryConsumer
     {
+        public void Flush()
+        {
+        }
+
+        public void Close()
+        {
+        }
+
         public void DecrementMetric(string name)
         {
             throw new NotImplementedException();
