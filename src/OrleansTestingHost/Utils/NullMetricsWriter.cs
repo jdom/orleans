@@ -7,7 +7,7 @@ namespace Orleans.TestingHost.Utils
     /// <summary>
     /// Test metrics writer that does nothing with the metrics.
     /// </summary>
-    public class NullMetricsWriter : IMetricsWriter
+    public class NullTelemetryClient : ITelemetryClient
     {
         /// <inheritdoc />
         public void DecrementMetric(string name)

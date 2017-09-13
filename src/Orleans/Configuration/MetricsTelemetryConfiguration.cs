@@ -37,7 +37,7 @@ namespace Orleans.Runtime.Configuration
             var pluginType = assembly.GetType(typeName);
             if (pluginType == null) throw new TypeLoadException($"Cannot locate plugin class {typeName} in assembly {assembly.FullName}");
 
-            if (!typeof(IMetricTelemetryConsumer).IsAssignableFrom(pluginType)) throw new InvalidOperationException($"MetricsTelemetryConsumer class {typeName} must implement one of {nameof(IMetricTelemetryConsumer)} based interfaces");
+            if (!typeof(ITelemetryConsumer).IsAssignableFrom(pluginType)) throw new InvalidOperationException($"Telemetry consumer class {typeName} must implement one of {nameof(ITelemetryConsumer)} based interfaces");
 
             var extendedProperties = properties?.ToDictionary(x => x.Key, x => x.Value);
             Consumers.Add(new ConsumerConfiguration { ConsumerType = pluginType, Properties = extendedProperties });
