@@ -59,14 +59,15 @@
     <!-- Microsoft packages -->
     <MicrosoftCodeAnalysisCSharpVersion>2.0.0</MicrosoftCodeAnalysisCSharpVersion>
 
-    <MicrosoftExtensionsConfigurationBinderVersion>2.0.0</MicrosoftExtensionsConfigurationBinderVersion>
-	<MicrosoftExtensionsLoggingVersion>2.0.0</MicrosoftExtensionsLoggingVersion>
-    <MicrosoftExtensionsConfigurationEnvironmentVariablesVersion>2.0.0</MicrosoftExtensionsConfigurationEnvironmentVariablesVersion>
-    <MicrosoftExtensionsConfigurationJsonVersion>2.0.0</MicrosoftExtensionsConfigurationJsonVersion>
-    <MicrosoftExtensionsConfigurationVersion>2.0.0</MicrosoftExtensionsConfigurationVersion>
-    <MicrosoftExtensionsOptionsVersion>2.0.0</MicrosoftExtensionsOptionsVersion>
-    <MicrosoftExtensionsOptionsConfigurationExtensionsVersion>2.0.0</MicrosoftExtensionsOptionsConfigurationExtensionsVersion>
-    <MicrosoftExtensionsDependencyInjection>1.1.1</MicrosoftExtensionsDependencyInjection>
+    <MicrosoftExtensionsConfigurationBinderVersion>2.1.0-preview1-27010</MicrosoftExtensionsConfigurationBinderVersion>
+	<MicrosoftExtensionsLoggingVersion>2.1.0-preview1-27010</MicrosoftExtensionsLoggingVersion>
+    <MicrosoftExtensionsConfigurationEnvironmentVariablesVersion>2.1.0-preview1-27010</MicrosoftExtensionsConfigurationEnvironmentVariablesVersion>
+    <MicrosoftExtensionsConfigurationJsonVersion>2.1.0-preview1-27010</MicrosoftExtensionsConfigurationJsonVersion>
+    <MicrosoftExtensionsConfigurationVersion>2.1.0-preview1-27010</MicrosoftExtensionsConfigurationVersion>
+    <MicrosoftExtensionsOptionsVersion>2.1.0-preview1-27010</MicrosoftExtensionsOptionsVersion>
+    <MicrosoftExtensionsOptionsConfigurationExtensionsVersion>2.1.0-preview1-27010</MicrosoftExtensionsOptionsConfigurationExtensionsVersion>
+    <MicrosoftExtensionsDependencyInjection>2.1.0-preview1-27010</MicrosoftExtensionsDependencyInjection>
+	<MicrosoftExtensionsHosting>2.1.0-preview1-27010</MicrosoftExtensionsHosting>
 
     <MicrosoftDataSQLiteVersion>1.1.0</MicrosoftDataSQLiteVersion>
     <MicrosoftPowerShell5ReferenceAssembliesVersion>1.1.0</MicrosoftPowerShell5ReferenceAssembliesVersion>
@@ -99,7 +100,6 @@
     <SystemValueTupleVersion>4.4.0</SystemValueTupleVersion>
 
     <!-- Microsoft packages -->
-    <MicrosoftExtensionsDependencyInjection>2.0.0</MicrosoftExtensionsDependencyInjection>
 
     <MicrosoftApplicationInsightsVersion>2.4.0</MicrosoftApplicationInsightsVersion>
     <MicrosoftAzureEventHubsVersion>1.0.3</MicrosoftAzureEventHubsVersion>
