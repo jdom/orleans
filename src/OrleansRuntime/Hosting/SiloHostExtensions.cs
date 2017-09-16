@@ -10,7 +10,7 @@ namespace Orleans.Runtime.Hosting
     public static class SiloHostExtensions
     {
         //public static IHostBuilder ConfigureSiloHost(this IHostBuilder builder, Action<HostBuilderContext, ISiloBuilder2> configureApp)
-        public static IHostBuilder ConfigureSiloHost(this IHostBuilder builder, ClusterConfiguration configuration)
+        public static IHostBuilder ConfigureSiloHost(this IHostBuilder builder)
         {
             return builder.ConfigureServices((bulderContext, services) =>
             {
@@ -27,18 +27,19 @@ namespace Orleans.Runtime.Hosting
                     options.SiloName = options.SiloName ?? $"Silo_{Guid.NewGuid().ToString("N").Substring(0, 5)}";
                 });
                 services.AddSingleton<IHostedService, SiloHostService>();
-
-                if (configuration != null)
-                {
-                    services.TryAddSingleton(configuration);
-                }
-
                 services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 
                 services.TryAddSingleton<SiloInitializationParameters>();
-                services.TryAddSingleton<Silo>(sp => new Silo(sp.GetRequiredService<SiloInitializationParameters>(), sp));
                 DefaultSiloServices.AddDefaultServices(services);
             });
+        }
+
+        public static IHostBuilder ConfigureSiloHost(this IHostBuilder builder, ClusterConfiguration configuration)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            return builder
+                .ConfigureServices((bulderContext, services) => services.TryAddSingleton(configuration))
+                .ConfigureSiloHost();
         }
     }
 
