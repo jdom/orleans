@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
@@ -10,18 +9,6 @@ namespace Orleans.Hosting
     /// </summary>
     public static class SiloBuilderExtensions
     {
-        /// <summary>
-        /// Registers an action used to configure a particular type of options.
-        /// </summary>
-        /// <typeparam name="TOptions">The options type to be configured.</typeparam>
-        /// <param name="builder">The host builder.</param>
-        /// <param name="configureOptions">The action used to configure the options.</param>
-        /// <returns>The silo builder.</returns>
-        public static ISiloHostBuilder Configure<TOptions>(this ISiloHostBuilder builder, Action<TOptions> configureOptions) where TOptions : class
-        {
-            return builder.ConfigureServices(services => services.Configure(configureOptions));
-        }
-
         /// <summary>
         /// Configures the name of this silo.
         /// </summary>
@@ -69,29 +56,6 @@ namespace Orleans.Hosting
         {
             builder.ConfigureSiloName(Silo.PrimarySiloName);
             return builder.UseConfiguration(ClusterConfiguration.LocalhostPrimarySilo(siloPort, gatewayPort));
-        }
-
-        /// <summary>
-        /// Specifies how the <see cref="IServiceProvider"/> for this silo is configured. 
-        /// </summary>
-        /// <param name="builder">The host builder.</param>
-        /// <param name="factory">The service provider configuration method.</param>
-        /// <returns>The silo builder.</returns>
-        public static ISiloHostBuilder UseServiceProviderFactory<TContainerBuilder>(ISiloHostBuilder builder, IServiceProviderFactory<TContainerBuilder> factory)
-        {
-            return builder.UseServiceProviderFactory(services => factory.CreateServiceProvider(factory.CreateBuilder(services)));
-        }
-
-        /// <summary>
-        /// Specifies how the <see cref="IServiceProvider"/> for this silo is configured. 
-        /// </summary>
-        /// <param name="builder">The host builder.</param>
-        /// <param name="configureServiceProvider">The service provider configuration method.</param>
-        /// <returns>The silo builder.</returns>
-        public static ISiloHostBuilder UseServiceProviderFactory(this ISiloHostBuilder builder, Func<IServiceCollection, IServiceProvider> configureServiceProvider)
-        {
-            if (configureServiceProvider == null) throw new ArgumentNullException(nameof(configureServiceProvider));
-            return builder.UseServiceProviderFactory(new DelegateServiceProviderFactory(configureServiceProvider));
         }
     }
 }
