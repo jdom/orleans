@@ -11,14 +11,16 @@ namespace Orleans.Transactions
         /// <summary>
         /// Configure cluster to use an in-cluster transaction manager.
         /// </summary>
-        public static ISiloHostBuilder UseInClusterTransactionManager(this ISiloHostBuilder builder, TransactionsConfiguration config)
+        public static ISiloBuilder UseInClusterTransactionManager(this ISiloBuilder builder, TransactionsConfiguration config)
         {
-            return builder.ConfigureServices(UseInClusterTransactionManager)
-                          .Configure<TransactionsConfiguration>((cfg) => cfg.Copy(config));
+            builder.HostBuilder.ConfigureServices(UseInClusterTransactionManager)
+                .Configure<TransactionsConfiguration>(cfg => cfg.Copy(config));
+            return builder;
         }
-        public static ISiloHostBuilder UseTransactionalState(this ISiloHostBuilder builder)
+        public static ISiloBuilder UseTransactionalState(this ISiloBuilder builder)
         {
-            return builder.ConfigureServices(UseTransactionalState);
+            builder.HostBuilder.ConfigureServices(UseTransactionalState);
+            return builder;
         }
 
         private static void UseInClusterTransactionManager(IServiceCollection services)

@@ -21,11 +21,12 @@ namespace Orleans.Transactions.Tests
             public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
             {
                 return new SiloHostBuilder()
-                    .ConfigureSiloName(siloName)
-                    .UseConfiguration(clusterConfiguration)
-                    .UseInClusterTransactionManager(new TransactionsConfiguration())
-                    .UseInMemoryTransactionLog()
-                    .UseTransactionalState();
+                    .ConfigureSiloHost(silo => silo
+                        .ConfigureSiloName(siloName)
+                        .UseConfiguration(clusterConfiguration)
+                        .UseInClusterTransactionManager(new TransactionsConfiguration())
+                        .UseInMemoryTransactionLog()
+                        .UseTransactionalState());
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Threading.Tasks;
 using TestExtensions;
 using Xunit;
 using Orleans.Runtime.Configuration;
@@ -8,7 +6,6 @@ using Orleans.TestingHost;
 using Tester.StorageFacet.Infrastructure;
 using Tester.StorageFacet.Implementations;
 using Orleans.Hosting;
-using Orleans.Runtime;
 
 namespace Tester
 {
@@ -30,8 +27,9 @@ namespace Tester
                 public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
                 {
                     var builder = new SiloHostBuilder()
-                        .ConfigureSiloName(siloName)
-                        .UseConfiguration(clusterConfiguration);
+                        .ConfigureSiloHost(siloBuilder => siloBuilder
+                            .ConfigureSiloName(siloName)
+                            .UseConfiguration(clusterConfiguration));
 
                     // Setup storage feature infrastructure.
                     // - Setup infrastructure.

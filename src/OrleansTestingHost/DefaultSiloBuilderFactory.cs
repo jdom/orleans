@@ -7,8 +7,10 @@ namespace Orleans.TestingHost
     {
         public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
         {
-            var builder = new SiloHostBuilder();
-            return builder.ConfigureSiloName(siloName).UseConfiguration(clusterConfiguration);
+            return new SiloHostBuilder().ConfigureSiloHost(builder => 
+                builder
+                    .ConfigureSiloName(siloName)
+                    .UseConfiguration(clusterConfiguration));
         }
     }
 }

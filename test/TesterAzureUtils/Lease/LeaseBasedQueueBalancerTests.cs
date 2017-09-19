@@ -12,7 +12,6 @@ using Orleans.TestingHost.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TestExtensions;
 using Xunit;
@@ -52,9 +51,10 @@ namespace Tester.AzureUtils.Lease
             public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
             {
                 return new SiloHostBuilder()
-                    .ConfigureSiloName(siloName)
-                    .UseConfiguration(clusterConfiguration)
-                    .ConfigureServices(ConfigureServices);
+                    .ConfigureServices(ConfigureServices)
+                    .ConfigureSiloHost(silo => silo
+                        .ConfigureSiloName(siloName)
+                        .UseConfiguration(clusterConfiguration));
             }
         }
 

@@ -13,9 +13,10 @@ namespace TestVersionGrains
         public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
         {
             return new SiloHostBuilder()
-                .ConfigureSiloName(siloName)
-                .UseConfiguration(clusterConfiguration)
-                .ConfigureServices(ConfigureServices);
+                .ConfigureServices(ConfigureServices)
+                .ConfigureSiloHost(silo => silo
+                    .ConfigureSiloName(siloName)
+                    .UseConfiguration(clusterConfiguration));
         }
 
         private void ConfigureServices(IServiceCollection services)
