@@ -6,11 +6,11 @@ using Orleans.Runtime.Configuration;
 namespace Orleans.Hosting
 {
     /// <summary>
-    /// Extensions for <see cref="ISiloHostBuilder"/> instances.
+    /// Extensions for <see cref="ISiloBuilder"/> to configure Orleans in the host builder.
     /// </summary>
     public static class SiloBuilderExtensions
     {
-        public static ISiloHostBuilder ConfigureSiloHost(this ISiloHostBuilder hostBuilder, Action<ISiloBuilder> configureDelegate)
+        public static IHostBuilder ConfigureSiloHost(this IHostBuilder hostBuilder, Action<ISiloBuilder> configureDelegate)
         {
             var siloBuilder = new SiloBuilder(hostBuilder);
             configureDelegate(siloBuilder);

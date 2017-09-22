@@ -24,9 +24,9 @@ namespace Tester
 
             private class TestSiloBuilderFactory : ISiloBuilderFactory
             {
-                public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+                public IHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
                 {
-                    var builder = new SiloHostBuilder()
+                    var builder = new HostBuilder()
                         .ConfigureSiloHost(siloBuilder => siloBuilder
                             .ConfigureSiloName(siloName)
                             .UseConfiguration(clusterConfiguration));

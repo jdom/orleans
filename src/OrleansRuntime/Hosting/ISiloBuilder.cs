@@ -2,16 +2,16 @@
 {
     public interface ISiloBuilder
     {
-        ISiloHostBuilder HostBuilder { get; }
+        IHostBuilder HostBuilder { get; }
     }
 
     internal class SiloBuilder : ISiloBuilder
     {
-        public SiloBuilder(ISiloHostBuilder hostBuilder)
+        public SiloBuilder(IHostBuilder hostBuilder)
         {
             this.HostBuilder = hostBuilder;
         }
 
-        public ISiloHostBuilder HostBuilder { get; }
+        public IHostBuilder HostBuilder { get; }
     }
 }

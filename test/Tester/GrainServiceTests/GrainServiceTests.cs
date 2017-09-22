@@ -29,9 +29,9 @@ namespace Tester
 
             private class GrainSiloBuilderFactory : ISiloBuilderFactory
             {
-                public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+                public IHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
                 {
-                    return new SiloHostBuilder()
+                    return new HostBuilder()
                         .ConfigureServices(ConfigureServices)
                         .ConfigureSiloHost(silo => silo
                             .ConfigureSiloName(siloName)

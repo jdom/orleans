@@ -8,9 +8,9 @@ using Orleans.Runtime;
 namespace Orleans.Hosting
 {
     /// <summary>
-    /// Functionality for building <see cref="IHost"/> instances.
+    /// Functionality for building <see cref="IHost"/> instances. This will be replaced by Microsoft.Extensions.Hosting.HostBuilder when it's released.
     /// </summary>
-    public class SiloHostBuilder : ISiloHostBuilder
+    public class HostBuilder : IHostBuilder
     {
         private readonly ServiceProviderBuilder serviceProviderBuilder = new ServiceProviderBuilder();
 
@@ -26,7 +26,7 @@ namespace Orleans.Hosting
         public IHost Build()
         {
             if (this.built)
-                throw new InvalidOperationException($"{nameof(this.Build)} may only be called once per {nameof(SiloHostBuilder)} instance.");
+                throw new InvalidOperationException($"{nameof(this.Build)} may only be called once per {nameof(HostBuilder)} instance.");
             this.built = true;
             
             // Configure the container, including the default silo name & services.
@@ -49,7 +49,7 @@ namespace Orleans.Hosting
         }
 
         /// <inheritdoc />
-        public ISiloHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
+        public IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
         {
             this.configureAppConfigActions.Add(configureDelegate ?? throw new ArgumentNullException(nameof(configureDelegate)));
             return this;
@@ -57,7 +57,7 @@ namespace Orleans.Hosting
 
 
         /// <inheritdoc />
-        public ISiloHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
+        public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
         {
             if (configureDelegate == null) throw new ArgumentNullException(nameof(configureDelegate));
             this.serviceProviderBuilder.ConfigureServices(configureDelegate);
@@ -65,14 +65,14 @@ namespace Orleans.Hosting
         }
 
         /// <inheritdoc />
-        public ISiloHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
+        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
         {
             this.serviceProviderBuilder.UseServiceProviderFactory(factory);
             return this;
         }
 
         /// <inheritdoc />
-        public ISiloHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
+        public IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
         {
             this.serviceProviderBuilder.ConfigureContainer(configureDelegate);
             return this;

@@ -18,9 +18,9 @@ namespace Orleans.Transactions.Tests
 
         private class SiloBuilderFactory : ISiloBuilderFactory
         {
-            public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+            public IHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
             {
-                return new SiloHostBuilder()
+                return new HostBuilder()
                     .ConfigureSiloHost(silo => silo
                         .ConfigureSiloName(siloName)
                         .UseConfiguration(clusterConfiguration)

@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Orleans.Hosting
 {
     /// <summary>
-    /// Functionality for building <see cref="IHost"/> instances.
+    /// Functionality for building <see cref="IHost"/> instances. This will be replaced by Microsoft.Extensions.Hosting.IHostBuilder when it's released.
     /// </summary>
-    public interface ISiloHostBuilder
+    public interface IHostBuilder
     {
         /// <summary>
         /// A central location for sharing state between components during the host building process.
@@ -29,7 +29,7 @@ namespace Orleans.Hosting
         /// <param name="configureDelegate">The delegate for configuring the <see cref="IConfigurationBuilder"/> that will be used
         /// to construct the <see cref="IConfiguration"/> for the application.</param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        ISiloHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate);
+        IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate);
 
         /// <summary>
         /// Adds services to the container. This can be called multiple times and the results will be additive.
@@ -37,7 +37,7 @@ namespace Orleans.Hosting
         /// <param name="configureDelegate">The delegate for configuring the <see cref="IServiceCollection"/> that will be used
         /// to construct the <see cref="IServiceProvider"/>.</param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        ISiloHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate);
+        IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate);
 
         /// <summary>
         /// Overrides the factory used to create the service provider.
@@ -45,7 +45,7 @@ namespace Orleans.Hosting
         /// <typeparam name="TContainerBuilder"></typeparam>
         /// <param name="factory"></param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        ISiloHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory);
+        IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory);
 
         /// <summary>
         /// Enables configuring the instantiated dependency container. This can be called multiple times and
@@ -54,6 +54,6 @@ namespace Orleans.Hosting
         /// <typeparam name="TContainerBuilder"></typeparam>
         /// <param name="configureDelegate"></param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        ISiloHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate);
+        IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate);
     }
 }

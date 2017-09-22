@@ -62,7 +62,7 @@ namespace Tester.StorageFacet.Implementations
 
     public static class TableExampleStorageExtensions
     {
-        public static void UseTableExampleStorage(this ISiloHostBuilder builder, string name)
+        public static void UseTableExampleStorage(this IHostBuilder builder, string name)
         {
             builder.ConfigureServices(services =>
             {

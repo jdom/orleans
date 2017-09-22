@@ -5,9 +5,9 @@ namespace Orleans.TestingHost
 {
     public sealed class DefaultSiloBuilderFactory : ISiloBuilderFactory
     {
-        public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+        public IHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
         {
-            return new SiloHostBuilder().ConfigureSiloHost(builder => 
+            return new HostBuilder().ConfigureSiloHost(builder => 
                 builder
                     .ConfigureSiloName(siloName)
                     .UseConfiguration(clusterConfiguration));

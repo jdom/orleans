@@ -33,7 +33,7 @@ namespace Orleans.TestingHost
         public AppDomainSiloHost(string name, Type siloBuilderFactoryType, ClusterConfiguration config)
         {
             var builderFactory = (ISiloBuilderFactory)Activator.CreateInstance(siloBuilderFactoryType);
-            ISiloHostBuilder builder = builderFactory.CreateSiloBuilder(name, config);
+            var builder = builderFactory.CreateSiloBuilder(name, config);
             builder.ConfigureServices((services) => services.AddSingleton<TestHooksSystemTarget>());
             this.host = builder.Build();
             InitializeTestHooksSystemTarget();
