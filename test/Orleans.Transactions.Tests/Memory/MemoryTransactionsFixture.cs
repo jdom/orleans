@@ -21,7 +21,7 @@ namespace Orleans.Transactions.Tests
             public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
             {
                 return new SiloHostBuilder()
-                    .ConfigureSiloName(siloName)
+                    .ConfigureSiloIdentity(siloName)
                     .UseConfiguration(clusterConfiguration)
                     .UseInClusterTransactionManager(new TransactionsConfiguration())
                     .UseInMemoryTransactionLog()

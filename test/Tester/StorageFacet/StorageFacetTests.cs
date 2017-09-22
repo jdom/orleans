@@ -30,7 +30,7 @@ namespace Tester
                 public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
                 {
                     var builder = new SiloHostBuilder()
-                        .ConfigureSiloName(siloName)
+                        .ConfigureSiloIdentity(siloName)
                         .UseConfiguration(clusterConfiguration);
 
                     // Setup storage feature infrastructure.

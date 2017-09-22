@@ -15,7 +15,7 @@ namespace Orleans.Hosting
         /// <param name="builder">The host builder.</param>
         /// <param name="siloName">The silo name.</param>
         /// <returns>The silo builder.</returns>
-        public static ISiloHostBuilder ConfigureSiloName(this ISiloHostBuilder builder, string siloName)
+        public static ISiloHostBuilder ConfigureSiloIdentity(this ISiloHostBuilder builder, string siloName)
         {
             builder.Configure<SiloIdentityOptions>(options => options.SiloName = siloName);
             return builder;
@@ -54,7 +54,7 @@ namespace Orleans.Hosting
         /// <returns>The silo builder.</returns>
         public static ISiloHostBuilder ConfigureLocalHostPrimarySilo(this ISiloHostBuilder builder, int siloPort = 22222, int gatewayPort = 40000)
         {
-            builder.ConfigureSiloName(Silo.PrimarySiloName);
+            builder.ConfigureSiloIdentity(Silo.PrimarySiloName);
             return builder.UseConfiguration(ClusterConfiguration.LocalhostPrimarySilo(siloPort, gatewayPort));
         }
     }

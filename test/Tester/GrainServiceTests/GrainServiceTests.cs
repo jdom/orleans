@@ -32,7 +32,7 @@ namespace Tester
                 public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
                 {
                     return new SiloHostBuilder()
-                        .ConfigureSiloName(siloName)
+                        .ConfigureSiloIdentity(siloName)
                         .UseConfiguration(clusterConfiguration)
                         .ConfigureServices(ConfigureServices);
                 }

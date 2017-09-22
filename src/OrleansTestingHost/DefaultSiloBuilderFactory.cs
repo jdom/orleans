@@ -8,7 +8,7 @@ namespace Orleans.TestingHost
         public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
         {
             var builder = new SiloHostBuilder();
-            return builder.ConfigureSiloName(siloName).UseConfiguration(clusterConfiguration);
+            return builder.ConfigureSiloIdentity(siloName).UseConfiguration(clusterConfiguration);
         }
     }
 }
