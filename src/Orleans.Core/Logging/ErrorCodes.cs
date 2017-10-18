@@ -390,7 +390,10 @@ namespace Orleans
         SiloShutdownEventFailure        = SiloBase + 49,
         LifecycleStartFailure           = SiloBase + 50,
         LifecycleStopFailure            = SiloBase + 51,
-
+        ApplicationStartupException     = SiloBase + 52,
+        ApplicationStoppingException    = SiloBase + 53,
+        ApplicationStoppedException     = SiloBase + 54,
+        
         CatalogBase                     = Runtime + 500,
         CatalogNonExistingActivation1   = CatalogBase + 1,
         Catalog_UnregisterManyAsync     = CatalogBase + 2,
