@@ -3,6 +3,7 @@ using Orleans;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -75,7 +76,7 @@ namespace OrleansClient
         {
             // example of calling grains from the initialized client
             var friend = client.GetGrain<IHello>(0);
-            var response = await friend.SayHello("Good morning, my friend!");
+            var response = await friend.SayHello("Good morning, my friend!", Vector3.One);
             Console.WriteLine("\n\n{0}\n\n", response);
         }
     }

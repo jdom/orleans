@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace HelloWorld.Interfaces
@@ -7,6 +8,6 @@ namespace HelloWorld.Interfaces
     /// </summary>
     public interface IHello : Orleans.IGrainWithIntegerKey
     {
-        Task<string> SayHello(string greeting);
+        Task<string> SayHello(string greeting, Vector3 howFar);
     }
 }

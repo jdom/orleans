@@ -1,3 +1,4 @@
+using System.Numerics;
 using HelloWorld.Interfaces;
 using System.Threading.Tasks;
 
@@ -8,9 +9,9 @@ namespace HelloWorld.Grains
     /// </summary>
     public class HelloGrain : Orleans.Grain, IHello
     {
-        Task<string> IHello.SayHello(string greeting)
+        Task<string> IHello.SayHello(string greeting, Vector3 howFar)
         {
-            return Task.FromResult($"You said: '{greeting}', I say: Hello!");
+            return Task.FromResult($"You said: '{greeting}', I say: Hello! You are far: {howFar.X}, {howFar.Y}, {howFar.Z}");
         }
     }
 }
