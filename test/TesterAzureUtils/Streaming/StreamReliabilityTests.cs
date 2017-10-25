@@ -1,5 +1,5 @@
 ﻿//#define USE_GENERICS
-//#define DELETE_AFTER_TEST
+#define DELETE_AFTER_TEST
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ using Tester;
 namespace UnitTests.Streaming.Reliability
 {
     [TestCategory("Streaming"), TestCategory("Reliability")]
-    public class StreamReliabilityTests : TestClusterPerTest
+    public class StreamReliabilityTests : OrleansTestingBase, IClassFixture<StreamReliabilityTests.Fixture>, IDisposable
     {
         private readonly ITestOutputHelper output;
         public const string SMS_STREAM_PROVIDER_NAME = StreamTestsConstants.SMS_STREAM_PROVIDER_NAME;
@@ -36,69 +36,105 @@ namespace UnitTests.Streaming.Reliability
 
         private Guid _streamId;
         private string _streamProviderName;
-        private int numExpectedSilos;
+        private const int NumExpectedSilos = 2;
 #if DELETE_AFTER_TEST
         private HashSet<IStreamReliabilityTestGrain> _usedGrains; 
 #endif
 
-        public override TestCluster CreateTestCluster()
+        public class Fixture : BaseAzureTestClusterFixture
         {
-            TestUtils.CheckForAzureStorage();
-
-            this.numExpectedSilos = 2;
-            var options = new TestClusterOptions(initialSilosCount: (short)this.numExpectedSilos);
-
-            options.ClusterConfiguration.AddMemoryStorageProvider("MemoryStore", numStorageGrains: 1);
-
-            options.ClusterConfiguration.AddAzureTableStorageProvider("AzureStore", deleteOnClear: true);
-            options.ClusterConfiguration.AddAzureTableStorageProvider("PubSubStore", deleteOnClear: true, useJsonFormat: false);
-
-            options.ClusterConfiguration.AddSimpleMessageStreamProvider(SMS_STREAM_PROVIDER_NAME, fireAndForgetDelivery: false);
-
-            options.ClusterConfiguration.AddAzureQueueStreamProvider(AZURE_QUEUE_STREAM_PROVIDER_NAME);
-            options.ClusterConfiguration.AddAzureQueueStreamProvider("AzureQueueProvider2");
-
-            options.ClusterConfiguration.Globals.ServiceId = Guid.NewGuid();
-
-            options.ClientConfiguration.AddSimpleMessageStreamProvider(SMS_STREAM_PROVIDER_NAME, fireAndForgetDelivery: false);
-            options.ClientConfiguration.AddAzureQueueStreamProvider(AZURE_QUEUE_STREAM_PROVIDER_NAME);
-            return new TestCluster(options).UseSiloBuilderFactory<SiloBuilderFactory>().UseClientBuilderFactory(clientBuilderFactory);
-        }
-
-        private Func<ClientConfiguration, IClientBuilder> clientBuilderFactory = config => new ClientBuilder()
-            .UseConfiguration(config).UseAzureTableGatewayListProvider(gatewayOptions =>
+            protected override TestCluster CreateTestCluster()
             {
-                gatewayOptions.ConnectionString = TestDefaultConfiguration.DataConnectionString;
-            })
-            .AddApplicationPartsFromAppDomain()
-            .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(config.ClientName, config.DeploymentId)));
+                TestUtils.CheckForAzureStorage();
 
-        public class SiloBuilderFactory : ISiloBuilderFactory
-        {
-            public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+                var options = new TestClusterOptions(initialSilosCount: (short)NumExpectedSilos);
+
+                options.ClusterConfiguration.AddMemoryStorageProvider("MemoryStore", numStorageGrains: 1);
+
+                options.ClusterConfiguration.AddAzureTableStorageProvider("AzureStore", deleteOnClear: true);
+                options.ClusterConfiguration.AddAzureTableStorageProvider("PubSubStore", deleteOnClear: true, useJsonFormat: false);
+
+                options.ClusterConfiguration.AddSimpleMessageStreamProvider(SMS_STREAM_PROVIDER_NAME, fireAndForgetDelivery: false);
+
+                options.ClusterConfiguration.AddAzureQueueStreamProvider(AZURE_QUEUE_STREAM_PROVIDER_NAME);
+                options.ClusterConfiguration.AddAzureQueueStreamProvider("AzureQueueProvider2");
+
+                options.ClusterConfiguration.Globals.ServiceId = Guid.NewGuid();
+
+                options.ClientConfiguration.AddSimpleMessageStreamProvider(SMS_STREAM_PROVIDER_NAME, fireAndForgetDelivery: false);
+                options.ClientConfiguration.AddAzureQueueStreamProvider(AZURE_QUEUE_STREAM_PROVIDER_NAME);
+                return new TestCluster(options).UseSiloBuilderFactory<SiloBuilderFactory>().UseClientBuilderFactory(clientBuilderFactory);
+            }
+
+            public override void Dispose()
             {
-                return new SiloHostBuilder()
-                    .ConfigureSiloName(siloName)
-                    .UseConfiguration(clusterConfiguration)
-                    .UseAzureTableMembership(options =>
-                    {
-                        options.ConnectionString = TestDefaultConfiguration.DataConnectionString;
-                        options.MaxStorageBusyRetries = 3;
-                    })
-                    .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
+                var deploymentId = HostedCluster.DeploymentId;
+                base.Dispose();
+
+                AzureQueueStreamProviderUtils.DeleteAllUsedAzureQueues(NullLoggerFactory.Instance, AZURE_QUEUE_STREAM_PROVIDER_NAME, deploymentId, TestDefaultConfiguration.DataConnectionString).Wait();
+            }
+
+            private Func<ClientConfiguration, IClientBuilder> clientBuilderFactory = config => new ClientBuilder()
+                .UseConfiguration(config).UseAzureTableGatewayListProvider(gatewayOptions =>
+                {
+                    gatewayOptions.ConnectionString = TestDefaultConfiguration.DataConnectionString;
+                })
+                .AddApplicationPartsFromAppDomain()
+                .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(config.ClientName, config.DeploymentId)));
+
+            public class SiloBuilderFactory : ISiloBuilderFactory
+            {
+                public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+                {
+                    return new SiloHostBuilder()
+                        .ConfigureSiloName(siloName)
+                        .UseConfiguration(clusterConfiguration)
+                        .UseAzureTableMembership(options =>
+                        {
+                            options.ConnectionString = TestDefaultConfiguration.DataConnectionString;
+                            options.MaxStorageBusyRetries = 3;
+                        })
+                        .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
+                }
             }
         }
 
-        public StreamReliabilityTests(ITestOutputHelper output)
+        public StreamReliabilityTests(ITestOutputHelper output, Fixture fixture)
         {
             this.output = output;
-            CheckSilosRunning("Initially", numExpectedSilos);
+            this.HostedCluster = fixture.HostedCluster;
+            var silosCount = this.HostedCluster.GetActiveSilos().Count();
+            if (silosCount != NumExpectedSilos)
+            {
+                if (silosCount < NumExpectedSilos)
+                {
+                    this.HostedCluster.StartAdditionalSilos(NumExpectedSilos - silosCount);
+                }
+                else
+                {
+                    foreach (var siloHandle in this.HostedCluster.GetActiveSilos().Reverse()
+                        .Take(silosCount - NumExpectedSilos).ToList())
+                    {
+                        this.HostedCluster.StopSilo(siloHandle);
+                    }
+                }
+
+                this.HostedCluster.WaitForLivenessToStabilizeAsync().Wait();
+            }
+
+            CheckSilosRunning("Initially", NumExpectedSilos);
 #if DELETE_AFTER_TEST
             _usedGrains = new HashSet<IStreamReliabilityTestGrain>(); 
 #endif
         }
 
-        public override void Dispose()
+        public TestCluster HostedCluster { get; }
+        public IClusterClient Client => this.HostedCluster.Client;
+        protected IGrainFactory GrainFactory => this.Client;
+        internal IInternalClusterClient InternalClient => (IInternalClusterClient)this.Client;
+        protected Logger logger => this.Client.Logger;
+
+        public virtual void Dispose()
         {
 #if DELETE_AFTER_TEST
             List<Task> promises = new List<Task>();
@@ -107,13 +143,8 @@ namespace UnitTests.Streaming.Reliability
                 promises.Add(g.ClearGrain());
             }
             Task.WhenAll(promises).Wait();
+            Thread.Sleep(10);
 #endif
-            var deploymentId = HostedCluster.DeploymentId;
-            base.Dispose();
-            if (_streamProviderName != null && _streamProviderName.Equals(AZURE_QUEUE_STREAM_PROVIDER_NAME))
-            {
-                AzureQueueStreamProviderUtils.DeleteAllUsedAzureQueues(NullLoggerFactory.Instance, _streamProviderName, deploymentId, TestDefaultConfiguration.DataConnectionString).Wait();
-            }
         }
 
         [SkippableFact, TestCategory("Functional")]
@@ -132,13 +163,13 @@ namespace UnitTests.Streaming.Reliability
             const string testName = "Baseline_StreamRel_RestartSilos";
             StreamTestUtils.LogStartTest(testName, _streamId, _streamProviderName, logger, HostedCluster);
 
-            CheckSilosRunning("Before Restart", numExpectedSilos);
+            CheckSilosRunning("Before Restart", NumExpectedSilos);
             SiloHandle prim1 = this.HostedCluster.Primary;
             SiloHandle sec1 = this.HostedCluster.SecondarySilos.First();
 
             RestartAllSilos();
 
-            CheckSilosRunning("After Restart", numExpectedSilos);
+            CheckSilosRunning("After Restart", NumExpectedSilos);
 
             Assert.NotEqual(prim1, this.HostedCluster.Primary); // Should be different Primary silos after restart
             Assert.NotEqual(sec1, this.HostedCluster.SecondarySilos.First()); // Should be different Secondary silos after restart
@@ -604,7 +635,7 @@ namespace UnitTests.Streaming.Reliability
             RestartAllSilos();
 
             string when = "After restart all silos";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             await consumerGrain.UnSubscribeFromAllStreams();
 
@@ -627,7 +658,7 @@ namespace UnitTests.Streaming.Reliability
             RestartAllSilos();
 
             string when = "After restart all silos";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             when = "SendItem";
             var producerGrain = GetGrain(producerGrainId);
@@ -662,7 +693,7 @@ namespace UnitTests.Streaming.Reliability
             RestartAllSilos();
 
             when = "After restart all silos";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
             // Note: It is not guaranteed that the list of producers will not get modified / cleaned up during silo shutdown, so can't assume count will be 1 here. 
             // Expected == -1 means don't care.
             await StreamTestUtils.CheckPubSubCounts(this.InternalClient, output, when, -1, 1, _streamId, _streamProviderName, StreamTestsConstants.StreamReliabilityNamespace);
@@ -692,7 +723,7 @@ namespace UnitTests.Streaming.Reliability
             var producerGrain = await Do_BaselineTest(consumerGrainId, producerGrainId);
 
             when = "Before kill one silo";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             bool sameSilo = await CheckGrainCounts();
 
@@ -710,7 +741,7 @@ namespace UnitTests.Streaming.Reliability
             // Note: Don't reinitialize client
 
             when = "After kill one silo";
-            CheckSilosRunning(when, numExpectedSilos - 1);
+            CheckSilosRunning(when, NumExpectedSilos - 1);
 
             when = "SendItem";
             await producerGrain.SendItem(1);
@@ -733,7 +764,7 @@ namespace UnitTests.Streaming.Reliability
             var producerGrain = await Do_BaselineTest(consumerGrainId, producerGrainId);
 
             when = "Before kill one silo";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             bool sameSilo = await CheckGrainCounts();
 
@@ -749,7 +780,7 @@ namespace UnitTests.Streaming.Reliability
             // Note: Don't reinitialize client
 
             when = "After kill one silo";
-            CheckSilosRunning(when, numExpectedSilos - 1);
+            CheckSilosRunning(when, NumExpectedSilos - 1);
 
             when = "SendItem";
             await producerGrain.SendItem(1);
@@ -772,7 +803,7 @@ namespace UnitTests.Streaming.Reliability
             var producerGrain = await Do_BaselineTest(consumerGrainId, producerGrainId);
 
             when = "Before restart one silo";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             bool sameSilo = await CheckGrainCounts();
 
@@ -789,7 +820,7 @@ namespace UnitTests.Streaming.Reliability
             // Note: Don't reinitialize client
 
             when = "After restart one silo";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             when = "SendItem";
             await producerGrain.SendItem(1);
@@ -812,7 +843,7 @@ namespace UnitTests.Streaming.Reliability
             var producerGrain = await Do_BaselineTest(consumerGrainId, producerGrainId);
 
             when = "Before restart one silo";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             bool sameSilo = await CheckGrainCounts();
 
@@ -828,7 +859,7 @@ namespace UnitTests.Streaming.Reliability
             // Note: Don't reinitialize client
 
             when = "After restart one silo";
-            CheckSilosRunning(when, numExpectedSilos);
+            CheckSilosRunning(when, NumExpectedSilos);
 
             when = "SendItem";
             await producerGrain.SendItem(1);
@@ -879,7 +910,7 @@ namespace UnitTests.Streaming.Reliability
 
             when = "After starting additonal silo " + newSilo;
             output.WriteLine(when);
-            CheckSilosRunning(when, numExpectedSilos + 1);
+            CheckSilosRunning(when, NumExpectedSilos + 1);
 
             //when = "SendItem-3";
             //output.WriteLine(when);
@@ -1033,6 +1064,7 @@ namespace UnitTests.Streaming.Reliability
         {
             Assert.Equal(expectedNumSilos, this.HostedCluster.GetActiveSilos().Count());
         }
+
         protected async Task<bool> CheckGrainCounts()
         {
 #if USE_GENERICS

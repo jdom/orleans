@@ -203,11 +203,17 @@ namespace UnitTests.Grains
         public async Task ClearGrain()
         {
             logger.Info("ClearGrain.");
-            State.ConsumerSubscriptionHandles.Clear();
-            State.IsProducer = false;
+            if (State.ConsumerSubscriptionHandles.Count > 0)
+            {
+                await this.RemoveAllConsumers();
+            }
+            if (State.IsProducer)
+            {
+                await this.RemoveProducer(State.Stream.Guid, State.StreamProviderName);
+            }
             Observers.Clear();
-            State.Stream = null;
             await ClearStateAsync();
+            DeactivateOnIdle();
         }
 
         public Task<bool> IsConsumer()
