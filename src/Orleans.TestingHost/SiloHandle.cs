@@ -1,7 +1,6 @@
 ﻿using System;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
-using Orleans.Runtime.TestHooks;
 
 namespace Orleans.TestingHost
 {
