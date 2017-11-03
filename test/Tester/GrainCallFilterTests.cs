@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Configuration;
 using Orleans.Providers;
@@ -34,6 +36,14 @@ namespace UnitTests.General
                 return new TestCluster(options);
             }
 
+            protected TestCluster CreateTestClusterNew()
+            {
+                var options = new TestClusterOptions2(2);
+                options.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
+                options.UseSiloBuilderConfigurator<SiloInvokerTestSiloBuilderConfigurator>();
+                return new TestCluster(options);
+            }
+
             private class SiloInvokerTestSiloBuilderFactory : ISiloBuilderFactory
             {
                 public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
@@ -45,7 +55,56 @@ namespace UnitTests.General
                         .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
                 }
             }
-            
+
+            private class SiloInvokerTestSiloBuilderConfigurator : ISiloBuilderConfigurator
+            {
+                public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+                {
+                    return new SiloHostBuilder()
+                        .ConfigureSiloName(siloName)
+                        .UseConfiguration(clusterConfiguration)
+                        .ConfigureServices(ConfigureServices)
+                        .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
+                }
+
+                public void Configure(ISiloHostBuilder hostBuilder)
+                {
+                    // TODO: Legacy support could be added to test cluster infrastructure too
+                    var clusterConfiguration = (ClusterConfiguration)hostBuilder.Properties["ClusterConfiguration"];
+                    hostBuilder.UseConfiguration(clusterConfiguration);
+
+                    hostBuilder.ConfigureServices((context, services) =>
+                    {
+                        // all of this related to logging can be moved to a base class or app-specific helper method
+                        var siloName = context.HostingEnvironment.ApplicationName;
+                        var clusterId = context.Configuration["ClusterId"]; // or clusterConfiguration.Globals.DeploymentId
+                        services.AddLogging(builder =>
+                            TestingUtils.ConfigureDefaultLoggingBuilder(builder,
+                                TestingUtils.CreateTraceFileName(siloName, clusterId)));
+
+                        ConfigureServices(services);
+                        services.AddMemoryStorageProvider("Default");
+                        services.AddMemoryStorageProvider("PubSubStore");
+                        services.AddSimpleMessageStreamProvider("SMSProvider");
+                        services.AddSimpleMessageStreamProvider("SMSProvider");
+                        services.AddBootstrapProvider<PreInvokeCallbackBootrstrapProvider>("PreInvokeCallbackBootrstrapProvider");
+                    });
+                }
+
+                public void ConfigureServicesAlt(HostBuilderContext context, IServiceCollection services)
+                {
+                    // TODO: Legacy support could be added to test cluster infrastructure too
+                    var clusterConfiguration = (ClusterConfiguration)context.Properties["ClusterConfiguration"];
+                    services.AddLegacyClusterConfigurationSupport(clusterConfiguration);
+
+                    var siloName = context.HostingEnvironment.ApplicationName;
+                    var clusterId = context.Configuration["ClusterId"]; // or clusterConfiguration.Globals.DeploymentId
+                    services.AddLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterId)));
+
+                    ConfigureServices(services);
+                }
+            }
+
             private static void ConfigureServices(IServiceCollection services)
             {
                 const string Key = GrainCallFilterTestConstants.Key;

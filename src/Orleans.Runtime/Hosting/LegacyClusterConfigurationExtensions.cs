@@ -10,7 +10,7 @@ using Orleans.Runtime.MembershipService;
 
 namespace Orleans.Hosting
 {
-    internal static class LegacyClusterConfigurationExtensions
+    public static class LegacyClusterConfigurationExtensions
     {
         public static IServiceCollection AddLegacyClusterConfigurationSupport(this IServiceCollection services, ClusterConfiguration configuration)
         {

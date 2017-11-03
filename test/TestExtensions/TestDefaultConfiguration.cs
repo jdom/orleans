@@ -30,6 +30,14 @@ namespace TestExtensions
         private static IConfiguration BuildDefaultConfiguration()
         {
             var builder = TestClusterOptions.FallbackOptions.DefaultConfigurationBuilder();
+            ConfigureHostConfiguration(builder);
+
+            var config = builder.Build();
+            return config;
+        }
+
+        public static void ConfigureHostConfiguration(IConfigurationBuilder builder)
+        {
             builder.AddInMemoryCollection(new Dictionary<string, string>
             {
                 { nameof(ZooKeeperConnectionString), "127.0.0.1:2181" }
@@ -37,13 +45,10 @@ namespace TestExtensions
 
             AddJsonFileInAncestorFolder(builder, "OrleansTestSecrets.json");
             builder.AddEnvironmentVariables("Orleans");
-
-            var config = builder.Build();
-            return config;
         }
 
         /// <summary>Try to find a file with specified name up the folder hierarchy, as some of our CI environments are configured this way.</summary>
-        private static void AddJsonFileInAncestorFolder(ConfigurationBuilder builder, string fileName)
+        private static void AddJsonFileInAncestorFolder(IConfigurationBuilder builder, string fileName)
         {
             // There might be some other out-of-the-box way of doing this though.
             var currentDir = new DirectoryInfo(Directory.GetCurrentDirectory());
