@@ -5,13 +5,20 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Orleans.Runtime.Configuration;
 using Orleans.TestingHost.Utils;
 
 namespace Orleans.TestingHost
 {
+    public class TestClusterOptions2
+    {
+        public string ClusterId { get; set; }
+        public bool UseTestClusterMemebership { get; set; }
+        public short InitialSilosCount { get; set; }
+        public string SerializedHostConfiguration { get; set; }
+    }
+
     /// <summary>Configuration builder for starting a <see cref="TestCluster"/>.</summary>
     public class TestClusterBuilder
     {
@@ -44,22 +51,22 @@ namespace Orleans.TestingHost
 
             this.InitialSilosCount = initialSilosCount;
             this.ClusterId = CreateClusterId(baseSiloPort);
-            this.UseDefaultTestMemebership = true;
+            this.UseTestClusterMemebership = true;
 
             this.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(this.defaultConfigurationSource));
             this.SiloBuilderConfiguratorType = typeof(DefaultSiloBuilderConfigurator);
         }
 
-                public string ClusterId
+        public string ClusterId
         {
             get => this.defaultConfigurationSource["ClusterId"];
             set => this.defaultConfigurationSource["ClusterId"] = value;
         }
 
-        public bool UseDefaultTestMemebership
+        public bool UseTestClusterMemebership
         {
-            get => this.defaultConfigurationSource.TryGetValue("UseDefaultTestMemebership", out string strValue) && bool.TryParse(strValue, out var retValue) ? retValue : true;
-            set => this.defaultConfigurationSource["UseDefaultTestMemebership"] = value.ToString(CultureInfo.InvariantCulture);
+            get => this.defaultConfigurationSource.TryGetValue("UseTestClusterMemebership", out string strValue) && bool.TryParse(strValue, out var retValue) ? retValue : true;
+            set => this.defaultConfigurationSource["UseTestClusterMemebership"] = value.ToString(CultureInfo.InvariantCulture);
         }
 
         public short InitialSilosCount
@@ -114,23 +121,41 @@ namespace Orleans.TestingHost
         {
             this.defaultConfigurationSource["SiloBuilderConfiguratorType"] = this.SiloBuilderConfiguratorType.AssemblyQualifiedName;
 
-            var configBuilder = new SerializableConfigurationBuilder();
-            foreach (var buildAction in this.configureHostConfigActions)
-            {
-                buildAction(configBuilder);
-            }
-
-        }
-
-
-        private void BuildHostConfiguration()
-        {
             var configBuilder = new ConfigurationBuilder();
             foreach (var buildAction in this.configureHostConfigActions)
             {
                 buildAction(configBuilder);
             }
-            this.hostConfiguration = configBuilder.Build();
+
+            var serializedConfiguration = SerializeConfigurationBuilder(configBuilder);
+
+            var configuration = configBuilder.Build();
+            var options = new TestClusterOptions2();
+            configuration.Bind(options);
+            options.SerializedHostConfiguration = serializedConfiguration;
+            var testCluster = new TestCluster2(options);
+        }
+
+        private static string SerializeConfigurationBuilder(ConfigurationBuilder builder)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented,
+            };
+
+            return JsonConvert.SerializeObject(builder, settings);
+        }
+
+        internal static ConfigurationBuilder DeserializeConfigurationBuilder(string serializedBuilder)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented,
+            };
+
+            return JsonConvert.DeserializeObject<ConfigurationBuilder>(serializedBuilder, settings);
         }
 
         private static string CreateClusterId(int baseSiloPort)
@@ -174,55 +199,6 @@ namespace Orleans.TestingHost
             }
 
             throw new InvalidOperationException("Cannot find enough free ports to spin up a cluster");
-        }
-
-        private class SerializableConfigurationBuilder : IConfigurationBuilder
-        {
-            public IList<IConfigurationSource> Sources { get; } = (IList<IConfigurationSource>)new List<IConfigurationSource>();
-            public IDictionary<string, object> Properties { get; } = (IDictionary<string, object>)new Dictionary<string, object>();
-            public IConfigurationBuilder Add(IConfigurationSource source)
-            {
-                if (source == null)
-                    throw new ArgumentNullException(nameof(source));
-
-                // TODO: add support for file and a few others
-                if (source is MemoryConfigurationSource)
-                {
-                    this.Sources.Add(source);
-                }
-                else
-                {
-                    // TODO: improve error message
-                    throw new InvalidOperationException($"The specified {nameof(IConfigurationSource)} is not supported, as it needs to be serializable.");
-                }
-
-                return this;
-            }
-
-            public string Serialize()
-            {
-                var payload = new JObject();
-                foreach (var configurationSource in this.Sources)
-                {
-                    if (configurationSource is MemoryConfigurationSource memorySource)
-                    {
-                        //payload.
-                    }
-                }
-
-
-            }
-
-            public IConfigurationRoot Build()
-            {
-                List<IConfigurationProvider> configurationProviderList = new List<IConfigurationProvider>();
-                foreach (IConfigurationSource source in this.Sources)
-                {
-                    IConfigurationProvider configurationProvider = source.Build(this);
-                    configurationProviderList.Add(configurationProvider);
-                }
-                return new ConfigurationRoot(configurationProviderList);
-            }
         }
     }
 }
