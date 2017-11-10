@@ -5,47 +5,74 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Memory;
+using Newtonsoft.Json.Linq;
 using Orleans.Runtime.Configuration;
 using Orleans.TestingHost.Utils;
 
 namespace Orleans.TestingHost
 {
     /// <summary>Configuration builder for starting a <see cref="TestCluster"/>.</summary>
-    public class TestClusterOptions2
+    public class TestClusterBuilder
     {
         private List<Action<IConfigurationBuilder>> configureHostConfigActions = new List<Action<IConfigurationBuilder>>();
         private Dictionary<string, string> defaultConfigurationSource;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TestClusterOptions2"/> using the default options.
+        /// Initializes a new instance of <see cref="TestClusterBuilder"/> using the default options.
         /// </summary>
-        public TestClusterOptions2()
+        public TestClusterBuilder()
             : this(2)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TestClusterOptions2"/> overriding the initial silos count.
+        /// Initializes a new instance of <see cref="TestClusterBuilder"/> overriding the initial silos count.
         /// </summary>
         /// <param name="initialSilosCount">The number of initial silos to deploy.</param>
-        public TestClusterOptions2(short initialSilosCount)
+        public TestClusterBuilder(short initialSilosCount)
         {
             (int baseSiloPort, int baseGatewayPort) = GetAvailableConsecutiveServerPortsPair();
 
             this.defaultConfigurationSource =
                 new Dictionary<string, string>
                 {
-                    ["InitialSilosCount"] = initialSilosCount.ToString(),
                     ["BaseSiloPort"] = baseSiloPort.ToString(),
                     ["BaseGatewayPort"] = baseGatewayPort.ToString(),
-                    ["ClusterId"] = CreateClusterId(baseSiloPort),
-                    ["UseDefaultTestMemebership"] = true.ToString(),
                     ["AssumeHomogenousSilosForTesting"] = true.ToString(),
                 };
+
+            this.InitialSilosCount = initialSilosCount;
+            this.ClusterId = CreateClusterId(baseSiloPort);
+            this.UseDefaultTestMemebership = true;
 
             this.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(this.defaultConfigurationSource));
             this.SiloBuilderConfiguratorType = typeof(DefaultSiloBuilderConfigurator);
         }
+
+                public string ClusterId
+        {
+            get => this.defaultConfigurationSource["ClusterId"];
+            set => this.defaultConfigurationSource["ClusterId"] = value;
+        }
+
+        public bool UseDefaultTestMemebership
+        {
+            get => this.defaultConfigurationSource.TryGetValue("UseDefaultTestMemebership", out string strValue) && bool.TryParse(strValue, out var retValue) ? retValue : true;
+            set => this.defaultConfigurationSource["UseDefaultTestMemebership"] = value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public short InitialSilosCount
+        {
+            get => this.defaultConfigurationSource.TryGetValue("InitialSilosCount", out string strValue) && short.TryParse(strValue, out var retValue) ? retValue : (short)1;
+            set => this.defaultConfigurationSource["InitialSilosCount"] = value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        ///// <summary>Gets or sets the cluster configuration.</summary>
+        //public ClusterConfiguration ClusterConfiguration { get; set; }
+
+        ///// <summary>Gets or sets the client configuration.</summary>
+        //public ClientConfiguration ClientConfiguration { get; set; }
 
         /// <summary>
         /// Set up the configuration for the builder itself. This will be used as a base to initialize each silo host
@@ -54,7 +81,7 @@ namespace Orleans.TestingHost
         /// <param name="configureDelegate">The delegate for configuring the <see cref="IConfigurationBuilder"/> that will be used
         /// to construct the <see cref="IConfiguration"/> for the host.</param>
         /// <returns>The same instance of the host builder for chaining.</returns>
-        public TestClusterOptions2 ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        public TestClusterBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
         {
             this.configureHostConfigActions.Add(configureDelegate ?? throw new ArgumentNullException(nameof(configureDelegate)));
             return this;
@@ -83,6 +110,29 @@ namespace Orleans.TestingHost
         /// </summary>
         public Func<ClientConfiguration, IClientBuilder> ClientBuilderFactory { get; set; } = DefaultClientBuilderFactory;
 
+        public TestCluster2 Build()
+        {
+            this.defaultConfigurationSource["SiloBuilderConfiguratorType"] = this.SiloBuilderConfiguratorType.AssemblyQualifiedName;
+
+            var configBuilder = new SerializableConfigurationBuilder();
+            foreach (var buildAction in this.configureHostConfigActions)
+            {
+                buildAction(configBuilder);
+            }
+
+        }
+
+
+        private void BuildHostConfiguration()
+        {
+            var configBuilder = new ConfigurationBuilder();
+            foreach (var buildAction in this.configureHostConfigActions)
+            {
+                buildAction(configBuilder);
+            }
+            this.hostConfiguration = configBuilder.Build();
+        }
+
         private static string CreateClusterId(int baseSiloPort)
         {
             string prefix = "testdepid-";
@@ -92,7 +142,6 @@ namespace Orleans.TestingHost
             string depId = $"{prefix}{now.ToString(DateTimeFormat, CultureInfo.InvariantCulture)}-{baseSiloPort}-{randomSuffix}";
             return depId;
         }
-
 
         private static ValueTuple<int, int> GetAvailableConsecutiveServerPortsPair()
         {
@@ -125,6 +174,55 @@ namespace Orleans.TestingHost
             }
 
             throw new InvalidOperationException("Cannot find enough free ports to spin up a cluster");
+        }
+
+        private class SerializableConfigurationBuilder : IConfigurationBuilder
+        {
+            public IList<IConfigurationSource> Sources { get; } = (IList<IConfigurationSource>)new List<IConfigurationSource>();
+            public IDictionary<string, object> Properties { get; } = (IDictionary<string, object>)new Dictionary<string, object>();
+            public IConfigurationBuilder Add(IConfigurationSource source)
+            {
+                if (source == null)
+                    throw new ArgumentNullException(nameof(source));
+
+                // TODO: add support for file and a few others
+                if (source is MemoryConfigurationSource)
+                {
+                    this.Sources.Add(source);
+                }
+                else
+                {
+                    // TODO: improve error message
+                    throw new InvalidOperationException($"The specified {nameof(IConfigurationSource)} is not supported, as it needs to be serializable.");
+                }
+
+                return this;
+            }
+
+            public string Serialize()
+            {
+                var payload = new JObject();
+                foreach (var configurationSource in this.Sources)
+                {
+                    if (configurationSource is MemoryConfigurationSource memorySource)
+                    {
+                        //payload.
+                    }
+                }
+
+
+            }
+
+            public IConfigurationRoot Build()
+            {
+                List<IConfigurationProvider> configurationProviderList = new List<IConfigurationProvider>();
+                foreach (IConfigurationSource source in this.Sources)
+                {
+                    IConfigurationProvider configurationProvider = source.Build(this);
+                    configurationProviderList.Add(configurationProvider);
+                }
+                return new ConfigurationRoot(configurationProviderList);
+            }
         }
     }
 }
