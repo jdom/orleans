@@ -27,7 +27,7 @@ namespace Orleans.TestingHost
     /// Make sure that your test project references your test grains and test grain interfaces 
     /// projects, and has CopyLocal=True set on those references [which should be the default].
     /// </remarks>
-    public class TestCluster2
+    public class TestCluster
     {
         /// <summary>
         /// Primary silo handle
@@ -41,13 +41,22 @@ namespace Orleans.TestingHost
 
         private readonly List<SiloHandle> additionalSilos = new List<SiloHandle>();
         
+        /// <summary>
+        /// Client configuration to use when initializing the client
+        /// </summary>
+        public ClientConfiguration ClientConfiguration { get; private set; }
+
+        /// <summary>
+        /// Cluster configuration
+        /// </summary>
+        public ClusterConfiguration ClusterConfiguration { get; private set; }
 
         private readonly StringBuilder log = new StringBuilder();
 
         /// <summary>
-        /// Id of the cluster
+        /// DeploymentId of the cluster
         /// </summary>
-        public string ClusterId => this.options.ClusterId;
+        public string DeploymentId => this.ClusterConfiguration.Globals.DeploymentId;
 
         /// <summary>
         /// The internal client interface.
@@ -84,53 +93,92 @@ namespace Orleans.TestingHost
         /// </summary>
         public SerializationManager SerializationManager { get; private set; }
 
-        private TestClusterOptions2 options;
+        internal Type siloBuilderFactoryType;
+
+        public TestCluster UseSiloBuilderFactory<TSiloBuilderFactory>() where TSiloBuilderFactory : ISiloBuilderFactory, new()
+        {
+            this.siloBuilderFactoryType = typeof(TSiloBuilderFactory);
+            return this;
+        }
+
+        private Func<ClientConfiguration, IClientBuilder> clientBuilderFactory;
+        /// <summary>
+        /// Set client builder factory, which would create a client builder to build the <see cref="TestCluster"/> client.
+        /// </summary>
+        public TestCluster UseClientBuilderFactory(Func<ClientConfiguration, IClientBuilder> clientBuilderFactory)
+        {
+            this.clientBuilderFactory = clientBuilderFactory;
+            return this;
+        }
 
         /// <summary>
         /// Configure the default Primary test silo, plus client in-process.
         /// </summary>
-        public TestCluster2()
-            : this(new TestClusterOptions2())
+        public TestCluster()
+            : this(new TestClusterOptions())
         {
         }
 
         /// <summary>
         /// Configures the test cluster plus client in-process.
         /// </summary>
-        public TestCluster2(TestClusterOptions2 options)
+        public TestCluster(TestClusterOptions options)
+            : this(options.ClusterConfiguration, options.ClientConfiguration)
         {
-            this.options = options;
+            this.siloBuilderFactoryType = options.SiloBuilderFactoryType;
+            this.clientBuilderFactory = options.ClientBuilderFactory;
         }
 
-        ///// <summary>
-        ///// Deploys the cluster using the specified configuration and starts the client in-process.
-        ///// It will start the number of silos defined in <see cref="TestClusterOptions2.InitialSilosCount"/>.
-        ///// </summary>
-        //public void Deploy()
-        //{
-        //    this.Deploy(this.ClusterConfiguration.Overrides.Keys);
-        //}
+        /// <summary>
+        /// Configures the test cluster plus default client in-process.
+        /// </summary>
+        public TestCluster(ClusterConfiguration clusterConfiguration)
+            : this(clusterConfiguration, TestClusterOptions.BuildClientConfiguration(clusterConfiguration))
+        {
+        }
 
-        ///// <summary>
-        ///// Deploys the cluster using the specified configuration and starts the client in-process.
-        ///// </summary>
-        ///// <param name="siloNames">Only deploy the specified silos which must also be present in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.</param>
-        //public void Deploy(IEnumerable<string> siloNames)
-        //{
-        //    try
-        //    {
-        //        DeployAsync(siloNames).Wait();
-        //    }
-        //    catch (AggregateException ex)
-        //    {
-        //        if (ex.InnerExceptions.Count > 1) throw;
-        //        ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-        //    }
-        //}
+        /// <summary>
+        /// Configures the test cluster plus client in-process,
+        /// using the specified silo and client config configurations.
+        /// </summary>
+        public TestCluster(ClusterConfiguration clusterConfiguration, ClientConfiguration clientConfiguration)
+        {
+            this.ClusterConfiguration = clusterConfiguration;
+            this.ClientConfiguration = clientConfiguration;
+            this.UseSiloBuilderFactory<DefaultSiloBuilderFactory>();
+            this.UseClientBuilderFactory(TestClusterOptions.DefaultClientBuilderFactory);
+        }
+
+        /// <summary>
+        /// Deploys the cluster using the specified configuration and starts the client in-process.
+        /// It will start all the silos defined in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.
+        /// </summary>
+        public void Deploy()
+        {
+            this.Deploy(this.ClusterConfiguration.Overrides.Keys);
+        }
 
         /// <summary>
         /// Deploys the cluster using the specified configuration and starts the client in-process.
         /// </summary>
+        /// <param name="siloNames">Only deploy the specified silos which must also be present in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.</param>
+        public void Deploy(IEnumerable<string> siloNames)
+        {
+            try
+            {
+                DeployAsync(siloNames).Wait();
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count > 1) throw;
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            }
+        }
+
+        /// <summary>
+        /// Deploys the cluster using the specified configuration and starts the client in-process.
+        /// </summary>
+        /// <param name="siloNames">Only deploy the specified silos which must also be present in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.</param>
         public async Task DeployAsync(IEnumerable<string> siloNames)
         {
             if (Primary != null) throw new InvalidOperationException("Cluster host already deployed.");
@@ -479,12 +527,12 @@ namespace Orleans.TestingHost
         /// <summary>
         /// Start a new silo in the target cluster
         /// </summary>
-        /// <param name="cluster">The TestCluster2 in which the silo should be deployed</param>
+        /// <param name="cluster">The TestCluster in which the silo should be deployed</param>
         /// <param name="type">The type of the silo to deploy</param>
         /// <param name="clusterConfig">The cluster config to use</param>
         /// <param name="nodeConfig">The configuration for the silo to deploy</param>
         /// <returns>A handle to the silo deployed</returns>
-        public static SiloHandle StartOrleansSilo(TestCluster2 cluster, Silo.SiloType type, ClusterConfiguration clusterConfig, NodeConfiguration nodeConfig)
+        public static SiloHandle StartOrleansSilo(TestCluster cluster, Silo.SiloType type, ClusterConfiguration clusterConfig, NodeConfiguration nodeConfig)
         {
             if (cluster == null) throw new ArgumentNullException(nameof(cluster));
             var siloName = nodeConfig.SiloName;
