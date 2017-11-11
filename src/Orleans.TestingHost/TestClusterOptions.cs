@@ -14,6 +14,8 @@ namespace Orleans.TestingHost
     public class TestClusterOptions2
     {
         public string ClusterId { get; set; }
+        public int BaseSiloPort{ get; set; }
+        public int BaseGatewayPort { get; set; }
         public bool UseTestClusterMemebership { get; set; }
         public short InitialSilosCount { get; set; }
         public string SerializedHostConfiguration { get; set; }
@@ -23,7 +25,6 @@ namespace Orleans.TestingHost
     public class TestClusterBuilder
     {
         private List<Action<IConfigurationBuilder>> configureHostConfigActions = new List<Action<IConfigurationBuilder>>();
-        private Dictionary<string, string> defaultConfigurationSource;
 
         /// <summary>
         /// Initializes a new instance of <see cref="TestClusterBuilder"/> using the default options.
@@ -39,40 +40,30 @@ namespace Orleans.TestingHost
         /// <param name="initialSilosCount">The number of initial silos to deploy.</param>
         public TestClusterBuilder(short initialSilosCount)
         {
-            (int baseSiloPort, int baseGatewayPort) = GetAvailableConsecutiveServerPortsPair();
-
-            this.defaultConfigurationSource =
-                new Dictionary<string, string>
-                {
-                    ["BaseSiloPort"] = baseSiloPort.ToString(),
-                    ["BaseGatewayPort"] = baseGatewayPort.ToString(),
-                    ["AssumeHomogenousSilosForTesting"] = true.ToString(),
-                };
-
             this.InitialSilosCount = initialSilosCount;
-            this.ClusterId = CreateClusterId(baseSiloPort);
+            this.ClusterId = CreateClusterId();
             this.UseTestClusterMemebership = true;
-
-            this.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(this.defaultConfigurationSource));
             this.SiloBuilderConfiguratorType = typeof(DefaultSiloBuilderConfigurator);
         }
 
+        public Dictionary<string, object> Properties { get; } = new Dictionary<string, object>();
+
         public string ClusterId
         {
-            get => this.defaultConfigurationSource["ClusterId"];
-            set => this.defaultConfigurationSource["ClusterId"] = value;
+            get => (string)this.Properties["ClusterId"];
+            set => this.Properties["ClusterId"] = value;
         }
 
         public bool UseTestClusterMemebership
         {
-            get => this.defaultConfigurationSource.TryGetValue("UseTestClusterMemebership", out string strValue) && bool.TryParse(strValue, out var retValue) ? retValue : true;
-            set => this.defaultConfigurationSource["UseTestClusterMemebership"] = value.ToString(CultureInfo.InvariantCulture);
+            get => (bool)this.Properties["UseTestClusterMemebership"];
+            set => this.Properties["UseTestClusterMemebership"] = value;
         }
 
         public short InitialSilosCount
         {
-            get => this.defaultConfigurationSource.TryGetValue("InitialSilosCount", out string strValue) && short.TryParse(strValue, out var retValue) ? retValue : (short)1;
-            set => this.defaultConfigurationSource["InitialSilosCount"] = value.ToString(CultureInfo.InvariantCulture);
+            get => (short)this.Properties["InitialSilosCount"];
+            set => this.Properties["InitialSilosCount"] = value;
         }
 
         ///// <summary>Gets or sets the cluster configuration.</summary>
@@ -119,9 +110,24 @@ namespace Orleans.TestingHost
 
         public TestCluster2 Build()
         {
-            this.defaultConfigurationSource["SiloBuilderConfiguratorType"] = this.SiloBuilderConfiguratorType.AssemblyQualifiedName;
-
             var configBuilder = new ConfigurationBuilder();
+            (int baseSiloPort, int baseGatewayPort) = GetAvailableConsecutiveServerPortsPair(this.InitialSilosCount + 3);
+
+            configBuilder.Properties["BaseSiloPort"] = baseSiloPort;
+            configBuilder.Properties["BaseGatewayPort"] = baseGatewayPort;
+            configBuilder.Properties["ClusterId"] = this.ClusterId;
+
+            var defaultConfigurationSource = new Dictionary<string, string>
+            {
+                ["ClusterId"] = this.ClusterId,
+                ["BaseSiloPort"] = baseSiloPort.ToString(),
+                ["BaseGatewayPort"] = baseGatewayPort.ToString(),
+                ["AssumeHomogenousSilosForTesting"] = true.ToString(),
+                ["SiloBuilderConfiguratorType"] = this.SiloBuilderConfiguratorType.AssemblyQualifiedName,
+            };
+
+            configBuilder.AddInMemoryCollection(defaultConfigurationSource);
+
             foreach (var buildAction in this.configureHostConfigActions)
             {
                 buildAction(configBuilder);
@@ -134,6 +140,7 @@ namespace Orleans.TestingHost
             configuration.Bind(options);
             options.SerializedHostConfiguration = serializedConfiguration;
             var testCluster = new TestCluster2(options);
+            return testCluster;
         }
 
         private static string SerializeConfigurationBuilder(ConfigurationBuilder builder)
@@ -158,24 +165,24 @@ namespace Orleans.TestingHost
             return JsonConvert.DeserializeObject<ConfigurationBuilder>(serializedBuilder, settings);
         }
 
-        private static string CreateClusterId(int baseSiloPort)
+        private static string CreateClusterId()
         {
-            string prefix = "testdepid-";
+            string prefix = "testcluster-";
             int randomSuffix = ThreadSafeRandom.Next(1000);
             DateTime now = DateTime.UtcNow;
             string DateTimeFormat = @"yyyy-MM-dd\tHH-mm-ss";
-            string depId = $"{prefix}{now.ToString(DateTimeFormat, CultureInfo.InvariantCulture)}-{baseSiloPort}-{randomSuffix}";
-            return depId;
+            return $"{prefix}{now.ToString(DateTimeFormat, CultureInfo.InvariantCulture)}-{randomSuffix}";
         }
 
-        private static ValueTuple<int, int> GetAvailableConsecutiveServerPortsPair()
+        /// <summary>Returns a 2 pairs of ports which have the specified number of consecutive ports available for use.</summary>
+        /// <param name="consecutivePortsToCheck">Each returned port in the pair will have to have at least this amount of available ports following it</param>
+        private static ValueTuple<int, int> GetAvailableConsecutiveServerPortsPair(int consecutivePortsToCheck = 5)
         {
             // Evaluate current system tcp connections
             IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
             IPEndPoint[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpListeners();
 
             // each returned port in the pair will have to have at least this amount of available ports following it
-            const int consecutivePortsToCheck = 5;
 
             return (GetAvailableConsecutiveServerPorts(tcpConnInfoArray, 22300, 30000, consecutivePortsToCheck),
                     GetAvailableConsecutiveServerPorts(tcpConnInfoArray, 40000, 50000, consecutivePortsToCheck));
