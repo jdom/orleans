@@ -502,7 +502,8 @@ namespace Orleans.TestingHost
 
         private SiloHandle LoadSiloInNewAppDomain(string siloName, Silo.SiloType type, ClusterConfiguration config, NodeConfiguration nodeConfiguration)
         {
-            return AppDomainSiloHandle.Create(siloName, type, this.siloBuilderFactoryType, config, nodeConfiguration);
+            // TODO: transform?
+            return AppDomainSiloHandle2.Create(siloName, this.options);
         }
 
         #endregion

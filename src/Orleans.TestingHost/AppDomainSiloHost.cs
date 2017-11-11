@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using Orleans.ApplicationParts;
 using Orleans.Providers;
 using Orleans.Runtime;
-using Orleans.Runtime.Configuration;
 using Orleans.Runtime.GrainDirectory;
 using Orleans.Runtime.Messaging;
 using Orleans.Runtime.Placement;
@@ -21,23 +22,45 @@ using Orleans.Runtime.Storage;
 namespace Orleans.TestingHost
 {
     /// <summary>Allows programmatically hosting an Orleans silo in the curent app domain, exposing some marshable members via remoting.</summary>
-    public class AppDomainSiloHost : MarshalByRefObject
+    public class AppDomainSiloHost2 : MarshalByRefObject
     {
         private readonly ISiloHost host;
 
         /// <summary>Creates and initializes a silo in the current app domain.</summary>
         /// <param name="name">Name of this silo.</param>
-        /// <param name="siloBuilderFactoryType">Type of silo host builder factory.</param>
-        /// <param name="config">Silo config data to be used for this silo.</param>
-        public AppDomainSiloHost(string name, Type siloBuilderFactoryType, ClusterConfiguration config)
+        /// <param name="serializedConfigurationBuilder">Silo config data to be used for this silo.</param>
+        public AppDomainSiloHost2(string name, string serializedConfigurationBuilder)
         {
-            var builderFactory = (ISiloBuilderFactory)Activator.CreateInstance(siloBuilderFactoryType);
-            ISiloHostBuilder builder = builderFactory
-                .CreateSiloBuilder(name, config)
+            var configBuilder = TestClusterBuilder.DeserializeConfigurationBuilder(serializedConfigurationBuilder);
+            ISiloHostBuilder hostBuilder = new SiloHostBuilder()
+                .ConfigureSiloName(name)
                 .ConfigureServices(services => services.AddSingleton<TestHooksSystemTarget>())
-                .AddApplicationPartsFromAppDomain()
-                .AddApplicationPartsFromBasePath();
-            this.host = builder.Build();
+                .ConfigureHostConfiguration(cb =>
+                {
+                    foreach (var source in configBuilder.Sources)
+                    {
+                        cb.Add(source);
+                    }
+                });
+
+
+            var configuration = configBuilder.Build();
+            var builderConfiguratorType = configuration["SiloBuilderConfiguratorType"];
+            if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
+            {
+                var builderConfigurator = (ISiloBuilderConfigurator)Activator.CreateInstance(Type.GetType(builderConfiguratorType));
+                builderConfigurator.Configure(hostBuilder);
+            }
+
+            var hasApplicationParts = hostBuilder.GetApplicationPartManager().ApplicationParts.OfType<AssemblyPart>().Any(part => !part.IsFrameworkAssembly);
+            if (!hasApplicationParts)
+            {
+                hostBuilder
+                    .AddApplicationPartsFromAppDomain()
+                    .AddApplicationPartsFromBasePath();
+            }
+
+            this.host = hostBuilder.Build();
             InitializeTestHooksSystemTarget();
             this.AppDomainTestHook = new AppDomainTestHooks(this.host);
         }
