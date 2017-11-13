@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.ApplicationParts;
 using Orleans.Providers;
@@ -28,15 +29,23 @@ namespace Orleans.TestingHost
 
         /// <summary>Creates and initializes a silo in the current app domain.</summary>
         /// <param name="name">Name of this silo.</param>
-        /// <param name="serializedConfigurationBuilder">Silo config data to be used for this silo.</param>
-        public AppDomainSiloHost2(string name, string serializedConfigurationBuilder)
+        /// <param name="serializedConfigurationSources">Silo config data to be used for this silo.</param>
+        public AppDomainSiloHost2(string name, string serializedConfigurationSources)
         {
-            var configBuilder = TestClusterBuilder.DeserializeConfigurationBuilder(serializedConfigurationBuilder);
+            var deserializedSources = TestClusterBuilder.DeserializeConfigurationSources(serializedConfigurationSources);
+            var configBuilder = new ConfigurationBuilder();
+            foreach (var source in deserializedSources)
+            {
+                configBuilder.Add(source);
+            }
+            var configuration = configBuilder.Build();
+
             ISiloHostBuilder hostBuilder = new SiloHostBuilder()
                 .ConfigureSiloName(name)
                 .ConfigureServices(services => services.AddSingleton<TestHooksSystemTarget>())
                 .ConfigureHostConfiguration(cb =>
                 {
+                    // TODO: Instead of passing the sources individually, just chain the pre-built configuration once we upgrade to Microsoft.Extensions.Configuration 2.1
                     foreach (var source in configBuilder.Sources)
                     {
                         cb.Add(source);
@@ -44,7 +53,6 @@ namespace Orleans.TestingHost
                 });
 
 
-            var configuration = configBuilder.Build();
             var builderConfiguratorType = configuration["SiloBuilderConfiguratorType"];
             if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
             {
