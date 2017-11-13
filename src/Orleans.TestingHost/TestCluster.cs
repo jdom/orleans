@@ -131,9 +131,9 @@ namespace Orleans.TestingHost
         /// <summary>
         /// Deploys the cluster using the specified configuration and starts the client in-process.
         /// </summary>
-        public async Task DeployAsync(IEnumerable<string> siloNames)
+        public async Task DeployAsync()
         {
-            if (Primary != null) throw new InvalidOperationException("Cluster host already deployed.");
+            if (this.Primary != null || this.additionalSilos.Count > 0) throw new InvalidOperationException("Cluster host already deployed.");
 
             AppDomain.CurrentDomain.UnhandledException += ReportUnobservedException;
 
@@ -141,7 +141,7 @@ namespace Orleans.TestingHost
             {
                 string startMsg = "----------------------------- STARTING NEW UNIT TEST SILO HOST: " + GetType().FullName + " -------------------------------------";
                 WriteLog(startMsg);
-                await InitializeAsync(siloNames);
+                await InitializeAsync();
             }
             catch (TimeoutException te)
             {
@@ -209,7 +209,9 @@ namespace Orleans.TestingHost
         /// <param name="didKill">Whether recent membership changes we done by graceful Stop.</param>
         public async Task WaitForLivenessToStabilizeAsync(bool didKill = false)
         {
-            TimeSpan stabilizationTime = GetLivenessStabilizationTime(this.ClusterConfiguration.Globals, didKill);
+            // TODO: read from the cluster
+            var globalConfiguration = new GlobalConfiguration(); //this.ClusterConfiguration.Globals
+            TimeSpan stabilizationTime = GetLivenessStabilizationTime(globalConfiguration, didKill);
             WriteLog(Environment.NewLine + Environment.NewLine + "WaitForLivenessToStabilize is about to sleep for {0}", stabilizationTime);
             await Task.Delay(stabilizationTime);
             WriteLog("WaitForLivenessToStabilize is done sleeping");
@@ -426,20 +428,13 @@ namespace Orleans.TestingHost
             this.StreamProviderManager = this.ServiceProvider.GetRequiredService<IRuntimeClient>().CurrentStreamProviderManager;
         }
         
-        private async Task InitializeAsync(IEnumerable<string> siloNames)
+        private async Task InitializeAsync()
         {
-            var silos = siloNames.ToList();
-            foreach (var siloName in silos)
-            {
-                if (!this.ClusterConfiguration.Overrides.Keys.Contains(siloName))
-                {
-                    throw new ArgumentOutOfRangeException(nameof(siloNames), $"Silo name {siloName} does not exist in the ClusterConfiguration.Overrides collection");
-                }
-            }
+            int silosToStart = this.options.InitialSilosCount;
 
-            if (silos.Contains(Silo.PrimarySiloName))
+            if (this.options.UseTestClusterMemebership)
             {
-                Primary = StartOrleansSilo(Silo.SiloType.Primary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[Silo.PrimarySiloName]);
+                Primary = StartOrleansSilo(Silo.SiloType.Primary, Silo.PrimarySiloName, this.options);
             }
 
             var secondarySiloNames = silos.Where(name => !string.Equals(Silo.PrimarySiloName, name)).ToList();
@@ -471,9 +466,9 @@ namespace Orleans.TestingHost
             }
         }
 
-        private SiloHandle StartOrleansSilo(Silo.SiloType type, ClusterConfiguration clusterConfig, NodeConfiguration nodeConfig)
+        private SiloHandle2 StartOrleansSilo(Silo.SiloType type, string siloName, TestClusterOptions2 clusterOptions)
         {
-            return StartOrleansSilo(this, type, clusterConfig, nodeConfig);
+            return StartOrleansSilo(this, type, siloName, clusterOptions);
         }
 
         /// <summary>
@@ -481,16 +476,15 @@ namespace Orleans.TestingHost
         /// </summary>
         /// <param name="cluster">The TestCluster2 in which the silo should be deployed</param>
         /// <param name="type">The type of the silo to deploy</param>
-        /// <param name="clusterConfig">The cluster config to use</param>
-        /// <param name="nodeConfig">The configuration for the silo to deploy</param>
+        /// <param name="clusterOptions">The options to use.</param>
         /// <returns>A handle to the silo deployed</returns>
-        public static SiloHandle StartOrleansSilo(TestCluster2 cluster, Silo.SiloType type, ClusterConfiguration clusterConfig, NodeConfiguration nodeConfig)
+        public static SiloHandle2 StartOrleansSilo(TestCluster2 cluster, Silo.SiloType type, string siloName, TestClusterOptions2 clusterOptions)
         {
             if (cluster == null) throw new ArgumentNullException(nameof(cluster));
-            var siloName = nodeConfig.SiloName;
 
-            cluster.WriteLog("Starting a new silo in app domain {0} with config {1}", siloName, clusterConfig.ToString(siloName));
-            var handle = cluster.LoadSiloInNewAppDomain(siloName, type, clusterConfig, nodeConfig);
+            cluster.WriteLog("Starting a new silo in app domain {0}");
+            clusterOptions.SerializedHostConfiguration
+            var handle = cluster.LoadSiloInNewAppDomain(siloName, type, clusterOptions);
             return handle;
         }
 
@@ -500,10 +494,10 @@ namespace Orleans.TestingHost
             instance.Dispose();
         }
 
-        private SiloHandle LoadSiloInNewAppDomain(string siloName, Silo.SiloType type, ClusterConfiguration config, NodeConfiguration nodeConfiguration)
+        private SiloHandle2 LoadSiloInNewAppDomain(string siloName, Silo.SiloType type, TestClusterOptions2 clusterOptions)
         {
             // TODO: transform?
-            return AppDomainSiloHandle2.Create(siloName, this.options);
+            return AppDomainSiloHandle2.Create(siloName, clusterOptions);
         }
 
         #endregion
