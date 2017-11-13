@@ -133,17 +133,17 @@ namespace Orleans.TestingHost
                 buildAction(configBuilder);
             }
 
-            var serializedConfiguration = SerializeConfigurationBuilder(configBuilder);
+            var serializedConfigurationSources = SerializeConfigurationSources(configBuilder);
 
             var configuration = configBuilder.Build();
             var options = new TestClusterOptions2();
             configuration.Bind(options);
-            options.SerializedHostConfiguration = serializedConfiguration;
+            options.SerializedHostConfiguration = serializedConfigurationSources;
             var testCluster = new TestCluster2(options);
             return testCluster;
         }
 
-        private static string SerializeConfigurationBuilder(ConfigurationBuilder builder)
+        private static string SerializeConfigurationSources(IConfigurationBuilder builder)
         {
             var settings = new JsonSerializerSettings
             {
@@ -151,10 +151,10 @@ namespace Orleans.TestingHost
                 Formatting = Formatting.Indented,
             };
 
-            return JsonConvert.SerializeObject(builder, settings);
+            return JsonConvert.SerializeObject(builder.Sources, settings);
         }
 
-        internal static ConfigurationBuilder DeserializeConfigurationBuilder(string serializedBuilder)
+        internal static IList<IConfigurationSource> DeserializeConfigurationSources(string serializedSources)
         {
             var settings = new JsonSerializerSettings
             {
@@ -162,7 +162,7 @@ namespace Orleans.TestingHost
                 Formatting = Formatting.Indented,
             };
 
-            return JsonConvert.DeserializeObject<ConfigurationBuilder>(serializedBuilder, settings);
+            return JsonConvert.DeserializeObject<IList<IConfigurationSource>>(serializedSources, settings);
         }
 
         private static string CreateClusterId()
