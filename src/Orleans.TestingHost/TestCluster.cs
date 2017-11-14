@@ -14,6 +14,8 @@ using Orleans.Streams;
 using Orleans.TestingHost.Utils;
 using System.Collections.Concurrent;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Memory;
 
 namespace Orleans.TestingHost
 {
@@ -466,24 +468,44 @@ namespace Orleans.TestingHost
             }
         }
 
-        private SiloHandle2 StartOrleansSilo(Silo.SiloType type, string siloName, TestClusterOptions2 clusterOptions)
+        private SiloHandle2 StartOrleansSilo(short instanceNumber, TestClusterOptions2 clusterOptions)
         {
-            return StartOrleansSilo(this, type, siloName, clusterOptions);
+            return StartOrleansSilo(this, instanceNumber, clusterOptions);
         }
 
         /// <summary>
         /// Start a new silo in the target cluster
         /// </summary>
         /// <param name="cluster">The TestCluster2 in which the silo should be deployed</param>
-        /// <param name="type">The type of the silo to deploy</param>
+        /// <param name="instanceNumber">The instance number to deploy</param>
         /// <param name="clusterOptions">The options to use.</param>
         /// <returns>A handle to the silo deployed</returns>
-        public static SiloHandle2 StartOrleansSilo(TestCluster2 cluster, Silo.SiloType type, string siloName, TestClusterOptions2 clusterOptions)
+        public static SiloHandle2 StartOrleansSilo(TestCluster2 cluster, short instanceNumber, TestClusterOptions2 clusterOptions)
         {
             if (cluster == null) throw new ArgumentNullException(nameof(cluster));
 
+            string siloName = clusterOptions.UseTestClusterMemebership && instanceNumber == 0
+                ? Silo.PrimarySiloName
+                : $"Secondary_{instanceNumber}";
+
+            var configuration = clusterOptions.HostConfiguration.ToList();
+            var hostSpecificConfiguration = new Dictionary<string, string>
+            {
+                ["SiloPort"] = (clusterOptions.BaseSiloPort + instanceNumber).ToString(),
+                ["GatewayPort"] = (clusterOptions.BaseGatewayPort + instanceNumber).ToString(),
+                ["SiloName"] = siloName,
+            };
+
+            configuration.Add(new MemoryConfigurationSource { InitialData = hostSpecificConfiguration });
+            if (clusterOptions.UseTestClusterMemebership)
+            {
+                hostSpecificConfiguration["SeedNodePort"] = clusterOptions.BaseSiloPort.ToString();
+                if (instanceNumber == 0)
+                {
+                }
+            }
             cluster.WriteLog("Starting a new silo in app domain {0}");
-            var handle = cluster.LoadSiloInNewAppDomain(siloName, type, clusterOptions);
+            var handle = cluster.LoadSiloInNewAppDomain(siloName, configuration);
             return handle;
         }
 
@@ -493,10 +515,10 @@ namespace Orleans.TestingHost
             instance.Dispose();
         }
 
-        private SiloHandle2 LoadSiloInNewAppDomain(string siloName, Silo.SiloType type, TestClusterOptions2 clusterOptions)
+        private SiloHandle2 LoadSiloInNewAppDomain(string siloName, IList<IConfigurationSource> configuration)
         {
             // TODO: transform?
-            return AppDomainSiloHandle2.Create(siloName, clusterOptions);
+            return AppDomainSiloHandle2.Create(siloName, configuration);
         }
 
         #endregion

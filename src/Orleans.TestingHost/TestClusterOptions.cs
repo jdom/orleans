@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -18,7 +19,7 @@ namespace Orleans.TestingHost
         public int BaseGatewayPort { get; set; }
         public bool UseTestClusterMemebership { get; set; }
         public short InitialSilosCount { get; set; }
-        public string SerializedHostConfiguration { get; set; }
+        public IReadOnlyList<IConfigurationSource> HostConfiguration { get; set; }
     }
 
     /// <summary>Configuration builder for starting a <see cref="TestCluster"/>.</summary>
@@ -133,17 +134,16 @@ namespace Orleans.TestingHost
                 buildAction(configBuilder);
             }
 
-            var serializedConfigurationSources = SerializeConfigurationSources(configBuilder);
-
             var configuration = configBuilder.Build();
             var options = new TestClusterOptions2();
             configuration.Bind(options);
-            options.SerializedHostConfiguration = serializedConfigurationSources;
+            options.HostConfiguration = new ReadOnlyCollection<IConfigurationSource>(configBuilder.Sources);
             var testCluster = new TestCluster2(options);
             return testCluster;
         }
 
-        private static string SerializeConfigurationSources(IConfigurationBuilder builder)
+        // TODO: move away
+        public static string SerializeConfigurationSources(IList<IConfigurationSource> sources)
         {
             var settings = new JsonSerializerSettings
             {
@@ -151,7 +151,7 @@ namespace Orleans.TestingHost
                 Formatting = Formatting.Indented,
             };
 
-            return JsonConvert.SerializeObject(builder.Sources, settings);
+            return JsonConvert.SerializeObject(sources, settings);
         }
 
         internal static IList<IConfigurationSource> DeserializeConfigurationSources(string serializedSources)

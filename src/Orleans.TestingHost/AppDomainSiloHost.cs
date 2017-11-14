@@ -29,9 +29,9 @@ namespace Orleans.TestingHost
         private readonly ISiloHost host;
 
         /// <summary>Creates and initializes a silo in the current app domain.</summary>
-        /// <param name="siloName">Name of this silo.</param>
+        /// <param name="appDomainName">Name of this silo.</param>
         /// <param name="serializedConfigurationSources">Silo config data to be used for this silo.</param>
-        public AppDomainSiloHost2(string siloName, string serializedConfigurationSources)
+        public AppDomainSiloHost2(string appDomainName, string serializedConfigurationSources)
         {
             var deserializedSources = TestClusterBuilder.DeserializeConfigurationSources(serializedConfigurationSources);
             var configBuilder = new ConfigurationBuilder();
@@ -40,6 +40,8 @@ namespace Orleans.TestingHost
                 configBuilder.Add(source);
             }
             var configuration = configBuilder.Build();
+
+            string siloName = configuration["SiloName"] ?? appDomainName;
 
             ISiloHostBuilder hostBuilder = new SiloHostBuilder()
                 .ConfigureSiloName(siloName)
