@@ -15,6 +15,7 @@ using Orleans.Runtime.Placement;
 using Orleans.Storage;
 using Orleans.MultiCluster;
 using Orleans.Hosting;
+using Orleans.Runtime.Configuration;
 using Orleans.Runtime.MultiClusterNetwork;
 using Orleans.Runtime.TestHooks;
 using Orleans.Runtime.Providers;
@@ -28,9 +29,9 @@ namespace Orleans.TestingHost
         private readonly ISiloHost host;
 
         /// <summary>Creates and initializes a silo in the current app domain.</summary>
-        /// <param name="name">Name of this silo.</param>
+        /// <param name="siloName">Name of this silo.</param>
         /// <param name="serializedConfigurationSources">Silo config data to be used for this silo.</param>
-        public AppDomainSiloHost2(string name, string serializedConfigurationSources)
+        public AppDomainSiloHost2(string siloName, string serializedConfigurationSources)
         {
             var deserializedSources = TestClusterBuilder.DeserializeConfigurationSources(serializedConfigurationSources);
             var configBuilder = new ConfigurationBuilder();
@@ -41,7 +42,7 @@ namespace Orleans.TestingHost
             var configuration = configBuilder.Build();
 
             ISiloHostBuilder hostBuilder = new SiloHostBuilder()
-                .ConfigureSiloName(name)
+                .ConfigureSiloName(siloName)
                 .ConfigureServices(services => services.AddSingleton<TestHooksSystemTarget>())
                 .ConfigureHostConfiguration(cb =>
                 {
@@ -52,12 +53,46 @@ namespace Orleans.TestingHost
                     }
                 });
 
-
             var builderConfiguratorType = configuration["SiloBuilderConfiguratorType"];
             if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
             {
                 var builderConfigurator = (ISiloBuilderConfigurator)Activator.CreateInstance(Type.GetType(builderConfiguratorType));
                 builderConfigurator.Configure(hostBuilder);
+            }
+
+            if (bool.TryParse(configuration["UseTestClusterMemebership"], out bool testMembership) && testMembership)
+            {
+                int baseSiloPort = int.Parse(configuration["BaseSiloPort"]);
+                int baseGatewayPort = int.Parse(configuration["BaseGatewayPort"]);
+
+                int siloPort = baseSiloPort; // TODO: read instance number
+                int gatewayPort = baseGatewayPort;  // TODO: read instance number
+                hostBuilder.ConfigureServices((context, services) =>
+                {
+                    // TODO: configure this without requiring the legacy configuration, when that's available
+                    var clusterConfiguration = services.FirstOrDefault(s => s.ImplementationType == typeof(ClusterConfiguration))?.ImplementationInstance as ClusterConfiguration;
+                    if (clusterConfiguration == null)
+                    {
+                        clusterConfiguration = ClusterConfiguration.LocalhostPrimarySilo(baseSiloPort, baseGatewayPort);
+                        services.AddLegacyClusterConfigurationSupport(clusterConfiguration);
+                    }
+
+                    var primaryNode = new IPEndPoint(IPAddress.Loopback, baseSiloPort);
+                    if (clusterConfiguration.Globals.SeedNodes.Count == 0)
+                    {
+                        clusterConfiguration.Globals.SeedNodes.Add(primaryNode);
+                    }
+
+                    var nodeConfig = clusterConfiguration.GetOrCreateNodeConfigurationForSilo(siloName);
+
+                    nodeConfig.HostNameOrIPAddress = "localhost";
+                    nodeConfig.Port = siloPort;
+                    nodeConfig.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Loopback, gatewayPort);
+
+                    clusterConfiguration.PrimaryNode = primaryNode;
+
+                    services.UseGrainBasedMembership();
+                });
             }
 
             var hasApplicationParts = hostBuilder.GetApplicationPartManager().ApplicationParts.OfType<AssemblyPart>().Any(part => !part.IsFrameworkAssembly);
