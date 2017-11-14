@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Remoting;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Orleans.TestingHost
 {
@@ -25,7 +27,7 @@ namespace Orleans.TestingHost
         /// <summary>Creates a new silo in a remote app domain and returns a handle to it.</summary>
         public static SiloHandle2 Create(
             string siloName,
-            TestClusterOptions2 clusterOptions,
+            IList<IConfigurationSource> configuration,
             string applicationBase = null)
         {
             AppDomainSetup setup = GetAppDomainSetupInfo(applicationBase);
@@ -34,7 +36,8 @@ namespace Orleans.TestingHost
             
             try
             {
-                var args = new object[] {siloName,  clusterOptions.SerializedHostConfiguration };
+                var serializedHostConfiguration = TestClusterBuilder.SerializeConfigurationSources(configuration);
+                var args = new object[] {siloName, serializedHostConfiguration };
 
                 var siloHost = (AppDomainSiloHost2)appDomain.CreateInstanceAndUnwrap(
                     typeof(AppDomainSiloHost2).Assembly.FullName,
