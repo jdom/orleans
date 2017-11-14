@@ -483,7 +483,6 @@ namespace Orleans.TestingHost
             if (cluster == null) throw new ArgumentNullException(nameof(cluster));
 
             cluster.WriteLog("Starting a new silo in app domain {0}");
-            clusterOptions.SerializedHostConfiguration
             var handle = cluster.LoadSiloInNewAppDomain(siloName, type, clusterOptions);
             return handle;
         }
