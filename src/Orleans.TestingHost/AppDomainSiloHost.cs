@@ -89,6 +89,11 @@ namespace Orleans.TestingHost
                     services.UseGrainBasedMembership();
                 }
 
+                if (string.IsNullOrWhiteSpace(clusterConfiguration.Globals.DeploymentId))
+                {
+                    clusterConfiguration.Globals.DeploymentId = context.Configuration["ClusterId"];
+                }
+
                 int siloPort = int.Parse(context.Configuration["SiloPort"]);
                 int gatewayPort = int.Parse(context.Configuration["GatewayPort"]);
 

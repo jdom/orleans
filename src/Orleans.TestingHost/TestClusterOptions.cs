@@ -121,6 +121,8 @@ namespace Orleans.TestingHost
             var defaultConfigurationSource = new Dictionary<string, string>
             {
                 ["ClusterId"] = this.ClusterId,
+                ["InitialSilosCount"] = this.InitialSilosCount.ToString(),
+                ["UseTestClusterMemebership"] = this.UseTestClusterMemebership.ToString(),
                 ["BaseSiloPort"] = baseSiloPort.ToString(),
                 ["BaseGatewayPort"] = baseGatewayPort.ToString(),
                 ["AssumeHomogenousSilosForTesting"] = true.ToString(),
