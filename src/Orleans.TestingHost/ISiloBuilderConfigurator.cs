@@ -1,14 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Orleans.Hosting;
-using Orleans.Runtime.Configuration;
+﻿using Orleans.Hosting;
 
 namespace Orleans.TestingHost
 {
-    public interface ISiloBuilderFactory
-    {
-        ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration);
-    }
-
     /// <summary>
     /// Allows implementations to configure the host builder when starting up each silo in the test cluster
     /// </summary>
@@ -18,6 +11,7 @@ namespace Orleans.TestingHost
         /// Configures the host builder
         /// </summary>
         void Configure(ISiloHostBuilder hostBuilder);
+        //void Configure(HostBuilderContext context, IServiceCollection services);
         //void Configure(GlobalConfiguration configuration, IServiceCollection services);
     }
 }

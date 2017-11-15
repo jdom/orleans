@@ -410,22 +410,16 @@ namespace Orleans.TestingHost
         /// <summary>
         /// Initialize the grain client. This should be already done by <see cref="Deploy()"/> or <see cref="DeployAsync"/>
         /// </summary>
-        //public void InitializeClient()
-        //{
-        //    WriteLog("Initializing Grain Client");
-        //    ClientConfiguration clientConfig = this.ClientConfiguration;
+        public void InitializeClient()
+        {
+            WriteLog("Initializing Cluster Client");
 
-        //    if (Debugger.IsAttached)
-        //    {
-        //        // Test is running inside debugger - Make timeout ~= infinite
-        //        clientConfig.ResponseTimeout = TimeSpan.FromMilliseconds(1000000);
-        //    }
-        //    this.InternalClient = (IInternalClusterClient)this.clientBuilderFactory(clientConfig).Build();
-        //    this.InternalClient.Connect().Wait();
-        //    this.SerializationManager = this.ServiceProvider.GetRequiredService<SerializationManager>();
-        //    this.StreamProviderManager = this.ServiceProvider.GetRequiredService<IRuntimeClient>().CurrentStreamProviderManager;
-        //}
-        
+            this.InternalClient = (IInternalClusterClient)TestClusterHostFactory.CreateClusterClient("MainClient", this.options.HostConfiguration);
+            this.InternalClient.Connect().Wait();
+            this.SerializationManager = this.ServiceProvider.GetRequiredService<SerializationManager>();
+            this.StreamProviderManager = this.ServiceProvider.GetRequiredService<IRuntimeClient>().CurrentStreamProviderManager;
+        }
+
         private async Task InitializeAsync()
         {
             short silosToStart = this.options.InitialSilosCount;
@@ -443,10 +437,10 @@ namespace Orleans.TestingHost
 
             WriteLog("Done initializing cluster");
 
-            //if (this.ClientConfiguration != null)
-            //{
-            //    InitializeClient();
-            //}
+            if (this.options.InitializeClientOnDeploy)
+            {
+                InitializeClient();
+            }
         }
 
         private SiloHandle2 StartOrleansSilo(int instanceNumber, TestClusterOptions2 clusterOptions)

@@ -18,6 +18,8 @@ namespace Orleans.TestingHost
         public int BaseSiloPort{ get; set; }
         public int BaseGatewayPort { get; set; }
         public bool UseTestClusterMemebership { get; set; }
+        public bool InitializeClientOnDeploy { get; set; }
+
         public short InitialSilosCount { get; set; }
         public IReadOnlyList<IConfigurationSource> HostConfiguration { get; set; }
     }
@@ -44,6 +46,7 @@ namespace Orleans.TestingHost
             this.InitialSilosCount = initialSilosCount;
             this.ClusterId = CreateClusterId();
             this.UseTestClusterMemebership = true;
+            this.InitializeClientOnDeploy = true;
             this.SiloBuilderConfiguratorType = typeof(DefaultSiloBuilderConfigurator);
         }
 
@@ -59,6 +62,12 @@ namespace Orleans.TestingHost
         {
             get => (bool)this.Properties["UseTestClusterMemebership"];
             set => this.Properties["UseTestClusterMemebership"] = value;
+        }
+
+        public bool InitializeClientOnDeploy
+        {
+            get => (bool)this.Properties["InitializeClientOnDeploy"];
+            set => this.Properties["InitializeClientOnDeploy"] = value;
         }
 
         public short InitialSilosCount
@@ -93,6 +102,13 @@ namespace Orleans.TestingHost
             this.SiloBuilderConfiguratorType = typeof(TSiloBuilderConfigurator);
         }
 
+        internal Type ClientBuilderConfiguratorType { get; private set; }
+
+        public void UseClientBuilderConfigurator<TClientBuilderConfigurator>() where TClientBuilderConfigurator : IClientBuilderConfigurator, new()
+        {
+            this.ClientBuilderConfiguratorType = typeof(TClientBuilderConfigurator);
+        }
+
         /// <summary>
         /// Default client builder factory
         /// </summary>
@@ -123,11 +139,17 @@ namespace Orleans.TestingHost
                 ["ClusterId"] = this.ClusterId,
                 ["InitialSilosCount"] = this.InitialSilosCount.ToString(),
                 ["UseTestClusterMemebership"] = this.UseTestClusterMemebership.ToString(),
+                ["InitializeClientOnDeploy"] = this.InitializeClientOnDeploy.ToString(),
                 ["BaseSiloPort"] = baseSiloPort.ToString(),
                 ["BaseGatewayPort"] = baseGatewayPort.ToString(),
                 ["AssumeHomogenousSilosForTesting"] = true.ToString(),
                 ["SiloBuilderConfiguratorType"] = this.SiloBuilderConfiguratorType.AssemblyQualifiedName,
             };
+
+            if (this.ClientBuilderConfiguratorType != null)
+            {
+                defaultConfigurationSource["ClientBuilderConfiguratorType"] = this.ClientBuilderConfiguratorType.AssemblyQualifiedName;
+            }
 
             configBuilder.AddInMemoryCollection(defaultConfigurationSource);
 
