@@ -12,7 +12,7 @@ namespace Orleans.Configuration
     {
         public static IServiceCollection AddLegacyClientConfigurationSupport(this IServiceCollection services, ClientConfiguration configuration)
         {
-            if (services.Any(service => service.ServiceType == typeof(ClientConfiguration)))
+            if (TryGetClientConfiguration(services) != null)
             {
                 throw new InvalidOperationException("Cannot configure legacy ClientConfiguration support twice");
             }
@@ -46,6 +46,13 @@ namespace Orleans.Configuration
             LegacyGatewayListProviderConfigurator.ConfigureServices(configuration, services);
 
             return services;
+        }
+
+        public static ClientConfiguration TryGetClientConfiguration(this IServiceCollection services)
+        {
+            return services
+                .FirstOrDefault(s => s.ServiceType == typeof(ClientConfiguration))
+                ?.ImplementationInstance as ClientConfiguration;
         }
 
         internal static void CopyCommonMessagingOptions(IMessagingConfiguration configuration, MessagingOptions options)
