@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans.Hosting;
-using Orleans.Runtime.Configuration;
 using Orleans.TestingHost;
 using Orleans.TestingHost.Utils;
 using TestExtensions;
+using UnitTests.GrainInterfaces;
+using UnitTests.Grains;
 using Xunit;
 
 namespace Tester
@@ -15,7 +16,7 @@ namespace Tester
     {
         private TestCluster2 testCluster;
 
-        [Fact]
+        [Fact, TestCategory("BVT")]
         public async Task CanInitialize()
         {
             var builder = new TestClusterBuilder(2);
@@ -24,6 +25,11 @@ namespace Tester
             this.testCluster = builder.Build();
 
             await this.testCluster.DeployAsync();
+
+            var grain = this.testCluster.Client.GetGrain<ISimpleGrain>(1, SimpleGrain.SimpleGrainNamePrefix);
+
+            await grain.SetA(2);
+            Assert.Equal(2, await grain.GetA());
         }
 
         public void Dispose()
