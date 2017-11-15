@@ -62,40 +62,42 @@ namespace Orleans.TestingHost
                 builderConfigurator.Configure(hostBuilder);
             }
 
-            if (bool.TryParse(configuration["UseTestClusterMemebership"], out bool testMembership) && testMembership)
+            hostBuilder.ConfigureServices((context, services) =>
             {
-                int baseSiloPort = int.Parse(configuration["BaseSiloPort"]);
-                int baseGatewayPort = int.Parse(configuration["BaseGatewayPort"]);
-
-                int siloPort = baseSiloPort; // TODO: read instance number
-                int gatewayPort = baseGatewayPort;  // TODO: read instance number
-                hostBuilder.ConfigureServices((context, services) =>
+                // TODO: configure this without requiring the legacy configuration, when that's available
+                var clusterConfiguration = services.FirstOrDefault(s => s.ImplementationType == typeof(ClusterConfiguration))?.ImplementationInstance as ClusterConfiguration;
+                if (clusterConfiguration == null)
                 {
-                    // TODO: configure this without requiring the legacy configuration, when that's available
-                    var clusterConfiguration = services.FirstOrDefault(s => s.ImplementationType == typeof(ClusterConfiguration))?.ImplementationInstance as ClusterConfiguration;
-                    if (clusterConfiguration == null)
-                    {
-                        clusterConfiguration = ClusterConfiguration.LocalhostPrimarySilo(baseSiloPort, baseGatewayPort);
-                        services.AddLegacyClusterConfigurationSupport(clusterConfiguration);
-                    }
+                    int baseSiloPort = int.Parse(context.Configuration["BaseSiloPort"]);
+                    int baseGatewayPort = int.Parse(context.Configuration["BaseGatewayPort"]);
 
-                    var primaryNode = new IPEndPoint(IPAddress.Loopback, baseSiloPort);
+                    clusterConfiguration = ClusterConfiguration.LocalhostPrimarySilo(baseSiloPort, baseGatewayPort);
+                    services.AddLegacyClusterConfigurationSupport(clusterConfiguration);
+                }
+
+                bool.TryParse(context.Configuration["UseTestClusterMemebership"], out bool useTestClusterMemebership);
+                if (useTestClusterMemebership)
+                {
+                    var primaryNode = new IPEndPoint(IPAddress.Loopback, int.Parse(context.Configuration["SeedNodePort"]));
                     if (clusterConfiguration.Globals.SeedNodes.Count == 0)
                     {
                         clusterConfiguration.Globals.SeedNodes.Add(primaryNode);
                     }
 
-                    var nodeConfig = clusterConfiguration.GetOrCreateNodeConfigurationForSilo(siloName);
-
-                    nodeConfig.HostNameOrIPAddress = "localhost";
-                    nodeConfig.Port = siloPort;
-                    nodeConfig.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Loopback, gatewayPort);
-
                     clusterConfiguration.PrimaryNode = primaryNode;
 
                     services.UseGrainBasedMembership();
-                });
-            }
+                }
+
+                int siloPort = int.Parse(context.Configuration["SiloPort"]);
+                int gatewayPort = int.Parse(context.Configuration["GatewayPort"]);
+
+                var nodeConfig = clusterConfiguration.GetOrCreateNodeConfigurationForSilo(siloName);
+
+                nodeConfig.HostNameOrIPAddress = "localhost";
+                nodeConfig.Port = siloPort;
+                nodeConfig.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Loopback, gatewayPort);
+            });
 
             var hasApplicationParts = hostBuilder.GetApplicationPartManager().ApplicationParts.OfType<AssemblyPart>().Any(part => !part.IsFrameworkAssembly);
             if (!hasApplicationParts)
