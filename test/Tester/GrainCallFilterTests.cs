@@ -36,12 +36,12 @@ namespace UnitTests.General
                 return new TestCluster(options);
             }
 
-            protected TestCluster CreateTestClusterNew()
+            protected TestCluster2 CreateTestClusterNew()
             {
-                var options = new TestClusterOptions2(2);
-                options.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
-                options.UseSiloBuilderConfigurator<SiloInvokerTestSiloBuilderConfigurator>();
-                return new TestCluster(options);
+                var builder = new TestClusterBuilder(2);
+                builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
+                builder.UseSiloBuilderConfigurator<SiloInvokerTestSiloBuilderConfigurator>();
+                return builder.Build();
             }
 
             private class SiloInvokerTestSiloBuilderFactory : ISiloBuilderFactory
@@ -58,14 +58,14 @@ namespace UnitTests.General
 
             private class SiloInvokerTestSiloBuilderConfigurator : ISiloBuilderConfigurator
             {
-                public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
-                {
-                    return new SiloHostBuilder()
-                        .ConfigureSiloName(siloName)
-                        .UseConfiguration(clusterConfiguration)
-                        .ConfigureServices(ConfigureServices)
-                        .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
-                }
+                //public ISiloHostBuilder CreateSiloBuilder(string siloName, ClusterConfiguration clusterConfiguration)
+                //{
+                //    return new SiloHostBuilder()
+                //        .ConfigureSiloName(siloName)
+                //        .UseConfiguration(clusterConfiguration)
+                //        .ConfigureServices(ConfigureServices)
+                //        .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
+                //}
 
                 public void Configure(ISiloHostBuilder hostBuilder)
                 {
@@ -83,11 +83,11 @@ namespace UnitTests.General
                                 TestingUtils.CreateTraceFileName(siloName, clusterId)));
 
                         ConfigureServices(services);
-                        services.AddMemoryStorageProvider("Default");
-                        services.AddMemoryStorageProvider("PubSubStore");
-                        services.AddSimpleMessageStreamProvider("SMSProvider");
-                        services.AddSimpleMessageStreamProvider("SMSProvider");
-                        services.AddBootstrapProvider<PreInvokeCallbackBootrstrapProvider>("PreInvokeCallbackBootrstrapProvider");
+                        //services.AddMemoryStorageProvider("Default");
+                        //services.AddMemoryStorageProvider("PubSubStore");
+                        //services.AddSimpleMessageStreamProvider("SMSProvider");
+                        //services.AddSimpleMessageStreamProvider("SMSProvider");
+                        //services.AddBootstrapProvider<PreInvokeCallbackBootrstrapProvider>("PreInvokeCallbackBootrstrapProvider");
                     });
                 }
 
