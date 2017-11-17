@@ -27,7 +27,7 @@ namespace Orleans.TestingHost
         /// <param name="serializedConfigurationSources">Silo config data to be used for this silo.</param>
         public AppDomainSiloHost2(string appDomainName, string serializedConfigurationSources)
         {
-            var deserializedSources = TestClusterBuilder.DeserializeConfigurationSources(serializedConfigurationSources);
+            var deserializedSources = TestClusterHostFactory.DeserializeConfigurationSources(serializedConfigurationSources);
             this.host = TestClusterHostFactory.CreateSiloHost(appDomainName, deserializedSources);
             this.AppDomainTestHook = new AppDomainTestHooks(this.host);
         }
