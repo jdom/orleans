@@ -32,6 +32,22 @@ namespace Tester
             Assert.Equal(2, await grain.GetA());
         }
 
+        [Fact, TestCategory("BVT")]
+        public async Task CanInitializeWithLegacyConfiguration()
+        {
+            var builder = new LegacyTestClusterBuilder(2);
+            builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
+            builder.UseSiloBuilderConfigurator<LegacyTestSiloBuilderConfigurator>();
+            this.testCluster = builder.Build();
+
+            await this.testCluster.DeployAsync();
+
+            var grain = this.testCluster.Client.GetGrain<ISimpleGrain>(1, SimpleGrain.SimpleGrainNamePrefix);
+
+            await grain.SetA(2);
+            Assert.Equal(2, await grain.GetA());
+        }
+
         public void Dispose()
         {
             this.testCluster?.StopAllSilos();
@@ -47,6 +63,7 @@ namespace Tester
 
                 hostBuilder.ConfigureServices((context, services) =>
                 {
+                    var clusterConfiguration = services.TryGetClusterConfiguration();
                     // all of this related to logging can be moved to a base class or app-specific helper method
                     var siloName = context.Configuration["SiloName"] ?? context.HostingEnvironment.ApplicationName;
                     var clusterId = context.Configuration["ClusterId"]; // or clusterConfiguration.Globals.DeploymentId
@@ -75,5 +92,31 @@ namespace Tester
             //    ConfigureServices(services);
             //}
         }
-    }
+
+        private class LegacyTestSiloBuilderConfigurator : ISiloBuilderConfigurator
+        {
+            public void Configure(ISiloHostBuilder hostBuilder)
+            {
+                // TODO: Legacy support could be added to test cluster infrastructure too
+                //var clusterConfiguration = (ClusterConfiguration)hostBuilder.Properties["ClusterConfiguration"];
+                //hostBuilder.UseConfiguration(clusterConfiguration);
+
+                hostBuilder.ConfigureServices((context, services) =>
+                {
+                    // all of this related to logging can be moved to a base class or app-specific helper method
+                    var siloName = context.Configuration["SiloName"] ?? context.HostingEnvironment.ApplicationName;
+                    var clusterId = context.Configuration["ClusterId"]; // or clusterConfiguration.Globals.DeploymentId
+                    services.AddLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterId)));
+                    services.AddLogging(builder => builder.AddConsole());
+
+                    // ConfigureServices(services);
+                    //services.AddMemoryStorageProvider("Default");
+                    //services.AddMemoryStorageProvider("PubSubStore");
+                    //services.AddSimpleMessageStreamProvider("SMSProvider");
+                    //services.AddSimpleMessageStreamProvider("SMSProvider");
+                    //services.AddBootstrapProvider<PreInvokeCallbackBootrstrapProvider>("PreInvokeCallbackBootrstrapProvider");
+                });
+            }
+        }
+        }
 }
