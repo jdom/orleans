@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Orleans.Runtime.Configuration;
 using Orleans.TestingHost.Utils;
 
@@ -164,29 +163,6 @@ namespace Orleans.TestingHost
             options.HostConfiguration = new ReadOnlyCollection<IConfigurationSource>(configBuilder.Sources);
             var testCluster = new TestCluster2(options);
             return testCluster;
-        }
-
-        // TODO: move away
-        public static string SerializeConfigurationSources(IList<IConfigurationSource> sources)
-        {
-            var settings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Formatting = Formatting.Indented,
-            };
-
-            return JsonConvert.SerializeObject(sources, settings);
-        }
-
-        internal static IList<IConfigurationSource> DeserializeConfigurationSources(string serializedSources)
-        {
-            var settings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Formatting = Formatting.Indented,
-            };
-
-            return JsonConvert.DeserializeObject<IList<IConfigurationSource>>(serializedSources, settings);
         }
 
         private static string CreateClusterId()

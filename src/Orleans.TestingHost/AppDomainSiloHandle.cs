@@ -36,7 +36,7 @@ namespace Orleans.TestingHost
             
             try
             {
-                var serializedHostConfiguration = TestClusterBuilder.SerializeConfigurationSources(configuration);
+                var serializedHostConfiguration = TestClusterHostFactory.SerializeConfigurationSources(configuration);
                 var args = new object[] {siloName, serializedHostConfiguration };
 
                 var siloHost = (AppDomainSiloHost2)appDomain.CreateInstanceAndUnwrap(

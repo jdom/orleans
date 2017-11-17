@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Orleans.ApplicationParts;
 using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
@@ -98,6 +99,28 @@ namespace Orleans.TestingHost
 
             AddDefaultApplicationParts(builder.GetApplicationPartManager());
             return builder.Build();
+        }
+
+        public static string SerializeConfigurationSources(IList<IConfigurationSource> sources)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented,
+            };
+
+            return JsonConvert.SerializeObject(sources, settings);
+        }
+
+        public static IList<IConfigurationSource> DeserializeConfigurationSources(string serializedSources)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented,
+            };
+
+            return JsonConvert.DeserializeObject<IList<IConfigurationSource>>(serializedSources, settings);
         }
 
         private static void ConfigureListeningPorts(HostBuilderContext context, ClusterConfiguration clusterConfiguration, string siloName)
