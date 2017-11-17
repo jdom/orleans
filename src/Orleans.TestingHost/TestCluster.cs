@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,7 +27,7 @@ namespace Orleans.TestingHost
     /// </remarks>
     public class TestCluster2
     {
-        private int startedInstances = 0;
+        private int startedInstances;
 
         /// <summary>
         /// Primary silo handle
@@ -103,31 +102,14 @@ namespace Orleans.TestingHost
             this.options = options;
         }
 
-        ///// <summary>
-        ///// Deploys the cluster using the specified configuration and starts the client in-process.
-        ///// It will start the number of silos defined in <see cref="TestClusterOptions2.InitialSilosCount"/>.
-        ///// </summary>
-        //public void Deploy()
-        //{
-        //    this.Deploy(this.ClusterConfiguration.Overrides.Keys);
-        //}
-
-        ///// <summary>
-        ///// Deploys the cluster using the specified configuration and starts the client in-process.
-        ///// </summary>
-        ///// <param name="siloNames">Only deploy the specified silos which must also be present in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.</param>
-        //public void Deploy(IEnumerable<string> siloNames)
-        //{
-        //    try
-        //    {
-        //        DeployAsync(siloNames).Wait();
-        //    }
-        //    catch (AggregateException ex)
-        //    {
-        //        if (ex.InnerExceptions.Count > 1) throw;
-        //        ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-        //    }
-        //}
+        /// <summary>
+        /// Deploys the cluster using the specified configuration and starts the client in-process.
+        /// It will start the number of silos defined in <see cref="TestClusterOptions2.InitialSilosCount"/>.
+        /// </summary>
+        public void Deploy()
+        {
+            this.DeployAsync().GetAwaiter().GetResult();
+        }
 
         /// <summary>
         /// Deploys the cluster using the specified configuration and starts the client in-process.
@@ -296,9 +278,16 @@ namespace Orleans.TestingHost
         /// </summary>
         public void StopPrimarySilo()
         {
+            if (Primary == null) throw new InvalidOperationException("There is no primary silo");
+            StopClusterClient();
+            StopSilo(Primary);
+        }
+
+        private void StopClusterClient()
+        {
             try
             {
-                this.InternalClient?.Close().Wait();
+                this.InternalClient?.Close().GetAwaiter().GetResult();
             }
             catch (Exception exc)
             {
@@ -309,8 +298,6 @@ namespace Orleans.TestingHost
                 this.InternalClient?.Dispose();
                 this.InternalClient = null;
             }
-
-            StopSilo(Primary);
         }
 
         /// <summary>
@@ -318,8 +305,12 @@ namespace Orleans.TestingHost
         /// </summary>
         public void StopAllSilos()
         {
+            StopClusterClient();
             StopSecondarySilos();
-            StopPrimarySilo();
+            if (Primary != null)
+            {
+                StopPrimarySilo();
+            }
             AppDomain.CurrentDomain.UnhandledException -= ReportUnobservedException;
         }
 
@@ -369,29 +360,29 @@ namespace Orleans.TestingHost
         /// Do a Stop or Kill of the specified silo, followed by a restart.
         /// </summary>
         /// <param name="instance">Silo to be restarted.</param>
-        //public SiloHandle2 RestartSilo(SiloHandle2 instance)
-        //{
-        //    if (instance != null)
-        //    {
-        //        var type = instance.Type;
-        //        var siloName = instance.Name;
-        //        StopSilo(instance);
-        //        var newInstance = StartOrleansSilo(type, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[siloName]);
+        public SiloHandle2 RestartSilo(SiloHandle2 instance)
+        {
+            if (instance != null)
+            {
+                var instanceNumber = instance.InstanceNumber;
+                var siloName = instance.Name;
+                StopSilo(instance);
+                var newInstance = StartOrleansSilo(instanceNumber, this.options);
 
-        //        if (type == Silo.SiloType.Primary && siloName == Silo.PrimarySiloName)
-        //        {
-        //            Primary = newInstance;
-        //        }
-        //        else
-        //        {
-        //            additionalSilos.Add(newInstance);
-        //        }
+                if (siloName == Silo.PrimarySiloName)
+                {
+                    Primary = newInstance;
+                }
+                else
+                {
+                    additionalSilos.Add(newInstance);
+                }
 
-        //        return newInstance;
-        //    }
+                return newInstance;
+            }
 
-        //    return null;
-        //}
+            return null;
+        }
 
         /// <summary>
         /// Restart a previously stopped.
@@ -486,8 +477,15 @@ namespace Orleans.TestingHost
 
         private void StopOrleansSilo(SiloHandle2 instance, bool stopGracefully)
         {
-            instance.StopSilo(stopGracefully);
-            instance.Dispose();
+            try
+            {
+                instance.StopSilo(stopGracefully);
+                instance.Dispose();
+            }
+            finally
+            {
+                Interlocked.Decrement(ref this.startedInstances);
+            }
         }
 
         private SiloHandle2 LoadSiloInNewAppDomain(string siloName, IList<IConfigurationSource> configuration)
