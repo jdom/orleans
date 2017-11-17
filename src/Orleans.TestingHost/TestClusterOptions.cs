@@ -75,12 +75,6 @@ namespace Orleans.TestingHost
             set => this.Properties["InitialSilosCount"] = value;
         }
 
-        ///// <summary>Gets or sets the cluster configuration.</summary>
-        //public ClusterConfiguration ClusterConfiguration { get; set; }
-
-        ///// <summary>Gets or sets the client configuration.</summary>
-        //public ClientConfiguration ClientConfiguration { get; set; }
-
         /// <summary>
         /// Set up the configuration for the builder itself. This will be used as a base to initialize each silo host
         /// for use later in the build process. This can be called multiple times and the results will be additive.

@@ -68,7 +68,7 @@ namespace Orleans.Hosting
             return services;
         }
 
-        internal static ClusterConfiguration TryGetClusterConfiguration(this IServiceCollection services)
+        public static ClusterConfiguration TryGetClusterConfiguration(this IServiceCollection services)
         {
             return services
                 .FirstOrDefault(s => s.ServiceType == typeof(ClusterConfiguration))
