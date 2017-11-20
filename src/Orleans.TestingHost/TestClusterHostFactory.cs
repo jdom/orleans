@@ -168,11 +168,16 @@ namespace Orleans.TestingHost
 
         private static void ConfigureAppServices(IConfiguration configuration, ISiloHostBuilder hostBuilder)
         {
-            var builderConfiguratorType = configuration["SiloBuilderConfiguratorType"];
-            if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
+            var builderConfiguratorTypes = configuration.GetValue<string[]>("SiloBuilderConfiguratorTypes");
+            if (builderConfiguratorTypes == null) return;
+
+            foreach (var builderConfiguratorType in builderConfiguratorTypes)
             {
-                var builderConfigurator = (ISiloBuilderConfigurator)Activator.CreateInstance(Type.GetType(builderConfiguratorType));
-                builderConfigurator.Configure(hostBuilder);
+                if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
+                {
+                    var builderConfigurator = (ISiloBuilderConfigurator)Activator.CreateInstance(Type.GetType(builderConfiguratorType));
+                    builderConfigurator.Configure(hostBuilder);
+                }
             }
         }
 
