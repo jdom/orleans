@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using Microsoft.Extensions.Configuration;
-using Orleans.Runtime.Configuration;
 using Orleans.TestingHost.Utils;
 
 namespace Orleans.TestingHost
@@ -46,7 +45,6 @@ namespace Orleans.TestingHost
             this.ClusterId = CreateClusterId();
             this.UseTestClusterMemebership = true;
             this.InitializeClientOnDeploy = true;
-            this.SiloBuilderConfiguratorType = typeof(DefaultSiloBuilderConfigurator);
         }
 
         public Dictionary<string, object> Properties { get; } = new Dictionary<string, object>();
@@ -75,6 +73,9 @@ namespace Orleans.TestingHost
             set => this.Properties["InitialSilosCount"] = value;
         }
 
+        internal List<string> SiloBuilderConfiguratorTypes { get; private set; } = new List<string>();
+        internal List<string> ClientBuilderConfiguratorTypes { get; private set; } = new List<string>();
+
         /// <summary>
         /// Set up the configuration for the builder itself. This will be used as a base to initialize each silo host
         /// for use later in the build process. This can be called multiple times and the results will be additive.
@@ -88,35 +89,16 @@ namespace Orleans.TestingHost
             return this;
         }
 
-        internal Type SiloBuilderConfiguratorType { get; private set; }
 
-        public void UseSiloBuilderConfigurator<TSiloBuilderConfigurator>() where TSiloBuilderConfigurator : ISiloBuilderConfigurator, new()
+        public void AddSiloBuilderConfigurator<TSiloBuilderConfigurator>() where TSiloBuilderConfigurator : ISiloBuilderConfigurator, new()
         {
-            this.SiloBuilderConfiguratorType = typeof(TSiloBuilderConfigurator);
+            this.SiloBuilderConfiguratorTypes.Add(typeof(TSiloBuilderConfigurator).AssemblyQualifiedName);
         }
 
-        internal Type ClientBuilderConfiguratorType { get; private set; }
-
-        public void UseClientBuilderConfigurator<TClientBuilderConfigurator>() where TClientBuilderConfigurator : IClientBuilderConfigurator, new()
+        public void AddClientBuilderConfigurator<TClientBuilderConfigurator>() where TClientBuilderConfigurator : IClientBuilderConfigurator, new()
         {
-            this.ClientBuilderConfiguratorType = typeof(TClientBuilderConfigurator);
+            this.ClientBuilderConfiguratorTypes.Add(typeof(TClientBuilderConfigurator).AssemblyQualifiedName);
         }
-
-        /// <summary>
-        /// Default client builder factory
-        /// </summary>
-        public static Func<ClientConfiguration, IClientBuilder> DefaultClientBuilderFactory = config =>
-            ClientBuilder.CreateDefault()
-                .UseConfiguration(config)
-                .AddApplicationPartsFromAppDomain()
-                .AddApplicationPartsFromBasePath()
-                .ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder,
-                    TestingUtils.CreateTraceFileName(config.ClientName, config.DeploymentId)));
-
-        /// <summary>
-        /// Factory delegate to create a client builder which will be used to build the <see cref="TestCluster"/> client. 
-        /// </summary>
-        public Func<ClientConfiguration, IClientBuilder> ClientBuilderFactory { get; set; } = DefaultClientBuilderFactory;
 
         public TestCluster2 Build()
         {
@@ -136,12 +118,22 @@ namespace Orleans.TestingHost
                 ["BaseSiloPort"] = baseSiloPort.ToString(),
                 ["BaseGatewayPort"] = baseGatewayPort.ToString(),
                 ["AssumeHomogenousSilosForTesting"] = true.ToString(),
-                ["SiloBuilderConfiguratorType"] = this.SiloBuilderConfiguratorType.AssemblyQualifiedName,
             };
 
-            if (this.ClientBuilderConfiguratorType != null)
+            if (this.SiloBuilderConfiguratorTypes != null)
             {
-                defaultConfigurationSource["ClientBuilderConfiguratorType"] = this.ClientBuilderConfiguratorType.AssemblyQualifiedName;
+                for (int i = 0; i < this.SiloBuilderConfiguratorTypes.Count; i++)
+                {
+                    defaultConfigurationSource[$"SiloBuilderConfiguratorTypes:{i}"] = this.SiloBuilderConfiguratorTypes[i];
+                }
+            }
+
+            if (this.ClientBuilderConfiguratorTypes != null)
+            {
+                for (int i = 0; i < this.ClientBuilderConfiguratorTypes.Count; i++)
+                {
+                    defaultConfigurationSource[$"ClientBuilderConfiguratorTypes:{i}"] = this.ClientBuilderConfiguratorTypes[i];
+                }
             }
 
             configBuilder.AddInMemoryCollection(defaultConfigurationSource);

@@ -40,7 +40,7 @@ namespace UnitTests.General
             {
                 var builder = new TestClusterBuilder(2);
                 builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
-                builder.UseSiloBuilderConfigurator<SiloInvokerTestSiloBuilderConfigurator>();
+                builder.AddSiloBuilderConfigurator<SiloInvokerTestSiloBuilderConfigurator>();
                 return builder.Build();
             }
 

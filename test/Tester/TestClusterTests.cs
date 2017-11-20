@@ -21,7 +21,7 @@ namespace Tester
         {
             var builder = new TestClusterBuilder(2);
             builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
-            builder.UseSiloBuilderConfigurator<TestSiloBuilderConfigurator>();
+            builder.AddSiloBuilderConfigurator<TestSiloBuilderConfigurator>();
             this.testCluster = builder.Build();
 
             await this.testCluster.DeployAsync();
@@ -37,7 +37,7 @@ namespace Tester
         {
             var builder = new LegacyTestClusterBuilder(2);
             builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
-            builder.UseSiloBuilderConfigurator<LegacyTestSiloBuilderConfigurator>();
+            builder.AddSiloBuilderConfigurator<LegacyTestSiloBuilderConfigurator>();
             this.testCluster = builder.Build();
 
             await this.testCluster.DeployAsync();
