@@ -26,8 +26,7 @@ namespace Orleans.TestingHost
             : base(initialSilosCount)
         {
             base.ConfigureHostConfiguration(ConfigureLegacyConfiguration);
-
-            // TODO: add multiple silo builder configurators, so that we can deserialize it on the other side
+            base.AddSiloBuilderConfigurator<LegacySiloBuilderConfigurator>();
         }
 
         /// <summary>Gets or sets the cluster configuration.</summary>
@@ -58,6 +57,8 @@ namespace Orleans.TestingHost
             {
                 configSource[ClientConfigurationKey] = Serialize(serializationManager, clientConfig);
             }
+
+            builder.AddInMemoryCollection(configSource);
         }
 
         private static SerializationManager CreateLegacyConfigurationSerializer()
@@ -74,11 +75,39 @@ namespace Orleans.TestingHost
 
         private static string Serialize(SerializationManager serializationManager, object config)
         {
+            BufferPool.InitGlobalBufferPool(Options.Create(new MessagingOptions()));
             var writer = new BinaryTokenStreamWriter();
             serializationManager.Serialize(config, writer);
             string serialized = Convert.ToBase64String(writer.ToByteArray());
             writer.ReleaseBuffers();
             return serialized;
+        }
+
+        internal class LegacySiloBuilderConfigurator : ISiloBuilderConfigurator
+        {
+            private static T Deserialize<T>(SerializationManager serializationManager, string config)
+            {
+                var data = Convert.FromBase64String(config);
+                var reader = new BinaryTokenStreamReader(data);
+                return serializationManager.Deserialize<T>(reader);
+            }
+
+            public void Configure(ISiloHostBuilder hostBuilder)
+            {
+                SerializationManager serializationManager = CreateLegacyConfigurationSerializer();
+                hostBuilder.ConfigureServices((context, services) =>
+                {
+                    var serializedConfiguration = context.Configuration["ClusterConfiguration"];
+                    if (string.IsNullOrWhiteSpace(serializedConfiguration))
+                    {
+                        throw new InvalidOperationException(
+                            "There is no ClusterConfiguration, which is unexpected for the current set up.");
+                    }
+                    var clusterConfiguration =
+                        Deserialize<ClusterConfiguration>(serializationManager, serializedConfiguration);
+                    services.AddLegacyClusterConfigurationSupport(clusterConfiguration);
+                });
+            }
         }
     }
 }

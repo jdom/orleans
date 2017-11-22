@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans.Hosting;
+using Orleans.Runtime.Configuration;
 using Orleans.TestingHost;
 using Orleans.TestingHost.Utils;
 using TestExtensions;
@@ -38,6 +39,10 @@ namespace Tester
             var builder = new LegacyTestClusterBuilder(2);
             builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
             builder.AddSiloBuilderConfigurator<LegacyTestSiloBuilderConfigurator>();
+            var config = ClusterConfiguration.LocalhostPrimarySilo();
+            config.AddMemoryStorageProvider("Default");
+
+            builder.ClusterConfiguration = config;
             this.testCluster = builder.Build();
 
             await this.testCluster.DeployAsync();
