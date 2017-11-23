@@ -54,7 +54,7 @@ namespace Orleans.TestingHost
                     clusterConfiguration.Globals.DeploymentId = context.Configuration["ClusterId"];
                 }
 
-                TryConfigureTestClusterMembership(context, clusterConfiguration, services);
+                TryConfigureTestClusterMembership(context, services);
 
                 ConfigureListeningPorts(context, clusterConfiguration, siloName);
             });
@@ -191,20 +191,14 @@ namespace Orleans.TestingHost
             }
         }
 
-        private static void TryConfigureTestClusterMembership(HostBuilderContext context, ClusterConfiguration clusterConfiguration, IServiceCollection services)
+        private static void TryConfigureTestClusterMembership(HostBuilderContext context, IServiceCollection services)
         {
             bool.TryParse(context.Configuration["UseTestClusterMemebership"], out bool useTestClusterMemebership);
             if (useTestClusterMemebership)
             {
-                var primaryNode = new IPEndPoint(IPAddress.Loopback, int.Parse(context.Configuration["SeedNodePort"]));
-                if (clusterConfiguration.Globals.SeedNodes.Count == 0)
-                {
-                    clusterConfiguration.Globals.SeedNodes.Add(primaryNode);
-                }
+                var primarySiloEndPoint = new IPEndPoint(IPAddress.Loopback, int.Parse(context.Configuration["SeedNodePort"]));
 
-                clusterConfiguration.PrimaryNode = primaryNode;
-
-                services.UseGrainBasedMembership();
+                services.UseDevelopmentMembership(options => options.PrimarySiloEndPoint = primarySiloEndPoint);
             }
         }
 
