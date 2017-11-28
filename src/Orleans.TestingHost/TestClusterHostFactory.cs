@@ -45,18 +45,16 @@ namespace Orleans.TestingHost
             hostBuilder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton<TestHooksSystemTarget>();
+                TryConfigureTestClusterMembership(context, services);
 
                 // TODO: configure this without requiring the legacy configuration, when that's available
                 var clusterConfiguration = GetOrCreateClusterConfiguration(services, context);
+                ConfigureListeningPorts(context, clusterConfiguration, siloName);
 
                 if (string.IsNullOrWhiteSpace(clusterConfiguration.Globals.DeploymentId))
                 {
                     clusterConfiguration.Globals.DeploymentId = context.Configuration["ClusterId"];
                 }
-
-                TryConfigureTestClusterMembership(context, services);
-
-                ConfigureListeningPorts(context, clusterConfiguration, siloName);
             });
 
             AddDefaultApplicationParts(hostBuilder.GetApplicationPartManager());
@@ -80,6 +78,8 @@ namespace Orleans.TestingHost
 
             builder.ConfigureServices(services =>
                 {
+                    TryConfigureTestClusterMembership(configuration, services);
+
                     // TODO: configure this without requiring the legacy configuration, when that's available
                     var clientConfiguration = GetOrCreateClientConfiguration(services, configuration);
 
@@ -93,8 +93,6 @@ namespace Orleans.TestingHost
                         // Test is running inside debugger - Make timeout ~= infinite
                         clientConfiguration.ResponseTimeout = TimeSpan.FromMilliseconds(1000000);
                     }
-
-                    TryConfigureTestClusterMembership(configuration, services);
                 });
 
             AddDefaultApplicationParts(builder.GetApplicationPartManager());
@@ -207,14 +205,9 @@ namespace Orleans.TestingHost
             bool.TryParse(configuration["UseTestClusterMemebership"], out bool useTestClusterMemebership);
             if (useTestClusterMemebership)
             {
-                services.UseStaticGatewayListProvider(options =>
+                services.UseStaticGatewayListProvider(options => options.Gateways = new List<Uri>
                 {
-                    if (options.Gateways.Count == 0)
-                    {
-                        options.Gateways.Add(
-                            new IPEndPoint(IPAddress.Loopback, int.Parse(configuration["BaseGatewayPort"]))
-                                .ToGatewayUri());
-                    }
+                    new IPEndPoint(IPAddress.Loopback, int.Parse(configuration["BaseGatewayPort"])).ToGatewayUri()
                 });
             }
         }
