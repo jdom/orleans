@@ -141,10 +141,14 @@ namespace Orleans.TestingHost
 
             if (clusterConfiguration == null)
             {
-                int baseSiloPort = int.Parse(context.Configuration["BaseSiloPort"]);
-                int baseGatewayPort = int.Parse(context.Configuration["BaseGatewayPort"]);
+                clusterConfiguration = new ClusterConfiguration
+                {
+                    Globals =
+                    {
+                        ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.ReminderTableGrain
+                    }
+                };
 
-                clusterConfiguration = ClusterConfiguration.LocalhostPrimarySilo(baseSiloPort, baseGatewayPort);
                 services.AddLegacyClusterConfigurationSupport(clusterConfiguration);
             }
             return clusterConfiguration;
@@ -156,9 +160,7 @@ namespace Orleans.TestingHost
 
             if (clientConfiguration == null)
             {
-                int baseSiloPort = int.Parse(configuration["BaseGatewayPort"]);
-
-                clientConfiguration = ClientConfiguration.LocalhostSilo(baseSiloPort);
+                clientConfiguration = new ClientConfiguration();
                 services.AddLegacyClientConfigurationSupport(clientConfiguration);
             }
             return clientConfiguration;
@@ -194,7 +196,7 @@ namespace Orleans.TestingHost
             bool.TryParse(context.Configuration["UseTestClusterMemebership"], out bool useTestClusterMemebership);
             if (useTestClusterMemebership)
             {
-                var primarySiloEndPoint = new IPEndPoint(IPAddress.Loopback, int.Parse(context.Configuration["SeedNodePort"]));
+                var primarySiloEndPoint = new IPEndPoint(IPAddress.Loopback, int.Parse(context.Configuration["PrimarySiloPort"]));
 
                 services.UseDevelopmentMembership(options => options.PrimarySiloEndPoint = primarySiloEndPoint);
             }
@@ -205,9 +207,14 @@ namespace Orleans.TestingHost
             bool.TryParse(configuration["UseTestClusterMemebership"], out bool useTestClusterMemebership);
             if (useTestClusterMemebership)
             {
-                services.UseStaticGatewayListProvider(options => options.Gateways = new List<Uri>
+                services.UseStaticGatewayListProvider(options =>
                 {
-                    new IPEndPoint(IPAddress.Loopback, int.Parse(configuration["BaseGatewayPort"])).ToGatewayUri()
+                    int baseGatewayPort = int.Parse(configuration["BaseGatewayPort"]);
+                    int initialSilosCount = int.Parse(configuration["InitialSilosCount"]);
+
+                    options.Gateways = Enumerable.Range(baseGatewayPort, initialSilosCount)
+                        .Select(port => new IPEndPoint(IPAddress.Loopback, port).ToGatewayUri())
+                        .ToList();
                 });
             }
         }

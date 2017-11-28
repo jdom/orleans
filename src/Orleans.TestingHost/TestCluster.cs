@@ -465,7 +465,7 @@ namespace Orleans.TestingHost
             configuration.Add(new MemoryConfigurationSource { InitialData = hostSpecificConfiguration });
             if (clusterOptions.UseTestClusterMemebership)
             {
-                hostSpecificConfiguration["SeedNodePort"] = clusterOptions.BaseSiloPort.ToString();
+                hostSpecificConfiguration["PrimarySiloPort"] = clusterOptions.BaseSiloPort.ToString();
                 if (instanceNumber == 0)
                 {
                 }
@@ -498,6 +498,11 @@ namespace Orleans.TestingHost
 
         #region Tracing helper functions
 
+        public string GetLog()
+        {
+            return this.log.ToString();
+        }
+
         private static void ReportUnobservedException(object sender, UnhandledExceptionEventArgs eventArgs)
         {
             Exception exception = (Exception)eventArgs.ExceptionObject;
@@ -511,7 +516,7 @@ namespace Orleans.TestingHost
 
         private void FlushLogToConsole()
         {
-            Console.WriteLine(log.ToString());
+            Console.WriteLine(GetLog());
         }
 
         private void WriteLog(object value)

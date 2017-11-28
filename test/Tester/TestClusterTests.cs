@@ -10,11 +10,18 @@ using TestExtensions;
 using UnitTests.GrainInterfaces;
 using UnitTests.Grains;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Tester
 {
     public class TestClusterTests : IDisposable
     {
+        private readonly ITestOutputHelper output;
+
+        public TestClusterTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
         private TestCluster2 testCluster;
 
         [Fact, TestCategory("BVT")]
@@ -31,6 +38,8 @@ namespace Tester
 
             await grain.SetA(2);
             Assert.Equal(2, await grain.GetA());
+
+            this.output.WriteLine(this.testCluster.GetLog());
         }
 
         [Fact, TestCategory("BVT")]
