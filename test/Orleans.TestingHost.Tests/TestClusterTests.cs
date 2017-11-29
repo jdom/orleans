@@ -1,28 +1,25 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
-using Orleans.TestingHost;
+using Orleans.TestingHost.Tests.Grains;
 using Orleans.TestingHost.Utils;
 using TestExtensions;
-using UnitTests.GrainInterfaces;
-using UnitTests.Grains;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tester
+namespace Orleans.TestingHost.Tests
 {
     public class TestClusterTests : IDisposable
     {
         private readonly ITestOutputHelper output;
+        private TestCluster2 testCluster;
 
         public TestClusterTests(ITestOutputHelper output)
         {
             this.output = output;
         }
-        private TestCluster2 testCluster;
 
         [Fact, TestCategory("BVT")]
         public async Task CanInitialize()
@@ -34,12 +31,10 @@ namespace Tester
 
             await this.testCluster.DeployAsync();
 
-            var grain = this.testCluster.Client.GetGrain<ISimpleGrain>(1, SimpleGrain.SimpleGrainNamePrefix);
+            var grain = this.testCluster.Client.GetGrain<ISimpleGrain>(1);
 
             await grain.SetA(2);
             Assert.Equal(2, await grain.GetA());
-
-            this.output.WriteLine(this.testCluster.GetLog());
         }
 
         [Fact, TestCategory("BVT")]
@@ -56,7 +51,7 @@ namespace Tester
 
             await this.testCluster.DeployAsync();
 
-            var grain = this.testCluster.Client.GetGrain<ISimpleGrain>(1, SimpleGrain.SimpleGrainNamePrefix);
+            var grain = this.testCluster.Client.GetGrain<ISimpleGrain>(1);
 
             await grain.SetA(2);
             Assert.Equal(2, await grain.GetA());
@@ -82,7 +77,6 @@ namespace Tester
                     var siloName = context.Configuration["SiloName"] ?? context.HostingEnvironment.ApplicationName;
                     var clusterId = context.Configuration["ClusterId"]; // or clusterConfiguration.Globals.DeploymentId
                     services.AddLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterId)));
-                    services.AddLogging(builder => builder.AddConsole());
 
                     // ConfigureServices(services);
                     //services.AddMemoryStorageProvider("Default");
@@ -121,7 +115,6 @@ namespace Tester
                     var siloName = context.Configuration["SiloName"] ?? context.HostingEnvironment.ApplicationName;
                     var clusterId = context.Configuration["ClusterId"]; // or clusterConfiguration.Globals.DeploymentId
                     services.AddLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName(siloName, clusterId)));
-                    services.AddLogging(builder => builder.AddConsole());
 
                     // ConfigureServices(services);
                     //services.AddMemoryStorageProvider("Default");
@@ -132,5 +125,5 @@ namespace Tester
                 });
             }
         }
-        }
+     }
 }
