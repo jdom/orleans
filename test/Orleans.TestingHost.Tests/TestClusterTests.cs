@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
@@ -21,12 +22,13 @@ namespace Orleans.TestingHost.Tests
             this.output = output;
         }
 
-        [Fact, TestCategory("BVT")]
+        [Fact, TestCategory("BVT"), TestCategory("Functional")]
         public async Task CanInitialize()
         {
             var builder = new TestClusterBuilder(2);
             builder.ConfigureHostConfiguration(TestDefaultConfiguration.ConfigureHostConfiguration);
             builder.AddSiloBuilderConfigurator<TestSiloBuilderConfigurator>();
+            builder.AddClientBuilderConfigurator<TestClientBuilderConfigurator>();
             this.testCluster = builder.Build();
 
             await this.testCluster.DeployAsync();
@@ -37,7 +39,7 @@ namespace Orleans.TestingHost.Tests
             Assert.Equal(2, await grain.GetA());
         }
 
-        [Fact, TestCategory("BVT")]
+        [Fact, TestCategory("Functional")]
         public async Task CanInitializeWithLegacyConfiguration()
         {
             var builder = new LegacyTestClusterBuilder(2);
@@ -99,6 +101,15 @@ namespace Orleans.TestingHost.Tests
 
             //    ConfigureServices(services);
             //}
+        }
+
+        private class TestClientBuilderConfigurator : IClientBuilderConfigurator
+        {
+            public void Configure(IConfiguration configuration, IClientBuilder clientBuilder)
+            {
+                var clusterId = configuration["ClusterId"];
+                clientBuilder.ConfigureLogging(builder => TestingUtils.ConfigureDefaultLoggingBuilder(builder, TestingUtils.CreateTraceFileName("Client", clusterId)));
+            }
         }
 
         private class LegacyTestSiloBuilderConfigurator : ISiloBuilderConfigurator

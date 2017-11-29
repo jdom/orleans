@@ -77,23 +77,23 @@ namespace Orleans.TestingHost
             ConfigureAppServices(configuration, builder);
 
             builder.ConfigureServices(services =>
+            {
+                TryConfigureTestClusterMembership(configuration, services);
+
+                // TODO: configure this without requiring the legacy configuration, when that's available
+                var clientConfiguration = GetOrCreateClientConfiguration(services, configuration);
+
+                if (string.IsNullOrWhiteSpace(clientConfiguration.DeploymentId))
                 {
-                    TryConfigureTestClusterMembership(configuration, services);
+                    clientConfiguration.DeploymentId = configuration["ClusterId"];
+                }
 
-                    // TODO: configure this without requiring the legacy configuration, when that's available
-                    var clientConfiguration = GetOrCreateClientConfiguration(services, configuration);
-
-                    if (string.IsNullOrWhiteSpace(clientConfiguration.DeploymentId))
-                    {
-                        clientConfiguration.DeploymentId = configuration["ClusterId"];
-                    }
-
-                    if (Debugger.IsAttached)
-                    {
-                        // Test is running inside debugger - Make timeout ~= infinite
-                        clientConfiguration.ResponseTimeout = TimeSpan.FromMilliseconds(1000000);
-                    }
-                });
+                if (Debugger.IsAttached)
+                {
+                    // Test is running inside debugger - Make timeout ~= infinite
+                    clientConfiguration.ResponseTimeout = TimeSpan.FromMilliseconds(1000000);
+                }
+            });
 
             AddDefaultApplicationParts(builder.GetApplicationPartManager());
             return builder.Build();
@@ -183,11 +183,16 @@ namespace Orleans.TestingHost
 
         private static void ConfigureAppServices(IConfiguration configuration, IClientBuilder clientBuilder)
         {
-            var builderConfiguratorType = configuration["ClientBuilderConfiguratorType"];
-            if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
+            var builderConfiguratorTypes = configuration.GetSection("ClientBuilderConfiguratorTypes")?.Get<string[]>();
+            if (builderConfiguratorTypes == null) return;
+
+            foreach (var builderConfiguratorType in builderConfiguratorTypes)
             {
-                var builderConfigurator = (IClientBuilderConfigurator)Activator.CreateInstance(Type.GetType(builderConfiguratorType));
-                builderConfigurator.Configure(clientBuilder);
+                if (!string.IsNullOrWhiteSpace(builderConfiguratorType))
+                {
+                    var builderConfigurator = (IClientBuilderConfigurator)Activator.CreateInstance(Type.GetType(builderConfiguratorType, true));
+                    builderConfigurator.Configure(configuration, clientBuilder);
+                }
             }
         }
 

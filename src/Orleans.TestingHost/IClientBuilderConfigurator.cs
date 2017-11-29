@@ -1,4 +1,6 @@
-﻿namespace Orleans.TestingHost
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Orleans.TestingHost
 {
     /// <summary>
     /// Allows implementations to configure the client builder when starting up each silo in the test cluster
@@ -8,6 +10,6 @@
         /// <summary>
         /// Configures the client builder
         /// </summary>
-        void Configure(IClientBuilder builder);
+        void Configure(IConfiguration configuration, IClientBuilder clientBuilder);
     }
 }
