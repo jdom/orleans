@@ -310,63 +310,63 @@ namespace Orleans.SqlUtils
         /// <summary>
         /// Lists active gateways. Used mainly by Orleans clients.
         /// </summary>
-        /// <param name="deploymentId">The deployment for which to query the gateways.</param>
+        /// <param name="clusterId">The deployment for which to query the gateways.</param>
         /// <returns>The gateways for the silo.</returns>
-        internal Task<List<Uri>> ActiveGatewaysAsync(string deploymentId)
+        internal Task<List<Uri>> ActiveGatewaysAsync(string clusterId)
         {
             return ReadAsync(dbStoredQueries.GatewaysQueryKey, DbStoredQueries.Converters.GetGatewayUri, command =>
-                new DbStoredQueries.Columns(command) {DeploymentId = deploymentId, Status = SiloStatus.Active},
+                new DbStoredQueries.Columns(command) {DeploymentId = clusterId, Status = SiloStatus.Active},
                 ret => ret.ToList());
         }
 
         /// <summary>
         /// Queries Orleans membership data.
         /// </summary>
-        /// <param name="deploymentId">The deployment for which to query data.</param>
+        /// <param name="clusterId">The deployment for which to query data.</param>
         /// <param name="siloAddress">Silo data used as parameters in the query.</param>
         /// <returns>Membership table data.</returns>
-        internal Task<MembershipTableData> MembershipReadRowAsync(string deploymentId, SiloAddress siloAddress)
+        internal Task<MembershipTableData> MembershipReadRowAsync(string clusterId, SiloAddress siloAddress)
         {
             return ReadAsync(dbStoredQueries.MembershipReadRowKey, DbStoredQueries.Converters.GetMembershipEntry, command =>
-                new DbStoredQueries.Columns(command) {DeploymentId = deploymentId, SiloAddress = siloAddress},
+                new DbStoredQueries.Columns(command) {DeploymentId = clusterId, SiloAddress = siloAddress},
                 ConvertToMembershipTableData);
         }
 
         /// <summary>
         /// returns all membership data for a deployment id
         /// </summary>
-        /// <param name="deploymentId"></param>
+        /// <param name="clusterId"></param>
         /// <returns></returns>
-        internal Task<MembershipTableData> MembershipReadAllAsync(string deploymentId)
+        internal Task<MembershipTableData> MembershipReadAllAsync(string clusterId)
         {
             return ReadAsync(dbStoredQueries.MembershipReadAllKey, DbStoredQueries.Converters.GetMembershipEntry, command =>
-                new DbStoredQueries.Columns(command) {DeploymentId = deploymentId}, ConvertToMembershipTableData);
+                new DbStoredQueries.Columns(command) {DeploymentId = clusterId}, ConvertToMembershipTableData);
         }
 
         /// <summary>
         /// deletes all membership entries for a deployment id
         /// </summary>
-        /// <param name="deploymentId"></param>
+        /// <param name="clusterId"></param>
         /// <returns></returns>
-        internal Task DeleteMembershipTableEntriesAsync(string deploymentId)
+        internal Task DeleteMembershipTableEntriesAsync(string clusterId)
         {
             return ExecuteAsync(dbStoredQueries.DeleteMembershipTableEntriesKey, command =>
-                new DbStoredQueries.Columns(command) {DeploymentId = deploymentId});
+                new DbStoredQueries.Columns(command) {DeploymentId = clusterId});
         }
 
         /// <summary>
         /// Updates IAmAlive for a silo
         /// </summary>
-        /// <param name="deploymentId"></param>
+        /// <param name="clusterId"></param>
         /// <param name="siloAddress"></param>
         /// <param name="iAmAliveTime"></param>
         /// <returns></returns>
-        internal Task UpdateIAmAliveTimeAsync(string deploymentId, SiloAddress siloAddress,DateTime iAmAliveTime)
+        internal Task UpdateIAmAliveTimeAsync(string clusterId, SiloAddress siloAddress,DateTime iAmAliveTime)
         {
             return ExecuteAsync(dbStoredQueries.UpdateIAmAlivetimeKey, command =>
                 new DbStoredQueries.Columns(command)
                 {
-                    DeploymentId = deploymentId,
+                    DeploymentId = clusterId,
                     SiloAddress = siloAddress,
                     IAmAliveTime = iAmAliveTime
                 });
@@ -375,28 +375,28 @@ namespace Orleans.SqlUtils
         /// <summary>
         /// Inserts a version row if one does not already exist.
         /// </summary>
-        /// <param name="deploymentId">The deployment for which to query data.</param>
+        /// <param name="clusterId">The deployment for which to query data.</param>
         /// <returns><em>TRUE</em> if a row was inserted. <em>FALSE</em> otherwise.</returns>
-        internal Task<bool> InsertMembershipVersionRowAsync(string deploymentId)
+        internal Task<bool> InsertMembershipVersionRowAsync(string clusterId)
         {
             return ReadAsync(dbStoredQueries.InsertMembershipVersionKey, DbStoredQueries.Converters.GetSingleBooleanValue, command =>
-                new DbStoredQueries.Columns(command) {DeploymentId = deploymentId}, ret => ret.First());
+                new DbStoredQueries.Columns(command) {DeploymentId = clusterId}, ret => ret.First());
         }
 
         /// <summary>
         /// Inserts a membership row if one does not already exist.
         /// </summary>
-        /// <param name="deploymentId">The deployment with which to insert row.</param>
+        /// <param name="clusterId">The cluster with which to insert row.</param>
         /// <param name="membershipEntry">The membership entry data to insert.</param>
         /// <param name="etag">The table expected version etag.</param>
         /// <returns><em>TRUE</em> if insert succeeds. <em>FALSE</em> otherwise.</returns>
-        internal Task<bool> InsertMembershipRowAsync(string deploymentId, MembershipEntry membershipEntry,
+        internal Task<bool> InsertMembershipRowAsync(string clusterId, MembershipEntry membershipEntry,
             string etag)
         {
             return ReadAsync(dbStoredQueries.InsertMembershipKey, DbStoredQueries.Converters.GetSingleBooleanValue, command =>
                 new DbStoredQueries.Columns(command)
                 {
-                    DeploymentId = deploymentId,
+                    DeploymentId = clusterId,
                     IAmAliveTime = membershipEntry.IAmAliveTime,
                     SiloName = membershipEntry.SiloName,
                     HostName = membershipEntry.HostName,
@@ -411,17 +411,17 @@ namespace Orleans.SqlUtils
         /// <summary>
         /// Updates membership row data.
         /// </summary>
-        /// <param name="deploymentId">The deployment with which to insert row.</param>
+        /// <param name="clusterId">The cluster with which to insert row.</param>
         /// <param name="membershipEntry">The membership data to used to update database.</param>
         /// <param name="etag">The table expected version etag.</param>
         /// <returns><em>TRUE</em> if update SUCCEEDS. <em>FALSE</em> ot</returns>
-        internal Task<bool> UpdateMembershipRowAsync(string deploymentId, MembershipEntry membershipEntry,
+        internal Task<bool> UpdateMembershipRowAsync(string clusterId, MembershipEntry membershipEntry,
             string etag)
         {
             return ReadAsync(dbStoredQueries.UpdateMembershipKey, DbStoredQueries.Converters.GetSingleBooleanValue, command =>
                 new DbStoredQueries.Columns(command)
                 {
-                    DeploymentId = deploymentId,
+                    DeploymentId = clusterId,
                     SiloAddress = membershipEntry.SiloAddress,
                     IAmAliveTime = membershipEntry.IAmAliveTime,
                     Status = membershipEntry.Status,
