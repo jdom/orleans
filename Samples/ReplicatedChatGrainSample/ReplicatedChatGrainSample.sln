@@ -12,9 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplicatedChatGrainSample.Grains", "QueuedGrainSample.Grains\ReplicatedChatGrainSample.Grains.csproj", "{27A256FD-E8F8-46B8-997C-FA092F9C4503}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplicatedChatGrainSample.Grains", "QueuedGrainSample.Grains\ReplicatedChatGrainSample.Grains.csproj", "{27A256FD-E8F8-46B8-997C-FA092F9C4503}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplicatedChatGrainSample.Interfaces", "QueuedGrainSample.Interfaces\ReplicatedChatGrainSample.Interfaces.csproj", "{0B475524-90DD-4D3B-B150-C9DBF30A8346}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplicatedChatGrainSample.Interfaces", "QueuedGrainSample.Interfaces\ReplicatedChatGrainSample.Interfaces.csproj", "{0B475524-90DD-4D3B-B150-C9DBF30A8346}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Silos", "Orleans.Silos\Orleans.Silos.csproj", "{B2BA54A0-378E-46C3-8ECD-02827A29F22E}"
 EndProject
