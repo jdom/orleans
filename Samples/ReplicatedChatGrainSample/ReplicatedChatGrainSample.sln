@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplicatedChatGrainSample.G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplicatedChatGrainSample.Interfaces", "QueuedGrainSample.Interfaces\ReplicatedChatGrainSample.Interfaces.csproj", "{0B475524-90DD-4D3B-B150-C9DBF30A8346}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.Silos", "Orleans.Silos\Orleans.Silos.csproj", "{B2BA54A0-378E-46C3-8ECD-02827A29F22E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.Silos", "Orleans.Silos\Orleans.Silos.csproj", "{B2BA54A0-378E-46C3-8ECD-02827A29F22E}"
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Deployment2", "Deployment2\Deployment2.ccproj", "{085273AE-249E-4179-AC65-457A5F07BFA8}"
 EndProject
