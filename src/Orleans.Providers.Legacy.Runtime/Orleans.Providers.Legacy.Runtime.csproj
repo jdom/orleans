@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Microsoft.Orleans.Providers.Legacy.Runtime</PackageId>
+    <Title>Microsoft Orleans Runtime Legacy Provider Library</Title>
+    <Description>Runtime library of Microsoft Orleans for legacy provider support.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>Orleans.Providers.Legacy.Runtime</AssemblyName>
+    <RootNamespace>Orleans.Providers.Legacy</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orleans.Core.Abstractions\Orleans.Core.Abstractions.csproj" />
+    <ProjectReference Include="..\Orleans.Core\Orleans.Core.csproj" />
+    <ProjectReference Include="..\Orleans.Providers.Legacy.Core\Orleans.Providers.Legacy.Core.csproj" />
+    <ProjectReference Include="..\Orleans.Runtime\Orleans.Runtime.csproj" />
+  </ItemGroup>
+</Project>

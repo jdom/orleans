@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Configuration;
-using Orleans.Providers;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.TestingHost;
@@ -28,8 +27,6 @@ namespace UnitTests.General
                 options.ClusterConfiguration.AddMemoryStorageProvider("PubSubStore");
                 options.ClusterConfiguration.AddSimpleMessageStreamProvider("SMSProvider");
                 options.ClientConfiguration.AddSimpleMessageStreamProvider("SMSProvider");
-                options.ClusterConfiguration.Globals.RegisterBootstrapProvider<PreInvokeCallbackBootrstrapProvider>(
-                    "PreInvokeCallbackBootrstrapProvider");
                 options.UseSiloBuilderFactory<SiloInvokerTestSiloBuilderFactory>();
                 return new TestCluster(options);
             }
@@ -235,23 +232,6 @@ namespace UnitTests.General
             // This grain method throws, but the exception should be handled by one of the filters and converted
             // into a specific message.
             await Assert.ThrowsAsync<InvalidCastException>(() => grain.IncorrectResultType());
-        }
-    }
-
-    public class PreInvokeCallbackBootrstrapProvider : IBootstrapProvider
-    {
-        public string Name { get; private set; }
-
-        public Task Init(string name, IProviderRuntime providerRuntime, IProviderConfiguration config)
-        {
-#pragma warning disable 618
-
-            return Task.FromResult(0);
-        }
-
-        public Task Close()
-        {
-            return Task.FromResult(0);
         }
     }
 }
