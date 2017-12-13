@@ -43,9 +43,9 @@ namespace Orleans.Storage
         private const string STRING_DATA_PROPERTY_NAME = "StringData";
 
         /// <summary> Default constructor </summary>
-        public AzureTableGrainStorage(IOptions<AzureTableStorageOptions> configurationOptions, SerializationManager serializationManager, ILoggerFactory loggerFactory)
+        public AzureTableGrainStorage(AzureTableStorageOptions options, SerializationManager serializationManager, ILoggerFactory loggerFactory)
         {
-            this.options = configurationOptions.Value;
+            this.options = options;
             this.serializationManager = serializationManager;
             this.loggerFactory = loggerFactory;
             this.logger = this.loggerFactory.CreateLogger($"{this.GetType().FullName}.{this.options.Name}");
@@ -451,7 +451,7 @@ namespace Orleans.Storage
         private async Task Init(CancellationToken ct)
         {
             this.logger.Info((int)AzureProviderErrorCode.AzureTableProvider_InitProvider, $"AzureTableStorage initializing: {this.options.ToString()}");
-            logger.Info((int)AzureProviderErrorCode.AzureTableProvider_ParamConnectionString, "AzureTableStorage Provider is using DataConnectionString: {0}", ConfigUtilities.RedactConnectionStringInfo(this.options.DataConnectionString));
+            this.logger.Info((int)AzureProviderErrorCode.AzureTableProvider_ParamConnectionString, "AzureTableStorage Provider is using DataConnectionString: {0}", ConfigUtilities.RedactConnectionStringInfo(this.options.DataConnectionString));
             this.tableDataManager = new GrainStateTableDataManager(this.options.TableName, this.options.DataConnectionString, this.loggerFactory);
             await this.tableDataManager.InitTableAsync();
         }
@@ -468,6 +468,16 @@ namespace Orleans.Storage
         }
     }
 
+    public static class AzureTableGrainStorageFactory
+    {
+        public static IGrainStorage Create(IServiceProvider services, string name)
+        {
+            IOptionsFactory<AzureTableStorageOptions> optionsFactory = services.GetRequiredService<IOptionsFactory<AzureTableStorageOptions>>();
+            return ActivatorUtilities.CreateInstance<AzureTableGrainStorage>(services, optionsFactory.Create(name));
+        }
+    }
+
+
     public class AzureTableStorageOptions
     {
         public const string TableNameDefaultValue = "OrleansGrainState";
@@ -476,7 +486,7 @@ namespace Orleans.Storage
         public string ServiceId { get; set; }
         public string DataConnectionString { get; set; }
         public string TableName { get; set; } = TableNameDefaultValue;
-        public bool DeleteStateOnClear { get; set; }
+        public bool DeleteStateOnClear { get; set; } = false;
         public int InitStage { get; set; } = (int)SiloLifecycleStage.ApplicationServices;
         public JsonSerializerSettings JsonSettings { get; set; }
 
@@ -489,8 +499,7 @@ namespace Orleans.Storage
                 $"TableName={this.TableName}",
                 $"DeleteStateOnClear={this.DeleteStateOnClear}",
                 $"InitStage={this.InitStage}",
-                $"SerializeUsingJson={JsonSettings != null}"
-                );
+                $"SerializeUsingJson={JsonSettings != null}");
         }
     }
 
@@ -594,7 +603,7 @@ namespace Orleans.Storage
             this.Name = options.Name;
 
             // create storage
-            this.storage = new AzureTableGrainStorage(Options.Create(options), serializationManager, loggerFactory);
+            this.storage = new AzureTableGrainStorage(options, serializationManager, loggerFactory);
 
             // create fake lifecycle
             this.fakeSiloLifecycle = new SiloLifecycle(loggerFactory);

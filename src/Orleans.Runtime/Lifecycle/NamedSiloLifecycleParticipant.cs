@@ -45,6 +45,25 @@ namespace Orleans.Runtime
         }
     }
 
+    public class KeyedSiloLifecycleParticipantCollection<TKey, TService> : KeyedServiceCollection<TKey, TService>, ILifecycleParticipant<ISiloLifecycle>
+        where TService : class
+    {
+        private readonly IServiceProvider services;
+
+        public KeyedSiloLifecycleParticipantCollection(IServiceProvider services)
+        {
+            this.services = services;
+        }
+
+        public void Participate(ISiloLifecycle lifecycle)
+        {
+            foreach(IKeyedService<TKey, TService> keyedService in this.services.GetServices<IKeyedService<TKey, TService>>())
+            {
+                (keyedService as ILifecycleParticipant<ISiloLifecycle>)?.Participate(lifecycle);
+            }
+        }
+    }
+
     public static class KeyedSiloLifecycleParticipantExtensions
     {
         /// <summary>
@@ -55,7 +74,7 @@ namespace Orleans.Runtime
             where TService : class
         {
             collection.TryAddSingleton<TInstance>();
-            collection.AddSingleton<IKeyedService<TKey, TService>>(sp => new KeyedSiloLifecycleParticipant<TKey, TService, TInstance>(sp,key));
+            collection.AddSingleton<IKeyedService<TKey, TService>>(sp => new KeyedSiloLifecycleParticipant<TKey, TService, TInstance>(sp, key));
         }
 
         /// <summary>
