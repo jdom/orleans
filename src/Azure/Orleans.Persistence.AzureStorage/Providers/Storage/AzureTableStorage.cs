@@ -581,6 +581,8 @@ namespace Orleans.Storage
     /// </example>
     public class AzureTableStorage : IStorageProvider, IRestExceptionDecoder
     {
+        // julido: not sure I understand the purpose of having this wrapper. Why not just have a configurator (similar to LegacyAzureMembershipConfigurator)
+        // that just uses the services.UseAzureStorage extension method, but passes an options builder that reads from the legacy config?
         private SiloLifecycle fakeSiloLifecycle;
         private AzureTableGrainStorage storage;
 
