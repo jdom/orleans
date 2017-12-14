@@ -31,6 +31,20 @@ namespace Orleans.Hosting
             services.TryAddKeyedServiceCollection();
 
             services.AddNamedSiloLifecycleParticipant(name, AzureTableGrainStorageFactory.Create);
+
+            // TODO: instead of named silo lifetime participant, use normal keyed services 
+            // (but add an overload that accept a factory). This way we decouple registration from default keyed service implementation
+            // (and could work with any impl of keyed service collection). Also, it's up to each provider to decide whether it wants
+            // to participate in which lifetimes, and not bundled with the keyed service infrastructure.
+
+            // Code would look something like this:
+            // services.AddSingletonNamedService<IGrainStorage, AzureTableGrainStorage>(name);
+            // previous line would efectively be a decorator of this more general method (but most providers won't need it if we go with the constructor I mentioned):
+            // services.AddSingletonNamedService<IGrainStorage>(name, (sp, key) => ActivatorUtilities.CreateInstance<AzureTableGrainStorage>(sp, key));
+
+            // Then register this keyed service as a lifetime participant separately:
+            // services.AddSingleton<ILifecycleParticipant<ISiloLifecycle>>(sp => (AzureTableGrainStorage)sp.GetServiceByName<IGrainStorage>(name));
+
             return services;
         }
 
