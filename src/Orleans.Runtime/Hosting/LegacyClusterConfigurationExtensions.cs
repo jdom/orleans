@@ -10,13 +10,13 @@ using Orleans.Runtime.MembershipService;
 
 namespace Orleans.Hosting
 {
-    internal static class LegacyClusterConfigurationExtensions
+    public static class LegacyClusterConfigurationExtensions
     {
         public static IServiceCollection AddLegacyClusterConfigurationSupport(this IServiceCollection services, ClusterConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            if (services.Any(service => service.ServiceType == typeof(ClusterConfiguration)))
+            if (services.TryGetClusterConfiguration() != null)
             {
                 throw new InvalidOperationException("Cannot configure legacy ClusterConfiguration support twice");
             }
@@ -108,6 +108,13 @@ namespace Orleans.Hosting
 
             LegacyMembershipConfigurator.ConfigureServices(configuration.Globals, services);
             return services;
+        }
+
+        public static ClusterConfiguration TryGetClusterConfiguration(this IServiceCollection services)
+        {
+            return services
+                .FirstOrDefault(s => s.ServiceType == typeof(ClusterConfiguration))
+                ?.ImplementationInstance as ClusterConfiguration;
         }
     }
 }

@@ -17,4 +17,13 @@ namespace Orleans.TestingHost
                     TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.ClusterId)));
         }
     }
+
+    public class DefaultSiloBuilderConfigurator : ISiloBuilderConfigurator
+    {
+        public void Configure(ISiloHostBuilder hostBuilder)
+        {
+            //hostBuilder.ConfigureLogging(loggingBuilder => TestingUtils.ConfigureDefaultLoggingBuilder(loggingBuilder,
+            //    TestingUtils.CreateTraceFileName(siloName, clusterConfiguration.Globals.DeploymentId)));
+        }
+    }
 }

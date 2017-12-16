@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Providers;
 using Orleans.Runtime;
-using Orleans.Runtime.Configuration;
 using Orleans.Runtime.GrainDirectory;
 using Orleans.Runtime.Messaging;
 using Orleans.Runtime.Placement;
@@ -14,30 +13,22 @@ using Orleans.Storage;
 using Orleans.MultiCluster;
 using Orleans.Hosting;
 using Orleans.Runtime.MultiClusterNetwork;
-using Orleans.Runtime.TestHooks;
-using Orleans.Runtime.Providers;
 using Orleans.Runtime.Storage;
 
 namespace Orleans.TestingHost
 {
     /// <summary>Allows programmatically hosting an Orleans silo in the curent app domain, exposing some marshable members via remoting.</summary>
-    public class AppDomainSiloHost : MarshalByRefObject
+    public class AppDomainSiloHost2 : MarshalByRefObject
     {
         private readonly ISiloHost host;
 
         /// <summary>Creates and initializes a silo in the current app domain.</summary>
-        /// <param name="name">Name of this silo.</param>
-        /// <param name="siloBuilderFactoryType">Type of silo host builder factory.</param>
-        /// <param name="config">Silo config data to be used for this silo.</param>
-        public AppDomainSiloHost(string name, Type siloBuilderFactoryType, ClusterConfiguration config)
+        /// <param name="appDomainName">Name of this silo.</param>
+        /// <param name="serializedConfigurationSources">Silo config data to be used for this silo.</param>
+        public AppDomainSiloHost2(string appDomainName, string serializedConfigurationSources)
         {
-            var builderFactory = (ISiloBuilderFactory)Activator.CreateInstance(siloBuilderFactoryType);
-            ISiloHostBuilder builder = builderFactory
-                .CreateSiloBuilder(name, config)
-                .ConfigureServices(services => services.AddSingleton<TestHooksSystemTarget>())
-                .ConfigureApplicationParts(parts => parts.AddFromAppDomain().AddFromApplicationBaseDirectory());
-            this.host = builder.Build();
-            InitializeTestHooksSystemTarget();
+            var deserializedSources = TestClusterHostFactory.DeserializeConfigurationSources(serializedConfigurationSources);
+            this.host = TestClusterHostFactory.CreateSiloHost(appDomainName, deserializedSources);
             this.AppDomainTestHook = new AppDomainTestHooks(this.host);
         }
 
@@ -56,13 +47,6 @@ namespace Orleans.TestingHost
         public void Shutdown()
         {
             this.host.StopAsync().GetAwaiter().GetResult();
-        }
-
-        private void InitializeTestHooksSystemTarget()
-        {
-            var testHook = this.host.Services.GetRequiredService<TestHooksSystemTarget>();
-            var providerRuntime = this.host.Services.GetRequiredService<SiloProviderRuntime>();
-            providerRuntime.RegisterSystemTarget(testHook);
         }
     }
 

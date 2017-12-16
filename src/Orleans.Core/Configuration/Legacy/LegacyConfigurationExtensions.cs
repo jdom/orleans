@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,11 +12,23 @@ namespace Orleans.Configuration
 {
     internal static class LegacyConfigurationExtensions
     {
-        public static IServiceCollection AddLegacyClientConfigurationSupport(this IServiceCollection services, ClientConfiguration configuration)
+        public static IServiceCollection AddLegacyClientConfigurationSupport(this IServiceCollection services, ClientConfiguration configuration = null)
         {
-            if (services.Any(service => service.ServiceType == typeof(ClientConfiguration)))
+            if (TryGetClientConfiguration(services) != null)
             {
                 throw new InvalidOperationException("Cannot configure legacy ClientConfiguration support twice");
+            }
+
+            if (configuration == null)
+            {
+                try
+                {
+                    configuration = ClientConfiguration.StandardLoad();
+                }
+                catch (FileNotFoundException)
+                {
+                    configuration = new ClientConfiguration();
+                }
             }
 
             // these will eventually be removed once our code doesn't depend on the old ClientConfiguration
@@ -55,6 +68,13 @@ namespace Orleans.Configuration
             LegacyGatewayListProviderConfigurator.ConfigureServices(configuration, services);
 
             return services;
+        }
+
+        public static ClientConfiguration TryGetClientConfiguration(this IServiceCollection services)
+        {
+            return services
+                .FirstOrDefault(s => s.ServiceType == typeof(ClientConfiguration))
+                ?.ImplementationInstance as ClientConfiguration;
         }
 
         internal static void CopyCommonMessagingOptions(IMessagingConfiguration configuration, MessagingOptions options)

@@ -62,4 +62,57 @@ namespace TestExtensions
             this.HostedCluster?.StopAllSilos();
         }
     }
+
+    public abstract class BaseTestCluster2Fixture : IDisposable
+    {
+        private ExceptionDispatchInfo preconditionsException;
+
+        static BaseTestCluster2Fixture()
+        {
+            TestDefaultConfiguration.InitializeDefaults();
+        }
+
+        protected BaseTestCluster2Fixture()
+        {
+            try
+            {
+                CheckPreconditionsOrThrow();
+            }
+            catch (Exception ex)
+            {
+                preconditionsException = ExceptionDispatchInfo.Capture(ex);
+                return;
+            }
+
+            var testCluster = CreateTestCluster();
+            if (testCluster?.Primary == null)
+            {
+                testCluster?.Deploy();
+            }
+            this.HostedCluster = testCluster;
+        }
+
+        public void EnsurePreconditionsMet()
+        {
+            preconditionsException?.Throw();
+        }
+
+        protected virtual void CheckPreconditionsOrThrow() { }
+
+
+        protected abstract TestCluster2 CreateTestCluster();
+
+        public TestCluster2 HostedCluster { get; }
+
+        public IGrainFactory GrainFactory => this.HostedCluster?.GrainFactory;
+
+        public IClusterClient Client => this.HostedCluster?.Client;
+
+        public Logger Logger => this.Client?.Logger;
+
+        public virtual void Dispose()
+        {
+            this.HostedCluster?.StopAllSilos();
+        }
+    }
 }

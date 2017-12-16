@@ -4,44 +4,47 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.Remoting;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using Orleans.Runtime;
+using Orleans.Runtime.Configuration;
 
 namespace Orleans.TestingHost
 {
     /// <summary>
     /// Represents a handle to a silo that is deployed inside a remote AppDomain, but in the same process
     /// </summary>
-    public class AppDomainSiloHandle2 : SiloHandle2
+    public class AppDomainSiloHandle : SiloHandle
     {
         private bool isActive = true;
-        
+
         /// <summary> Get or set the AppDomain used by the silo </summary>
         public AppDomain AppDomain { get; set; }
 
         /// <summary>Gets or sets a reference to the silo host that is marshable by reference.</summary>
-        public AppDomainSiloHost2 SiloHost { get; set; }
+        public AppDomainSiloHost SiloHost { get; set; }
 
         /// <inheritdoc />
         public override bool IsActive => isActive;
 
         /// <summary>Creates a new silo in a remote app domain and returns a handle to it.</summary>
-        public static SiloHandle2 Create(
+        public static SiloHandle Create(
             string siloName,
-            IList<IConfigurationSource> configuration,
+            Silo.SiloType type,
+            Type siloBuilderFactory,
+            ClusterConfiguration config,
+            NodeConfiguration nodeConfiguration,
             string applicationBase = null)
         {
             AppDomainSetup setup = GetAppDomainSetupInfo(applicationBase);
 
             var appDomain = AppDomain.CreateDomain(siloName, null, setup);
-            
+
             try
             {
-                var serializedHostConfiguration = TestClusterHostFactory.SerializeConfigurationSources(configuration);
-                var args = new object[] {siloName, serializedHostConfiguration };
+                var args = new object[] { siloName, siloBuilderFactory, config };
 
-                var siloHost = (AppDomainSiloHost2)appDomain.CreateInstanceAndUnwrap(
-                    typeof(AppDomainSiloHost2).Assembly.FullName,
-                    typeof(AppDomainSiloHost2).FullName,
+                var siloHost = (AppDomainSiloHost)appDomain.CreateInstanceAndUnwrap(
+                    typeof(AppDomainSiloHost).Assembly.FullName,
+                    typeof(AppDomainSiloHost).FullName,
                     false,
                     BindingFlags.Default,
                     null,
@@ -53,11 +56,13 @@ namespace Orleans.TestingHost
 
                 siloHost.Start();
 
-                var retValue = new AppDomainSiloHandle2
+                var retValue = new AppDomainSiloHandle
                 {
                     Name = siloName,
                     SiloHost = siloHost,
+                    NodeConfiguration = nodeConfiguration,
                     SiloAddress = siloHost.SiloAddress,
+                    Type = type,
                     AppDomain = appDomain,
                     AppDomainTestHook = siloHost.AppDomainTestHook,
                 };
@@ -92,7 +97,7 @@ namespace Orleans.TestingHost
                     throw;
                 }
             }
-            
+
             this.isActive = false;
             try
             {

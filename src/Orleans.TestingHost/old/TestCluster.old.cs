@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Orleans.CodeGeneration;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Serialization;
 using Orleans.Streams;
 using Orleans.TestingHost.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
+using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace Orleans.TestingHost
 {
@@ -25,29 +27,36 @@ namespace Orleans.TestingHost
     /// Make sure that your test project references your test grains and test grain interfaces 
     /// projects, and has CopyLocal=True set on those references [which should be the default].
     /// </remarks>
-    public class TestCluster2
+    public class TestCluster
     {
-        private int startedInstances;
-
         /// <summary>
         /// Primary silo handle
         /// </summary>
-        public SiloHandle2 Primary { get; private set; }
+        public SiloHandle Primary { get; private set; }
 
         /// <summary>
         /// List of handles to the secondary silos
         /// </summary>
-        public IReadOnlyList<SiloHandle2> SecondarySilos => this.additionalSilos;
+        public IReadOnlyList<SiloHandle> SecondarySilos => this.additionalSilos;
 
-        private readonly List<SiloHandle2> additionalSilos = new List<SiloHandle2>();
-        
+        private readonly List<SiloHandle> additionalSilos = new List<SiloHandle>();
+
+        /// <summary>
+        /// Client configuration to use when initializing the client
+        /// </summary>
+        public ClientConfiguration ClientConfiguration { get; private set; }
+
+        /// <summary>
+        /// Cluster configuration
+        /// </summary>
+        public ClusterConfiguration ClusterConfiguration { get; private set; }
 
         private readonly StringBuilder log = new StringBuilder();
 
         /// <summary>
         /// ClusterId of the cluster
         /// </summary>
-        public string ClusterId => this.options.ClusterId;
+        public string ClusterId => this.ClusterConfiguration.Globals.ClusterId;
 
         /// <summary>
         /// The internal client interface.
@@ -78,45 +87,101 @@ namespace Orleans.TestingHost
         /// Client-side <see cref="IServiceProvider"/> to use in the tests.
         /// </summary>
         public IServiceProvider ServiceProvider => this.Client.ServiceProvider;
-        
+
         /// <summary>
         /// SerializationManager to use in the tests
         /// </summary>
         public SerializationManager SerializationManager { get; private set; }
 
-        private TestClusterOptions2 options;
+        internal Type siloBuilderFactoryType;
+
+        public TestCluster UseSiloBuilderFactory<TSiloBuilderFactory>() where TSiloBuilderFactory : ISiloBuilderFactory, new()
+        {
+            this.siloBuilderFactoryType = typeof(TSiloBuilderFactory);
+            return this;
+        }
+
+        private Func<ClientConfiguration, IClientBuilder> clientBuilderFactory;
+        /// <summary>
+        /// Set client builder factory, which would create a client builder to build the <see cref="TestCluster"/> client.
+        /// </summary>
+        public TestCluster UseClientBuilderFactory(Func<ClientConfiguration, IClientBuilder> clientBuilderFactory)
+        {
+            this.clientBuilderFactory = clientBuilderFactory;
+            return this;
+        }
 
         /// <summary>
         /// Configure the default Primary test silo, plus client in-process.
         /// </summary>
-        public TestCluster2()
-            : this(new TestClusterOptions2())
+        public TestCluster()
+            : this(new TestClusterOptions())
         {
         }
 
         /// <summary>
         /// Configures the test cluster plus client in-process.
         /// </summary>
-        public TestCluster2(TestClusterOptions2 options)
+        public TestCluster(TestClusterOptions options)
+            : this(options.ClusterConfiguration, options.ClientConfiguration)
         {
-            this.options = options;
+            this.siloBuilderFactoryType = options.SiloBuilderFactoryType;
+            this.clientBuilderFactory = options.ClientBuilderFactory;
+        }
+
+        /// <summary>
+        /// Configures the test cluster plus default client in-process.
+        /// </summary>
+        public TestCluster(ClusterConfiguration clusterConfiguration)
+            : this(clusterConfiguration, TestClusterOptions.BuildClientConfiguration(clusterConfiguration))
+        {
+        }
+
+        /// <summary>
+        /// Configures the test cluster plus client in-process,
+        /// using the specified silo and client config configurations.
+        /// </summary>
+        public TestCluster(ClusterConfiguration clusterConfiguration, ClientConfiguration clientConfiguration)
+        {
+            this.ClusterConfiguration = clusterConfiguration;
+            this.ClientConfiguration = clientConfiguration;
+            this.UseSiloBuilderFactory<DefaultSiloBuilderFactory>();
+            this.UseClientBuilderFactory(TestClusterOptions.DefaultClientBuilderFactory);
         }
 
         /// <summary>
         /// Deploys the cluster using the specified configuration and starts the client in-process.
-        /// It will start the number of silos defined in <see cref="TestClusterOptions2.InitialSilosCount"/>.
+        /// It will start all the silos defined in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.
         /// </summary>
         public void Deploy()
         {
-            this.DeployAsync().GetAwaiter().GetResult();
+            this.Deploy(this.ClusterConfiguration.Overrides.Keys);
         }
 
         /// <summary>
         /// Deploys the cluster using the specified configuration and starts the client in-process.
         /// </summary>
-        public async Task DeployAsync()
+        /// <param name="siloNames">Only deploy the specified silos which must also be present in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.</param>
+        public void Deploy(IEnumerable<string> siloNames)
         {
-            if (this.Primary != null || this.additionalSilos.Count > 0) throw new InvalidOperationException("Cluster host already deployed.");
+            try
+            {
+                DeployAsync(siloNames).Wait();
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Count > 1) throw;
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            }
+        }
+
+        /// <summary>
+        /// Deploys the cluster using the specified configuration and starts the client in-process.
+        /// </summary>
+        /// <param name="siloNames">Only deploy the specified silos which must also be present in the <see cref="Runtime.Configuration.ClusterConfiguration.Overrides"/> collection.</param>
+        public async Task DeployAsync(IEnumerable<string> siloNames)
+        {
+            if (Primary != null) throw new InvalidOperationException("Cluster host already deployed.");
 
             AppDomain.CurrentDomain.UnhandledException += ReportUnobservedException;
 
@@ -124,7 +189,7 @@ namespace Orleans.TestingHost
             {
                 string startMsg = "----------------------------- STARTING NEW UNIT TEST SILO HOST: " + GetType().FullName + " -------------------------------------";
                 WriteLog(startMsg);
-                await InitializeAsync();
+                await InitializeAsync(siloNames);
             }
             catch (TimeoutException te)
             {
@@ -162,7 +227,7 @@ namespace Orleans.TestingHost
         /// Get the list of current active silos.
         /// </summary>
         /// <returns>List of current silos.</returns>
-        public IEnumerable<SiloHandle2> GetActiveSilos()
+        public IEnumerable<SiloHandle> GetActiveSilos()
         {
             WriteLog("GetActiveSilos: Primary={0} + {1} Additional={2}",
                 Primary, additionalSilos.Count, Runtime.Utils.EnumerableToString(additionalSilos));
@@ -178,10 +243,10 @@ namespace Orleans.TestingHost
         /// Find the silo handle for the specified silo address.
         /// </summary>
         /// <param name="siloAddress">Silo address to be found.</param>
-        /// <returns>SiloHandle2 of the appropriate silo, or <c>null</c> if not found.</returns>
-        public SiloHandle2 GetSiloForAddress(SiloAddress siloAddress)
+        /// <returns>SiloHandle of the appropriate silo, or <c>null</c> if not found.</returns>
+        public SiloHandle GetSiloForAddress(SiloAddress siloAddress)
         {
-            var activeSilos = GetActiveSilos().ToList();
+            List<SiloHandle> activeSilos = GetActiveSilos().ToList();
             var ret = activeSilos.FirstOrDefault(s => s.SiloAddress.Equals(siloAddress));
             return ret;
         }
@@ -192,9 +257,7 @@ namespace Orleans.TestingHost
         /// <param name="didKill">Whether recent membership changes we done by graceful Stop.</param>
         public async Task WaitForLivenessToStabilizeAsync(bool didKill = false)
         {
-            // TODO: read from the cluster
-            var globalConfiguration = new GlobalConfiguration(); //this.ClusterConfiguration.Globals
-            TimeSpan stabilizationTime = GetLivenessStabilizationTime(globalConfiguration, didKill);
+            TimeSpan stabilizationTime = GetLivenessStabilizationTime(this.ClusterConfiguration.Globals, didKill);
             WriteLog(Environment.NewLine + Environment.NewLine + "WaitForLivenessToStabilize is about to sleep for {0}", stabilizationTime);
             await Task.Delay(stabilizationTime);
             WriteLog("WaitForLivenessToStabilize is done sleeping");
@@ -226,39 +289,42 @@ namespace Orleans.TestingHost
         /// <summary>
         /// Start an additional silo, so that it joins the existing cluster.
         /// </summary>
-        /// <returns>SiloHandle2 for the newly started silo.</returns>
-        public SiloHandle2 StartAdditionalSilo()
+        /// <returns>SiloHandle for the newly started silo.</returns>
+        public SiloHandle StartAdditionalSilo()
         {
-            return this.StartAdditionalSilos(1).GetAwaiter().GetResult().Single();
+            var clusterConfig = this.ClusterConfiguration;
+            short instanceNumber = (short)clusterConfig.Overrides.Count;
+            var defaultNode = clusterConfig.Defaults;
+            int baseSiloPort = defaultNode.Port;
+            int baseGatewayPort = defaultNode.ProxyGatewayEndpoint.Port;
+            var nodeConfig = TestClusterOptions.AddNodeConfiguration(
+                this.ClusterConfiguration,
+                Silo.SiloType.Secondary,
+                instanceNumber,
+                baseSiloPort,
+                baseGatewayPort);
+
+            SiloHandle instance = StartOrleansSilo(
+                Silo.SiloType.Secondary,
+                this.ClusterConfiguration,
+                nodeConfig);
+            additionalSilos.Add(instance);
+            return instance;
         }
 
         /// <summary>
         /// Start a number of additional silo, so that they join the existing cluster.
         /// </summary>
-        /// <param name="silosToStart">Number of silos to start.</param>
+        /// <param name="numExtraSilos">Number of additional silos to start.</param>
         /// <returns>List of SiloHandles for the newly started silos.</returns>
-        public async Task<List<SiloHandle2>> StartAdditionalSilos(int silosToStart)
+        public List<SiloHandle> StartAdditionalSilos(int numExtraSilos)
         {
-            var instances = new List<SiloHandle2>();
-            if (silosToStart > 0)
+            List<SiloHandle> instances = new List<SiloHandle>();
+            for (int i = 0; i < numExtraSilos; i++)
             {
-                var siloStartTasks = Enumerable.Range(this.startedInstances, silosToStart)
-                    .Select(instanceNumber => Task.Run(() => StartOrleansSilo((short)instanceNumber, this.options))).ToArray();
-
-                try
-                {
-                    await Task.WhenAll(siloStartTasks);
-                }
-                catch (Exception)
-                {
-                    this.additionalSilos.AddRange(siloStartTasks.Where(t => t.Exception == null).Select(t => t.Result));
-                    throw;
-                }
-
-                instances.AddRange(siloStartTasks.Select(t => t.Result));
-                this.additionalSilos.AddRange(instances);
+                SiloHandle instance = StartAdditionalSilo();
+                instances.Add(instance);
             }
-
             return instances;
         }
 
@@ -267,7 +333,7 @@ namespace Orleans.TestingHost
         /// </summary>
         public void StopSecondarySilos()
         {
-            foreach (var instance in this.additionalSilos.ToList())
+            foreach (SiloHandle instance in this.additionalSilos.ToList())
             {
                 StopSilo(instance);
             }
@@ -278,16 +344,9 @@ namespace Orleans.TestingHost
         /// </summary>
         public void StopPrimarySilo()
         {
-            if (Primary == null) throw new InvalidOperationException("There is no primary silo");
-            StopClusterClient();
-            StopSilo(Primary);
-        }
-
-        private void StopClusterClient()
-        {
             try
             {
-                this.InternalClient?.Close().GetAwaiter().GetResult();
+                this.InternalClient?.Close().Wait();
             }
             catch (Exception exc)
             {
@@ -298,6 +357,8 @@ namespace Orleans.TestingHost
                 this.InternalClient?.Dispose();
                 this.InternalClient = null;
             }
+
+            StopSilo(Primary);
         }
 
         /// <summary>
@@ -305,12 +366,8 @@ namespace Orleans.TestingHost
         /// </summary>
         public void StopAllSilos()
         {
-            StopClusterClient();
             StopSecondarySilos();
-            if (Primary != null)
-            {
-                StopPrimarySilo();
-            }
+            StopPrimarySilo();
             AppDomain.CurrentDomain.UnhandledException -= ReportUnobservedException;
         }
 
@@ -318,7 +375,7 @@ namespace Orleans.TestingHost
         /// Do a semi-graceful Stop of the specified silo.
         /// </summary>
         /// <param name="instance">Silo to be stopped.</param>
-        public void StopSilo(SiloHandle2 instance)
+        public void StopSilo(SiloHandle instance)
         {
             if (instance != null)
             {
@@ -338,7 +395,7 @@ namespace Orleans.TestingHost
         /// Do an immediate Kill of the specified silo.
         /// </summary>
         /// <param name="instance">Silo to be killed.</param>
-        public void KillSilo(SiloHandle2 instance)
+        public void KillSilo(SiloHandle instance)
         {
             if (instance != null)
             {
@@ -360,16 +417,16 @@ namespace Orleans.TestingHost
         /// Do a Stop or Kill of the specified silo, followed by a restart.
         /// </summary>
         /// <param name="instance">Silo to be restarted.</param>
-        public SiloHandle2 RestartSilo(SiloHandle2 instance)
+        public SiloHandle RestartSilo(SiloHandle instance)
         {
             if (instance != null)
             {
-                var instanceNumber = instance.InstanceNumber;
+                var type = instance.Type;
                 var siloName = instance.Name;
                 StopSilo(instance);
-                var newInstance = StartOrleansSilo(instanceNumber, this.options);
+                var newInstance = StartOrleansSilo(type, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[siloName]);
 
-                if (siloName == Silo.PrimarySiloName)
+                if (type == Silo.SiloType.Primary && siloName == Silo.PrimarySiloName)
                 {
                     Primary = newInstance;
                 }
@@ -384,17 +441,17 @@ namespace Orleans.TestingHost
             return null;
         }
 
-        ///// <summary>
-        ///// Restart a previously stopped.
-        ///// </summary>
-        ///// <param name="siloName">Silo to be restarted.</param>
-        //public SiloHandle2 RestartStoppedSecondarySilo(string siloName)
-        //{
-        //    if (siloName == null) throw new ArgumentNullException(nameof(siloName));
-        //    var newInstance = StartOrleansSilo(Silo.SiloType.Secondary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[siloName]);
-        //    additionalSilos.Add(newInstance);
-        //    return newInstance;
-        //}
+        /// <summary>
+        /// Restart a previously stopped.
+        /// </summary>
+        /// <param name="siloName">Silo to be restarted.</param>
+        public SiloHandle RestartStoppedSecondarySilo(string siloName)
+        {
+            if (siloName == null) throw new ArgumentNullException(nameof(siloName));
+            var newInstance = StartOrleansSilo(Silo.SiloType.Secondary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[siloName]);
+            additionalSilos.Add(newInstance);
+            return newInstance;
+        }
 
         #region Private methods
 
@@ -403,105 +460,102 @@ namespace Orleans.TestingHost
         /// </summary>
         public void InitializeClient()
         {
-            WriteLog("Initializing Cluster Client");
+            WriteLog("Initializing Grain Client");
+            ClientConfiguration clientConfig = this.ClientConfiguration;
 
-            this.InternalClient = (IInternalClusterClient)TestClusterHostFactory.CreateClusterClient("MainClient", this.options.HostConfiguration);
+            if (Debugger.IsAttached)
+            {
+                // Test is running inside debugger - Make timeout ~= infinite
+                clientConfig.ResponseTimeout = TimeSpan.FromMilliseconds(1000000);
+            }
+            this.InternalClient = (IInternalClusterClient)this.clientBuilderFactory(clientConfig).Build();
             this.InternalClient.Connect().Wait();
             this.SerializationManager = this.ServiceProvider.GetRequiredService<SerializationManager>();
             this.StreamProviderManager = this.ServiceProvider.GetRequiredService<IRuntimeClient>().CurrentStreamProviderManager;
         }
 
-        private async Task InitializeAsync()
+        private async Task InitializeAsync(IEnumerable<string> siloNames)
         {
-            short silosToStart = this.options.InitialSilosCount;
-
-            if (this.options.UseTestClusterMemebership)
+            var silos = siloNames.ToList();
+            foreach (var siloName in silos)
             {
-                this.Primary = StartOrleansSilo(this.startedInstances, this.options);
-                silosToStart--;
+                if (!this.ClusterConfiguration.Overrides.Keys.Contains(siloName))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(siloNames), $"Silo name {siloName} does not exist in the ClusterConfiguration.Overrides collection");
+                }
             }
 
-            if (silosToStart > 0)
+            if (silos.Contains(Silo.PrimarySiloName))
             {
-                await this.StartAdditionalSilos(silosToStart);
+                Primary = StartOrleansSilo(Silo.SiloType.Primary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[Silo.PrimarySiloName]);
+            }
+
+            var secondarySiloNames = silos.Where(name => !string.Equals(Silo.PrimarySiloName, name)).ToList();
+            if (secondarySiloNames.Count > 0)
+            {
+                var siloStartTasks = secondarySiloNames.Select(siloName =>
+                {
+                    return Task.Run(() => StartOrleansSilo(Silo.SiloType.Secondary, this.ClusterConfiguration, this.ClusterConfiguration.Overrides[siloName]));
+                }).ToList();
+
+                try
+                {
+                    await Task.WhenAll(siloStartTasks);
+                }
+                catch (Exception)
+                {
+                    this.additionalSilos.AddRange(siloStartTasks.Where(t => t.Exception == null).Select(t => t.Result));
+                    throw;
+                }
+
+                this.additionalSilos.AddRange(siloStartTasks.Select(t => t.Result));
             }
 
             WriteLog("Done initializing cluster");
 
-            if (this.options.InitializeClientOnDeploy)
+            if (this.ClientConfiguration != null)
             {
                 InitializeClient();
             }
         }
 
-        private SiloHandle2 StartOrleansSilo(int instanceNumber, TestClusterOptions2 clusterOptions)
+        private SiloHandle StartOrleansSilo(Silo.SiloType type, ClusterConfiguration clusterConfig, NodeConfiguration nodeConfig)
         {
-            return StartOrleansSilo(this, instanceNumber, clusterOptions);
+            return StartOrleansSilo(this, type, clusterConfig, nodeConfig);
         }
 
         /// <summary>
         /// Start a new silo in the target cluster
         /// </summary>
-        /// <param name="cluster">The TestCluster2 in which the silo should be deployed</param>
-        /// <param name="instanceNumber">The instance number to deploy</param>
-        /// <param name="clusterOptions">The options to use.</param>
+        /// <param name="cluster">The TestCluster in which the silo should be deployed</param>
+        /// <param name="type">The type of the silo to deploy</param>
+        /// <param name="clusterConfig">The cluster config to use</param>
+        /// <param name="nodeConfig">The configuration for the silo to deploy</param>
         /// <returns>A handle to the silo deployed</returns>
-        public static SiloHandle2 StartOrleansSilo(TestCluster2 cluster, int instanceNumber, TestClusterOptions2 clusterOptions)
+        public static SiloHandle StartOrleansSilo(TestCluster cluster, Silo.SiloType type, ClusterConfiguration clusterConfig, NodeConfiguration nodeConfig)
         {
             if (cluster == null) throw new ArgumentNullException(nameof(cluster));
+            var siloName = nodeConfig.SiloName;
 
-            string siloName = clusterOptions.UseTestClusterMemebership && instanceNumber == 0
-                ? Silo.PrimarySiloName
-                : $"Secondary_{instanceNumber}";
-
-            var configuration = clusterOptions.HostConfiguration.ToList();
-            var hostSpecificConfiguration = new Dictionary<string, string>
-            {
-                ["SiloPort"] = (clusterOptions.BaseSiloPort + instanceNumber).ToString(),
-                ["GatewayPort"] = (clusterOptions.BaseGatewayPort + instanceNumber).ToString(),
-                ["SiloName"] = siloName,
-            };
-
-            configuration.Add(new MemoryConfigurationSource { InitialData = hostSpecificConfiguration });
-            if (clusterOptions.UseTestClusterMemebership)
-            {
-                hostSpecificConfiguration["PrimarySiloPort"] = clusterOptions.BaseSiloPort.ToString();
-                if (instanceNumber == 0)
-                {
-                }
-            }
-            var handle = cluster.LoadSiloInNewAppDomain(siloName, configuration);
-            Interlocked.Increment(ref cluster.startedInstances);
+            cluster.WriteLog("Starting a new silo in app domain {0} with config {1}", siloName, clusterConfig.ToString(siloName));
+            var handle = cluster.LoadSiloInNewAppDomain(siloName, type, clusterConfig, nodeConfig);
             return handle;
         }
 
-        private void StopOrleansSilo(SiloHandle2 instance, bool stopGracefully)
+        private void StopOrleansSilo(SiloHandle instance, bool stopGracefully)
         {
-            try
-            {
-                instance.StopSilo(stopGracefully);
-                instance.Dispose();
-            }
-            finally
-            {
-                Interlocked.Decrement(ref this.startedInstances);
-            }
+            instance.StopSilo(stopGracefully);
+            instance.Dispose();
         }
 
-        private SiloHandle2 LoadSiloInNewAppDomain(string siloName, IList<IConfigurationSource> configuration)
+        private SiloHandle LoadSiloInNewAppDomain(string siloName, Silo.SiloType type, ClusterConfiguration config, NodeConfiguration nodeConfiguration)
         {
-            WriteLog("Starting a new silo in app domain {0}", siloName);
-            return AppDomainSiloHandle2.Create(siloName, configuration);
+            return AppDomainSiloHandle.Create(siloName, type, this.siloBuilderFactoryType, config, nodeConfiguration);
         }
 
         #endregion
 
         #region Tracing helper functions
-
-        public string GetLog()
-        {
-            return this.log.ToString();
-        }
 
         private static void ReportUnobservedException(object sender, UnhandledExceptionEventArgs eventArgs)
         {
@@ -516,7 +570,7 @@ namespace Orleans.TestingHost
 
         private void FlushLogToConsole()
         {
-            Console.WriteLine(GetLog());
+            Console.WriteLine(log.ToString());
         }
 
         private void WriteLog(object value)
